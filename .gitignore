@@ -1,3 +1,4 @@
 *.log
 _datastore.json
 _session_store.json
+node_modules
