@@ -1,0 +1,34 @@
+<div class="control-group">
+  <label for="name" class="control-label">Name</label>
+  <div class="controls">
+    <%- contentTag('input', event.name, {type:'text', class:'span6', name:'name'}) %>
+  </div>
+</div>
+<div class="control-group">
+  <label for="description" class="control-label">Description</label>
+  <div class="controls">
+    <%- contentTag('input', event.description, {type:'text', class:'span6', name:'description'}) %>
+  </div>
+</div>
+<div class="control-group">
+  <label for="isPrivate" class="control-label">Private</label>
+  <div class="controls">
+    <select name="isPrivate", class="span1">
+      <% if(event.isPrivate) { -%>
+      <option>false</option>
+      <option selected>true</option>
+      <% } else { -%>
+      <option selected>false</option>
+      <option>true</option>
+      <% } -%>
+    </select>
+  </div>
+  <label for="title" class="control-label">Course this Event belongs to</label>
+  <div>
+    <%- selectTag(courses, event.eventId, {
+      name: 'eventId'
+    , valueField: 'id'
+    , textField: 'name'
+    }); %>
+  </div>
+</div>

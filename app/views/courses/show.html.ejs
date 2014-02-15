@@ -1,0 +1,18 @@
+<div class="hero-unit">
+  <h2 class="name"><%= course.name %></h2>
+  <%- linkTo('Edit this course', editCoursePath(params.id), {class: 'btn pull-right'}); %>
+  <%- linkTo('Back to list', coursePath(''), {class: 'btn pull-right'}); %>
+</div>
+
+<h2>Course Properties</h2>
+<% for(var i in course) { -%>
+<% if(i !== 'saved') { -%>
+<div class="row list-item">
+  <div class="span4">
+    <h3><%= i %></h3>
+  </div>
+  <div class="span8">
+    <h3><i class="icon-list-alt"></i><span class="<%= i %>"><%= course[i] %></span></h3>
+  </div>
+</div>
+<% } -%><% } -%>
