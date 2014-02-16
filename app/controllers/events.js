@@ -50,7 +50,12 @@ var Events = function () {
         throw new geddy.errors.NotFoundError();
       }
       else {
-        self.respondWith(event);
+        geddy.model.Course.first(event.courseId, function (err, data) {
+          if (err){
+            throw err;
+          }
+          self.respond({event: event, course: data});
+        });
       }
     });
   };
@@ -66,7 +71,12 @@ var Events = function () {
         throw new geddy.errors.BadRequestError();
       }
       else {
-        self.respondWith(event);
+        geddy.model.Course.all(function (err, data) {
+          if (err) {
+            throw err;
+          }
+          self.respond({event: event, courses: data});
+        });
       }
     });
   };

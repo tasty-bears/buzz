@@ -44,7 +44,9 @@ var Courses = function () {
         throw new geddy.errors.NotFoundError();
       }
       else {
-        self.respondWith(course);
+        course.getEvents(function (err, data) {
+          self.respond({course: course, events: data});
+        });
       }
     });
   };

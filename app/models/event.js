@@ -3,12 +3,19 @@ var Event = function () {
   this.defineProperties({
     name: {type: 'string', required: true},
     description: {type: 'string'},
-    isPrivate: {type: 'boolean'}
+    isPrivate: {type: 'boolean'},
+    date: {type: 'date'}
   });
 
   this.validatesPresent('name');
   this.belongsTo('Course');
 
+  // this.courseName = function () {
+  //   var self = this;
+
+  //   var course = geddy.model.Course.first(self.courseId);
+  //   return course.name;
+  // };
   
   // this.validatesPresent('description');
 
