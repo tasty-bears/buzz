@@ -23,12 +23,21 @@
       <% } -%>
     </select>
   </div>
-  <label for="title" class="control-label">Course this Event belongs to</label>
-  <div>
-    <%- selectTag(courses, event.eventId, {
-      name: 'eventId'
-    , valueField: 'id'
-    , textField: 'name'
-    }); %>
+  
+</div>
+<div class="control-group">
+  <label for="date" class="control-label">Event Date</label>
+  <div class="controls">
+    <%- contentTag('input', event.date, {type:'date', class:'span2', name:'date'}) %>
+  </div>
+</div>
+<div class="control-group">
+  <label for="title" class="control-label">Assign Course</label>
+  <div class="controls">
+    <%- selectTag(courses, event.courseId, {
+      name: 'courseId'
+      , valueField: 'id'
+      , textField: 'name'
+      }); %>
   </div>
 </div>

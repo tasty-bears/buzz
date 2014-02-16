@@ -1,19 +1,24 @@
 <div class="hero-unit">
-  <h2 class="name"><%= event.name %></h2>
-  <p class="description"><%= event.description %></p>
+  <h2 class="name"><%- geddy.date.strftime(event.date, "%m/%d") + " - " + course.name + " - " + event.name; %></h2>
   <%- linkTo('Edit this event', editEventPath(params.id), {class: 'btn pull-right'}); %>
   <%- linkTo('Back to list', eventPath(''), {class: 'btn pull-right'}); %>
 </div>
+<h3>Event Description</h3>
+<div class="row list-item">
+  <div class="span12">  
+    <p class="description"><%= event.description %></p>
+  </div>
+</div>
 
 <!-- <h2>Event Properties</h2>
-# <% for(var i in event) { -%>
-# <% if(i !== 'saved') { -%>
-# <div class="row list-item">
-#   <div class="span4">
-#     <h3><%= i %></h3>
-#   </div>
-#   <div class="span8">
-#     <h3><i class="icon-list-alt"></i><span class="<%= i %>"><%= event[i] %></span></h3>
-#   </div>
-# </div>
-# <% } -%><% } -%> -->
+<% for(var i in event) { -%>
+<% if(i !== 'saved') { -%>
+<div class="row list-item">
+  <div class="span4">
+    <h3><%= i %></h3>
+  </div>
+  <div class="span8">
+    <h3><i class="icon-list-alt"></i><span class="<%= i %>"><%= event[i] %></span></h3>
+  </div>
+</div>
+<% } -%><% } -%> -->
