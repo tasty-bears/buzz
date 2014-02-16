@@ -7,7 +7,7 @@ var Users = function () {
 
   // Set this to false if you don't need e-mail activation
   // for local users
-  var EMAIL_ACTIVATION = true
+  var EMAIL_ACTIVATION = geddy.config.email_activation
     , msg;
 
   if (EMAIL_ACTIVATION) {

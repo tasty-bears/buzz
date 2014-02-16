@@ -19,7 +19,7 @@
 var config = {
   appName: 'Geddy App'
 , detailedErrors: false
-, hostname: null
+, hostname: 'www.tastybears.com/angora'
 , port: 4000
 , model: {
     defaultAdapter: 'mongo'
@@ -32,6 +32,22 @@ var config = {
     , password: null
     , host: 'localhost'
     , port: 27017
+    }
+  }
+, email_activation: true
+, mailer: {
+    fromAddressUsername: 'noreply'
+  , transport: {
+      type: 'smtp'
+    , options: {
+        host: 'smtp.gmail.com'
+      , secureConnection: true // use SSL
+      , port: 465 // port for secure SMTP
+      , auth: {
+          user: 'tastybears.dev@gmail.com'
+        , pass: '***REMOVED***'
+        }
+      }
     }
   }
 
