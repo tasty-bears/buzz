@@ -17,7 +17,7 @@
 */
 
 var config = {
-  appName: 'Geddy App (development)'
+  appName: 'Angora (development)'
 , detailedErrors: true
 , debug: true
 , hostname: null

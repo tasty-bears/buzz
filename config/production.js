@@ -17,7 +17,7 @@
 */
 
 var config = {
-  appName: 'Geddy App'
+  appName: 'Angora'
 , detailedErrors: false
 , hostname: null
 , port: 4000
