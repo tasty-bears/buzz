@@ -1,8 +1,22 @@
 <!-- Lets talk about geddy -->
 <div class="hero-unit geddy-welcome-box">
-  <h1>Welcome to Angora!</h1>
-  
-  <p><%- linkTo('See Courses', 'http://localhost:4000/courses', {class: 'btn btn-primary btn-large'}) %></p>
-  <p><%- linkTo('See Events', 'http://localhost:4000/events', {class: 'btn btn-primary btn-large'}) %></p>
 
+  <% if (user) { %>
+    <h1>
+      Hello<% if (user.givenName) { %>, <%= user.givenName %><% } %>
+    </h1>
+    <p>You've successfully logged in to this Geddy app (via <%= authType %>).</p>
+    <p><%- linkTo('Click here to log back out', logoutPath) %></p>
+
+    <hr/>
+    
+    <p><%- linkTo('See Courses', 'http://localhost:4000/courses', {class: 'btn btn-primary btn-large'}) %></p>
+    <p><%- linkTo('See Events', 'http://localhost:4000/events', {class: 'btn btn-primary btn-large'}) %></p>
+
+  <% } else { %>
+    <h1>Hello, stranger</h1>
+    <p>You're not authenticated with this app.</p>
+    <p><%- linkTo('Click here to create a user account.', addUserPath) %></p>
+    <p><%- linkTo('Click here to log in with Facebook or Twitter.', loginPath) %></p>
+  <% } %>
 </div>

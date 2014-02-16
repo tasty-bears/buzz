@@ -20,7 +20,7 @@ var config = {
   appName: 'Angora (development)'
 , detailedErrors: true
 , debug: true
-, hostname: null
+, hostname: 'localhost'
 , port: 4000
 , model: {
     defaultAdapter: 'filesystem'
@@ -31,6 +31,7 @@ var config = {
   , key: 'sid'
   , expiry: 14 * 24 * 60 * 60
   }
+, email_activation: false
 };
 
 module.exports = config;
