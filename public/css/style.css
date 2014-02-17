@@ -53,6 +53,10 @@ code {
   margin: 5px;
 }
 
+.offset0 {
+  margin-left: 4px;
+}
+
 #flash-container {
   margin-top: 48px;
 }
