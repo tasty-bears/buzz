@@ -8,7 +8,7 @@ var Events = function () {
       if (err) {
         throw err;
       }
-      self.respondWith(events, {type:'Event'});
+      self.respond({events: events});
     });
   };
 
@@ -50,12 +50,7 @@ var Events = function () {
         throw new geddy.errors.NotFoundError();
       }
       else {
-        geddy.model.Course.first(event.courseId, function (err, data) {
-          if (err){
-            throw err;
-          }
-          self.respond({event: event, course: data});
-        });
+        self.respond({event: event});
       }
     });
   };

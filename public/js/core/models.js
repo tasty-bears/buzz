@@ -62,12 +62,17 @@ var Event = function () {
   this.validatesPresent('name');
   this.belongsTo('Course');
 
-  // this.courseName = function () {
-  //   var self = this;
-
-  //   var course = geddy.model.Course.first(self.courseId);
-  //   return course.name;
-  // };
+  this.courseHasName = function () {
+    var self = this;
+    var name = null;
+    geddy.model.Course.first(self.courseId, function(err, course) {
+      if (err) {
+        throw err;
+      }
+      name = course.name;
+    });
+    return name;
+  };
   
   // this.validatesPresent('description');
 
