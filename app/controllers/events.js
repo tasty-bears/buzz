@@ -1,5 +1,9 @@
+var passport = require('../helpers/passport')
+  , requireAuth = passport.requireAuth;
+
 var Events = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
+  this.before(requireAuth, {});
 
   this.index = function (req, resp, params) {
     var self = this;
@@ -123,3 +127,4 @@ var Events = function () {
 };
 
 exports.Events = Events;
+
