@@ -27,10 +27,17 @@ var Main = function () {
       var data = {
         user: null
       , authType: null
+      , courses: null
       };
       if (user) {
         data.user = user;
         data.authType = authTypes[self.session.get('authType')].name;
+        geddy.model.Course.all(function(err, allCourses) {
+          if (err) {
+            throw err;
+          }
+          data.courses = allCourses;
+        }); 
       }
       self.respond(data, {
         format: 'html'

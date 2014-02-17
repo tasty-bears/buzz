@@ -2,14 +2,22 @@
 <div class="hero-unit geddy-welcome-box">
 
   <% if (user) { %>
-    <h1 class="profile-header">
-      Hello<% if (user.givenName) { %>, <%= user.givenName %><% } %>
+    <h1 class="profile-header pull-left">
+      <% if (user.givenName) { %> <%= user.givenName %><% } %>
     </h1>
-    <p class="signin-subtext">You've successfully logged in to this Geddy app (via <%= authType %>).</p>
-    <hr/>
     
-    <p><%- linkTo('See Courses', '/courses', {class: 'btn btn-primary btn-large'}) %></p>
-    <p><%- linkTo('See Events', '/events', {class: 'btn btn-primary btn-large'}) %></p>
+    <% if (courses) { %>
+    <% for (var i = 0, ii = courses.length; i < ii; i++) { %>
+      <div class="row list-item" id="course-<%= courses[i].id; %>">
+        <div class="span12">
+          <h3><%- linkTo(courses[i].name, coursePath(courses[i].id)); %></h3>
+        </div>
+      </div>
+      <% } %>
+    <% } %>
+
+    <!-- <p><%- linkTo('See Courses', '/courses', {class: 'btn btn-primary btn-large'}) %></p>
+    <p><%- linkTo('See Events', '/events', {class: 'btn btn-primary btn-large'}) %></p> -->
 
   <% } else { %>
     <h1>Hello, stranger</h1>
