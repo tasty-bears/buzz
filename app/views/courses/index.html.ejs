@@ -8,7 +8,7 @@
 <% for (var i = 0, ii = courses.length; i < ii; i++) { %>
   <div class="row list-item" id="course-<%= courses[i].id; %>">
     <div class="span12">
-      <h3><%- linkTo(courses[i].name, coursePath(courses[i].id)); %></h3>
+      <h3><%- linkTo(courses[i].name + " " + courses[i].courseNumber, coursePath(courses[i].id)); %></h3>
     </div>
     
   </div>

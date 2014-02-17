@@ -10,12 +10,29 @@ var Event = function () {
   this.validatesPresent('name');
   this.belongsTo('Course');
 
-  // this.courseName = function () {
-  //   var self = this;
+  this.courseHasName = function () {
+    var self = this;
+    var name = null;
+    geddy.model.Course.first(self.courseId, function(err, course) {
+      if (err) {
+        throw err;
+      }
+      name = course.name;
+    });
+    return name;
+  };
 
-  //   var course = geddy.model.Course.first(self.courseId);
-  //   return course.name;
-  // };
+  this.courseHasNumber = function () {
+    var self = this;
+    var name = null;
+    geddy.model.Course.first(self.courseId, function(err, course) {
+      if (err) {
+        throw err;
+      }
+      number = course.courseNumber;
+    });
+    return number;
+  };
   
   // this.validatesPresent('description');
 
