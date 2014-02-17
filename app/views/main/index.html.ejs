@@ -2,12 +2,10 @@
 <div class="hero-unit geddy-welcome-box">
 
   <% if (user) { %>
-    <h1>
+    <h1 class="profile-header">
       Hello<% if (user.givenName) { %>, <%= user.givenName %><% } %>
     </h1>
-    <p>You've successfully logged in to this Geddy app (via <%= authType %>).</p>
-    <p><%- linkTo('Click here to log back out', logoutPath) %></p>
-
+    <p class="signin-subtext">You've successfully logged in to this Geddy app (via <%= authType %>).</p>
     <hr/>
     
     <p><%- linkTo('See Courses', '/courses', {class: 'btn btn-primary btn-large'}) %></p>
