@@ -28,6 +28,7 @@ var Main = function () {
         user: null
       , authType: null
       , courses: null
+      , events: null
       };
       if (user) {
         data.user = user;
@@ -37,6 +38,12 @@ var Main = function () {
             throw err;
           }
           data.courses = allCourses;
+        }); 
+        geddy.model.Event.all(function(err, allEvents) {
+          if (err) {
+            throw err;
+          }
+          data.events = allEvents;
         }); 
       }
       self.respond(data, {

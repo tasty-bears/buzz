@@ -6,6 +6,7 @@
       <% if (user.givenName) { %> <%= user.givenName %><% } %>
     </h1>
     
+    <h2> Courses </h2>
     <% if (courses) { %>
     <% for (var i = 0, ii = courses.length; i < ii; i++) { %>
       <div class="row list-item" id="course-<%= courses[i].id; %>">
@@ -16,6 +17,16 @@
       <% } %>
     <% } %>
 
+    <h2> Events </h2>
+    <% if (events) { %>
+    <% for (var i = 0, ii = events.length; i < ii; i++) { %>
+      <div class="row list-item" id="event-<%= events[i].id; %>">
+        <div class="span12">
+          <h3><%- linkTo(events[i].name, coursePath(events[i].id)); %></h3>
+        </div>
+      </div>
+      <% } %>
+    <% } %>
     <!-- <p><%- linkTo('See Courses', '/courses', {class: 'btn btn-primary btn-large'}) %></p>
     <p><%- linkTo('See Events', '/events', {class: 'btn btn-primary btn-large'}) %></p> -->
 
