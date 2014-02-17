@@ -10,7 +10,7 @@
     <div class="span12">
       <h3 class="eventLink">
       <!-- implement courseName() function to display course name for each class -->
-      <%- linkTo(geddy.date.strftime(events[i].date, "%m/%d") + " - " + events[i].courseHasName() +  " - " + events[i].name, eventPath(events[i].id)); %></h3>
+      <%- linkTo(geddy.date.strftime(events[i].date, "%m/%d") + " - " + events[i].courseHasName() + " " + events[i].courseHasNumber() +  " - " + events[i].name, eventPath(events[i].id)); %></h3>
     </div>
     <!-- <div class="span4">
       <h3><i class="icon-list-alt"></i><%= events[i].id; %></h3>

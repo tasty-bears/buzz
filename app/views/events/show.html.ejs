@@ -1,5 +1,5 @@
 <div class="hero-unit">
-  <h2 class="name"><%- geddy.date.strftime(event.date, "%m/%d") + " - " + event.courseHasName() + " - " + event.name; %></h2>
+  <h2 class="name"><%- geddy.date.strftime(event.date, "%m/%d") + " - " + event.courseHasName() + " " + event.courseHasNumber() + " - " + event.name; %></h2>
   <%- linkTo('Edit this event', editEventPath(params.id), {class: 'btn pull-right'}); %>
   <%- linkTo('Back to list', eventPath(''), {class: 'btn pull-right'}); %>
 </div>

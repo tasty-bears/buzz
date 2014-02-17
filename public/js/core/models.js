@@ -73,6 +73,18 @@ var Event = function () {
     });
     return name;
   };
+
+  this.courseHasNumber = function () {
+    var self = this;
+    var name = null;
+    geddy.model.Course.first(self.courseId, function(err, course) {
+      if (err) {
+        throw err;
+      }
+      number = course.courseNumber;
+    });
+    return number;
+  };
   
   // this.validatesPresent('description');
 
