@@ -13,7 +13,7 @@
 </div>
 
 <div class="span4 offset0 pull-left courses-list">
-  <h2> Courses </h2>
+  <h2> My Courses </h2>
   <% if (courses) { %>
     <% for (var i = 0, ii = courses.length; i < ii; i++) { %>
       <div class="row list-item span4 offset0 pull-left" id="course-<%= courses[i].id; %>">
@@ -26,7 +26,7 @@
 </div>
 
 <div class="span7 pull-right events-list">
-  <h2> Events </h2>
+  <h2> My Events </h2>
   <% if (events) { %>
     <% for (var i = 0, ii = events.length; i < ii; i++) { %>
       <div class="row list-item span7 pull-right" id="event-<%= events[i].id; %>">
@@ -39,9 +39,9 @@
 </div>
   <% } else { %>
     <h1>Hello, stranger</h1>
-    <p>You're not authenticated with this app.</p>
-    <p><%- linkTo('Click here to create a user account.', addUserPath) %></p>
-    <p><%- linkTo('Click here to log in with Facebook or Twitter.', loginPath) %></p>
+    <!-- <p>You're not authenticated with this app.</p> -->
+    <p><%- linkTo('Create a new Angora Account', addUserPath) %></p>
+    <p><%- linkTo('Log in', loginPath) %></p>
 </div>
   <% } %>
 
