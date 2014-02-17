@@ -1,11 +1,36 @@
 <div class="hero-unit">
-  <h2 class="id"><%= user.givenName %></h2>
+  <h2 class="id"><%= user.givenName + " " + user.familyName%></h2>
   <%- linkTo('Edit this user', editUserPath(params.id), {class: 'btn pull-right'}); %>
-  <%- linkTo('Back to list', userPath(''), {class: 'btn pull-right'}); %>
+  <!-- <%- linkTo('Back to list', userPath(''), {class: 'btn pull-right'}); %> -->
 </div>
 
-<h2>User Properties</h2>
-<% for(var i in user) { -%>
+<h2>Account Info</h2>
+<div class="row list-item">
+	<div class="span4">
+		<h3>Username</h3>
+	</div>
+	<div class="span8">
+		<h3><%= user.username%></h3>
+	</div>
+</div>
+<div class="row list-item">
+	<div class="span4">
+		<h3>Email</h3>
+	</div>
+	<div class="span8">
+		<h3><%= user.email%></h3>
+	</div>
+</div>
+<div class="row list-item">
+	<div class="span4">
+		<h3>Active Since</h3>
+	</div>
+	<div class="span8">
+		<h3><%= geddy.date.strftime(user.activatedAt, "%m/%d/%Y")%></h3>
+	</div>
+</div>
+
+<!-- <% for(var i in user) { -%>
 <% if(i !== 'saved') { -%>
 <div class="row list-item">
   <div class="span4">
@@ -15,4 +40,4 @@
     <h3><i class="icon-list-alt"></i><span class="<%= i %>"><%= user[i] %></span></h3>
   </div>
 </div>
-<% } -%><% } -%>
+<% } -%><% } -%> -->
