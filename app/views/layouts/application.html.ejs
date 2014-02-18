@@ -15,7 +15,12 @@
           </div><!--/.nav-collapse -->
           <div class="nav-collapse pull-right">
             <ul class="nav">
+            <% if (user) { %>
+              <li><%- linkTo(user.givenName, userPath(user.id)); %><li>
               <li><%- linkTo('Log out', logoutPath) %></li>
+            <% } else { %>
+              <li><%- linkTo('Log in', loginPath) %></li>
+            <% } %>
             </ul>
           </div>
         </div>

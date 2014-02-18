@@ -37,7 +37,7 @@ code {
 }
 
 .list-item {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 .list-item div {
@@ -53,8 +53,12 @@ code {
   margin: 5px;
 }
 
+.list-height {
+  line-height: 0px;
+}
+
 .offset0 {
-  margin-left: 4px;
+  margin-left: 0px;
 }
 
 #flash-container {
@@ -67,4 +71,5 @@ code {
     margin-top: 10px;
   }
 }
+
 

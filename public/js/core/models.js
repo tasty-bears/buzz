@@ -51,7 +51,8 @@ Course = geddy.model.register('Course', Course);
 
 (function () {
 var Event = function () {
-
+  // change name to summary
+  // change summary to not required
   this.defineProperties({
     name: {type: 'string', required: true},
     description: {type: 'string'},
@@ -85,7 +86,7 @@ var Event = function () {
     });
     return number;
   };
-  
+
   // this.validatesPresent('description');
 
   /*

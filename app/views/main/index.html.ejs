@@ -12,26 +12,32 @@
     <p><%- linkTo('See Events', '/events', {class: 'btn btn-primary btn-large'}) %></p> -->
 </div>
 
-<div class="span4 offset0 pull-left courses-list">
-  <h2> Courses </h2>
+<h2 class="span4 offset0"> My Courses </h2>
+<h2 class="span8 offset0 pull-right"> My Events </h2>
+
+<div class="span4 offset0 courses-list ">
   <% if (courses) { %>
     <% for (var i = 0, ii = courses.length; i < ii; i++) { %>
-      <div class="row list-item span4 offset0 pull-left" id="course-<%= courses[i].id; %>">
-        <div>
-          <h4><%- linkTo(courses[i].name + " " + courses[i].courseNumber, coursePath(courses[i].id)); %></h4>
+      <div class="row list-item pull-left" id="course-<%= courses[i].id; %>">
+        <div class="span4">
+          <h3 class="list-height"><%- linkTo(courses[i].name + " " + courses[i].courseNumber, coursePath(courses[i].id)); %></h3>
         </div>
       </div>
     <% } %>
   <% } %>
 </div>
 
-<div class="span7 pull-right events-list">
-  <h2> Events </h2>
+<div class="span8 offset0 events-list pull-right">
   <% if (events) { %>
+  <% events = events.sort(function(a, b){ %>
+      <% if(a.date < b.date) return -1; %>
+      <% if(a.date > b.date) return 1; %>
+      <% return 0; %>
+    <% }); %>
     <% for (var i = 0, ii = events.length; i < ii; i++) { %>
-      <div class="row list-item span7 pull-right" id="event-<%= events[i].id; %>">
-        <div>
-          <h4><%- linkTo(geddy.date.strftime(events[i].date, "%m/%d") + " - " + events[i].courseHasName() + " " + events[i].courseHasNumber() +  " - " + events[i].name, eventPath(events[i].id)); %></h4>
+      <div class="row list-item" id="event-<%= events[i].id; %>">
+        <div class="span8">
+          <h3 class="list-height"><%- linkTo(geddy.date.strftime(events[i].date, "%m/%d") + " - " + events[i].courseHasName() + " " + events[i].courseHasNumber() +  " - " + events[i].name, eventPath(events[i].id)); %></h3>
         </div>
       </div>
     <% } %>
@@ -39,9 +45,10 @@
 </div>
   <% } else { %>
     <h1>Hello, stranger</h1>
-    <p>You're not authenticated with this app.</p>
-    <p><%- linkTo('Click here to create a user account.', addUserPath) %></p>
-    <p><%- linkTo('Click here to log in with Facebook or Twitter.', loginPath) %></p>
+    <!-- <p>You're not authenticated with this app.</p> -->
+    <p><%- linkTo('Create a new Angora Account', addUserPath) %></p>
+    <p><%- linkTo('Log in', loginPath) %></p>
 </div>
   <% } %>
+
 
