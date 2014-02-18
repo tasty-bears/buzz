@@ -8,9 +8,9 @@
 <% events.forEach(function (event) { %>
 <div class="row list-item">
 	<div class="span12">
-		<h4>
+		<h3 class="list-height">
   			<%- linkTo(geddy.date.strftime(event.date, "%m/%d") + " - " + event.name  , {controller: 'events', action: 'show', id: event.id}); %>
-		</h4>
+		</h3>
 	</div>
 </div>
 <% }); %>

@@ -37,7 +37,7 @@ code {
 }
 
 .list-item {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 .list-item div {
@@ -51,6 +51,10 @@ code {
 
 .list-item div h3 i {
   margin: 5px;
+}
+
+.list-height {
+  line-height: 0px;
 }
 
 .offset0 {
@@ -67,4 +71,5 @@ code {
     margin-top: 10px;
   }
 }
+
 
