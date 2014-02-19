@@ -2,3 +2,4 @@
 _datastore.json
 _session_store.json
 node_modules
+config/secrets.json
