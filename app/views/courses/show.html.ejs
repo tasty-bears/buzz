@@ -1,0 +1,17 @@
+<div class="hero-unit">
+  <h2 class="name"><%= course.name + " " + course.courseNumber %></h2>
+  <%- linkTo('Edit this course', editCoursePath(params.id), {class: 'btn pull-right'}); %>
+  <%- linkTo('Back to list', coursePath(''), {class: 'btn pull-right'}); %>
+</div>
+
+<h3>Events for this Course</h3>
+<% events.forEach(function (event) { %>
+<div class="row list-item">
+	<div class="span12">
+		<h3 class="list-height">
+  			<%- linkTo(geddy.date.strftime(event.date, "%m/%d") + " - " + event.name  , {controller: 'events', action: 'show', id: event.id}); %>
+		</h3>
+	</div>
+</div>
+<% }); %>
+<%- linkTo('Create a new Event', addEventPath, {class: 'btn pull-right'}); %>

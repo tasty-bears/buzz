@@ -1,0 +1,17 @@
+<div class="hero-unit">
+  <h2>All Courses</h2>
+  <%- linkTo('Create a new Course', addCoursePath, {class: 'btn pull-right'}); %>
+</div>
+
+<div id="courses-list">
+<% if (courses) { %>
+<% for (var i = 0, ii = courses.length; i < ii; i++) { %>
+  <div class="row list-item" id="course-<%= courses[i].id; %>">
+    <div class="span12">
+      <h3 class="list-height"><%- linkTo(courses[i].name + " " + courses[i].courseNumber, coursePath(courses[i].id)); %></h3>
+    </div>
+
+  </div>
+<% } %>
+<% } %>
+</div>
