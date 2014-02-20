@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-npm install geddy
-npm install nodemailer
+cd ..
+sudo npm install geddy -g
+npm install 
