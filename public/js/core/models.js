@@ -63,27 +63,35 @@ var Event = function () {
   this.validatesPresent('name');
   this.belongsTo('Course');
 
+  //returns name of course that event belongs to
   this.courseHasName = function () {
     var self = this;
     var name = null;
+    //searches all courses for course that the event belongs to
     geddy.model.Course.first(self.courseId, function(err, course) {
       if (err) {
         throw err;
       }
+      // assign name of course to variable name
       name = course.name;
     });
+    //returns course's name
     return name;
   };
 
+  //returns courseNumber of course that event belongs to
   this.courseHasNumber = function () {
     var self = this;
     var name = null;
+    //searches all courses for course that the event belongs to
     geddy.model.Course.first(self.courseId, function(err, course) {
       if (err) {
         throw err;
       }
+      //assign course's number to variable number
       number = course.courseNumber;
     });
+    //return value
     return number;
   };
 
@@ -126,6 +134,7 @@ Event.someStaticProperty = 'YYZ';
 */
 
 Event = geddy.model.register('Event', Event);
+
 }());
 
 (function () {
