@@ -10,8 +10,11 @@
     "passport-yammer": "0.1.x",
     "bcrypt": "0.7.x"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "1.17.x"
+  },
   "engines": {
     "node": "0.8.x"
   }
 }
+
