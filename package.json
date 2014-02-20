@@ -11,9 +11,7 @@
     "bcrypt": "0.7.x"
   },
   "devDependencies": {
-    "jasmine-node": "",
-    "jsdom": "",
-    "jasmine-jquery": ""
+    "mocha": "1.17.x"
   },
   "engines": {
     "node": "0.8.x"
