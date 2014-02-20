@@ -17,9 +17,16 @@
 */
 
 var Application = function () {
+    var self = this;
+    self.user = null;
+    if(self.session) {
+        geddy.model.User.first({id: self.session.get('userId')}, function (err, user) {
+        	if (err) {
+            	throw err;
+        	}
+        	self.user = user;
+        });
+    }
 };
 
 exports.Application = Application;
-
-
-

@@ -8,7 +8,7 @@ var Events = function () {
   this.index = function (req, resp, params) {
     var self = this;
 
-    geddy.model.Event.all(function(err, events) {
+    geddy.model.Event.all({createdAt: {ne: null}}, {sort: {date: 'asc'}},function(err, events) {
       if (err) {
         throw err;
       }
@@ -127,4 +127,5 @@ var Events = function () {
 };
 
 exports.Events = Events;
+
 
