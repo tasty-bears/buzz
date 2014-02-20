@@ -21,19 +21,9 @@ var config = {
 , detailedErrors: false
 , hostname: 'www.tastybears.com/angora'
 , port: 4000
-, model: {
-    defaultAdapter: 'mongo'
-  }
-, db: {
-    mongo: {
-      username: null
-    , dbname: 'production'
-    , prefix: null
-    , password: null
-    , host: 'localhost'
-    , port: 27017
-    }
-  }
+
+, email_activation: false
+/*
 , email_activation: true
 , mailer: {
     fromAddressUsername: 'noreply'
@@ -50,7 +40,21 @@ var config = {
       }
     }
   }
+*/
 
+, model: {
+    defaultAdapter: 'mongo'
+  }
+, db: {
+    mongo: {
+      username: null
+    , dbname: 'production'
+    , prefix: null
+    , password: null
+    , host: 'localhost'
+    , port: 27017
+    }
+  }
 /* // Using Postgres as the default, with only a Postgres DB
 , model: {
     defaultAdapter: 'postgres'
@@ -65,7 +69,6 @@ var config = {
     }
   }
 */
-
 /* // Using MySQL as the default, with only a MySQL DB
 , model: {
     defaultAdapter: 'mysql'
@@ -79,7 +82,6 @@ var config = {
     }
   }
 */
-
 /* // Using Postgres as the default, with both Postgres and Riak
 , model: {
     defaultAdapter: 'postgres'
