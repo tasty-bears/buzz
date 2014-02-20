@@ -42,6 +42,7 @@ var config = {
   }
 */
 
+/* //TODO: use mongo on prod
 , model: {
     defaultAdapter: 'mongo'
   }
@@ -54,7 +55,7 @@ var config = {
     , host: 'localhost'
     , port: 27017
     }
-  }
+  }*/
 /* // Using Postgres as the default, with only a Postgres DB
 , model: {
     defaultAdapter: 'postgres'
