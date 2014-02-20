@@ -9,3 +9,5 @@ cp $scriptdir/_datastore.json $scriptdir/../
 cd $scriptdir/..
 sudo npm install geddy -g
 npm install 
+
+geddy gen secret
