@@ -9,7 +9,3 @@ npm install
 
 # setup db
 cp $scriptdir/_datastore.json $scriptdir/../
-
-# setup secrets
-cp $scriptdir/fakesecrets.json $scriptdir/../config/secrets.json
-geddy gen secret

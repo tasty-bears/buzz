@@ -2,7 +2,6 @@
 .env
 _datastore.json
 _session_store.json
-config/secrets.json
 
 # directories
 node_modules
