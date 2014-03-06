@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-scriptdir=${0%/*}
+scriptdir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 # install packages
 cd $scriptdir/..
