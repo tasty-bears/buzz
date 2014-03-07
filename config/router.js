@@ -53,6 +53,7 @@ router.get('/auth/facebook/callback').to('Auth.facebookCallback');
 router.resource('users');
 router.resource('events');
 router.resource('courses');
+router.resource('posts');
 
 // general / fallback
 router.match('/:controller/:action').to({controller: ':controller', action: ':action'});
