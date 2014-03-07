@@ -53,4 +53,5 @@ router.resource('users');
 router.resource('events');
 router.resource('courses');
 
+router.resource('posts');
 exports.router = router;
