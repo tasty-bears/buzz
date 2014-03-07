@@ -1,52 +1,58 @@
 var Post = function () {
 
   this.defineProperties({
-    timestamp: {type: 'datetime'},
+    // we will want to query for posts primarily by their datetime
+    timestamp: {type: 'datetime', required: true},
     locationDescription: {type: 'string'},
     locationLat: {type: 'number'},
     locationLong: {type: 'number'},
-    postingUser: {type: 'object'},
-    course: {type: 'object'},
-    public: {type: 'boolean'},
+    // querying by posting user will also be important
+    postingUser: {type: 'object', required: true},
     comments: {type: 'object'},
-    nativePost: {type: 'boolean'}
+    nativePost: {type: 'boolean', required: true}
   });
 
-  /*
-  this.property('login', 'string', {required: true});
-  this.property('password', 'string', {required: true});
-  this.property('lastName', 'string');
-  this.property('firstName', 'string');
+  // each post is associated with one event
+  this.belongsTo('Event');
+  // each event may have many posts
 
-  this.validatesPresent('login');
-  this.validatesFormat('login', /[a-z]+/, {message: 'Subdivisions!'});
-  this.validatesLength('login', {min: 3});
-  // Use with the name of the other parameter to compare with
-  this.validatesConfirmed('password', 'confirmPassword');
-  // Use with any function that returns a Boolean
-  this.validatesWithFunction('password', function (s) {
-      return s.length > 0;
-  });
-
-  // Can define methods for instances like this
-  this.someMethod = function () {
-    // Do some stuff
+  // returns the name of event that the post belongs to
+  this.getEventName = function () {
+    var self = this;
+    var name = null;
+    // searches all events for event that the post belongs to
+    geddy.model.Event.first(self.eventId, function(err, event) {
+      if (err) {
+        throw err;
+      }
+      // assign name of event to variable name
+      name = event.name;
+    });
+    // returns event's name
+    return name;
   };
-  */
+
+  // returns the dateTime of the event that the post belongs to
+  this.getEventDateTime = function () {
+    var self = this;
+    var dateTime = null;
+    // search all events for the event that the post belongs to
+    geddy.model.Event.first(self.eventId, function(err, event) {
+      if (err) {
+        throw err;
+      }
+      // assign dateTime of event to dateTime
+      dateTime = event.dateTime;
+    });
+    // return event's dateTime
+    return name;
+  }
+
+  // TODO write method to add comment to post
+  // comment will have text and associated posting user
+
+  // TODO write method to somehow associate file with post
 
 };
-
-/*
-// Can also define them on the prototype
-Post.prototype.someOtherMethod = function () {
-  // Do some other stuff
-};
-// Can also define static methods and properties
-Post.someStaticMethod = function () {
-  // Do some other stuff
-};
-Post.someStaticProperty = 'YYZ';
-*/
 
 exports.Post = Post;
-

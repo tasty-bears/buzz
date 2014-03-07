@@ -78,3 +78,4 @@ Event.someStaticProperty = 'YYZ';
 */
 
 Event = geddy.model.register('Event', Event);
+exports.Event = Event;
