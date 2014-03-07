@@ -5,11 +5,12 @@ var Event = function () {
     name: {type: 'string', required: true},
     description: {type: 'string'},
     isPrivate: {type: 'boolean'},
-    date: {type: 'date'}
+    dateTime: {type: 'datetime'}
   });
 
   this.validatesPresent('name');
   this.belongsTo('Course');
+  this.hasMany('Post');
 
   //returns name of course that event belongs to
   this.courseHasName = function () {
@@ -82,4 +83,4 @@ Event.someStaticProperty = 'YYZ';
 */
 
 Event = geddy.model.register('Event', Event);
-
+exports.Event = Event;

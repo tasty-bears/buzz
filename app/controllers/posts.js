@@ -34,4 +34,3 @@ var Posts = function () {
 };
 
 exports.Posts = Posts;
-
