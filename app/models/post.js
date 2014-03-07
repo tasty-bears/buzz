@@ -9,12 +9,17 @@ var Post = function () {
     // querying by posting user will also be important
     postingUser: {type: 'object', required: true},
     comments: {type: 'object'},
+    // is the post natively created in Buzz, or pulled in from Twitter/Facebook?
     nativePost: {type: 'boolean', required: true}
   });
 
   // each post is associated with one event
   this.belongsTo('Event');
   // each event may have many posts
+  this.hasMany('Comment');
+
+  //? is this correct
+  this.validatesPresent('postingUser');
 
   // returns the name of event that the post belongs to
   this.getEventName = function () {
@@ -56,3 +61,4 @@ var Post = function () {
 };
 
 exports.Post = Post;
+//? TODO register
