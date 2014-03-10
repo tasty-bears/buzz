@@ -3,3 +3,11 @@ _datastore.json
 _session_store.json
 node_modules
 config/secrets.json
+encodings.xml
+misc.xml
+modules.xml
+scope_settings.xml
+.name
+vcs.xml
+web.iml
+workspace.xml
