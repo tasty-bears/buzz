@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "",
   "dependencies": {
-    "geddy": "~0.11.8",
+    "geddy": "~0.12.7",
     "jake": "0.5.x",
     "passport": "0.1.x",
     "passport-twitter": "0.1.x",
