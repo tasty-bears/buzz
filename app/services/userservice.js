@@ -6,6 +6,6 @@ var UserService = function() {
 			action(null, data);
 		});
 	}
-}
+};
 
 module.exports = new UserService();

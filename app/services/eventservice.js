@@ -83,7 +83,6 @@ var EventService = function() {
 
 											post.getEvent(function(err, event) {
 												event.getUser(function(err, owner) {
-													// TODO : single or double quote here?
 													post.author = owner ? owner : {name: "No Author"};
 													post.event = event;
 													unpacked.push(post);
@@ -105,6 +104,6 @@ var EventService = function() {
 			}
 		}());
 	};
-}
+};
 
 module.exports = new EventService();

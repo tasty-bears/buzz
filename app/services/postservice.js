@@ -85,7 +85,6 @@ var PostService = function() {
 											comment.getPost(function(err, post) {
 												post.getEvent(function(err, event) {
 													event.getUser(function(err, user) {
-														// TODO : single or double quote here?
 														comment.author = owner ? owner : {name: "No Author"};
 														comment.post = post;
 														unpacked.push(comment);
@@ -108,6 +107,6 @@ var PostService = function() {
 			}
 		}());
 	};
-}
+};
 
 module.exports = new PostService();
