@@ -9,7 +9,7 @@ var Event = function () {
   });
 
   this.validatesPresent('name');
-  this.belongsTo('Course');
+  this.belongsTo('Schedule');
 
   //returns name of course that event belongs to
   this.courseHasName = function () {

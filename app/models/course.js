@@ -7,7 +7,12 @@ var Course = function () {
     professor: {type: 'string'}
   });
 
-  this.hasMany('Events');
+  this.hasOne('Schedule');
+
+  this.hasMany('Enrollments');
+  this.hasMany('Users',{through: 'Enrollments'});
+
+ 
 
   /*
   this.property('login', 'string', {required: true});
