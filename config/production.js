@@ -42,66 +42,19 @@ var config = {
   }
 */
 
-/* //TODO: use mongo on prod
 , model: {
     defaultAdapter: 'mongo'
   }
 , db: {
     mongo: {
-      username: null
-    , dbname: 'production'
+      username: process.env.MONGO_USER
+    , dbname: process.env.MONGO_NAME
     , prefix: null
-    , password: null
-    , host: 'localhost'
-    , port: 27017
-    }
-  }*/
-/* // Using Postgres as the default, with only a Postgres DB
-, model: {
-    defaultAdapter: 'postgres'
-  }
-, db: {
-    postgres: {
-      user: process.env.USER
-    , database: process.env.USER
-    , password: null
-    , host: null
-    , port: 5432
+    , password: process.env.MONGO_PASS
+    , host: process.env.MONGO_HOST
+    , port: process.env.MONGO_PORT
     }
   }
-*/
-/* // Using MySQL as the default, with only a MySQL DB
-, model: {
-    defaultAdapter: 'mysql'
-  }
-, db: {
-    mysql: {
-      host: 'localhost'
-    , user: process.env.USER
-    , database: process.env.USER
-    , password: null
-    }
-  }
-*/
-/* // Using Postgres as the default, with both Postgres and Riak
-, model: {
-    defaultAdapter: 'postgres'
-  }
-, db: {
-    postgres: {
-      user: process.env.USER
-    , database: process.env.USER
-    , password: null
-    , host: null
-    , port: 5432
-    }
-  , riak: {
-      protocol: 'http'
-    , host: 'localhost'
-    , port: 8098
-  }
-  }
-*/
 };
 
 module.exports = config;
