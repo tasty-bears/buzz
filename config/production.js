@@ -19,7 +19,7 @@
 var config = {
   appName: 'Angora'
 , detailedErrors: false
-, hostname: 'www.tastybears.com/angora'
+, hostname: 'localhost'
 , port: 4000
 
 , email_activation: false
