@@ -1,5 +1,7 @@
 var passport = require('../helpers/passport')
-  , requireAuth = passport.requireAuth;
+  , requireAuth = passport.requireAuth
+  , eventservice = require('../services/eventservice');
+
 
 var Events = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
@@ -45,7 +47,20 @@ var Events = function () {
 
   this.show = function (req, resp, params) {
     var self = this;
-
+    var data = {
+        params: params,
+        event: null,
+        events: null,
+        posts: null,
+        selectedEvent: -1
+    };
+    geddy.model.Event.all(function(err, events) {
+       if (err) {
+           throw err;
+       } else {
+           data.events = events;
+       }
+    });
     geddy.model.Event.first(params.id, function(err, event) {
       if (err) {
         throw err;
@@ -54,7 +69,15 @@ var Events = function () {
         throw new geddy.errors.NotFoundError();
       }
       else {
-        self.respond({event: event});
+        data.event = event;
+        data.selectedEvent = event.id;
+        var posts = eventservice.getPostsToDisplay(data.events, data.selectedEvent, function(err, posts) {
+            if (err) {
+                throw err;
+            } else {
+                self.respond(data);
+            }
+        });
       }
     });
   };

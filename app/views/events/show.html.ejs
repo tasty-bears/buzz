@@ -1,3 +1,4 @@
+
 <div class="hero-unit">
   <h2 class="name"><%- geddy.date.strftime(event.date, "%m/%d") + " - " + event.courseHasName() + " " + event.courseHasNumber() + " - " + event.name; %></h2>
   <%- linkTo('Edit this event', editEventPath(params.id), {class: 'btn pull-right'}); %>
@@ -22,3 +23,17 @@
   </div>
 </div>
 <% } -%><% } -%> -->
+
+<h3>Posts</h3>
+<%- linkTo('Create a new Post',eventPath(''), {class: 'btn pull-right'}); %>
+<!--<div style="background: white; width: 200px; height: 200px; position:
+absolute; left: 50%; top: 50%; margin-left: -100px; margin-top: -100px"
+id="modal">I'm a modal</div>-->
+<div class="row list-item">
+	<div class="span12">
+		<% for (var i in posts) { -%>
+		<%if (i !== 'saved') { -%>
+		<p><%= i %></p>
+		<% } -%><% } -%>
+	</div>
+</div>

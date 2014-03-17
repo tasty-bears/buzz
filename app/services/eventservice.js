@@ -64,7 +64,7 @@ var EventService = function() {
 							if (err) {
 								action(err, null);
 							} else {
-								tweets = tweets.concat(eventPosts);
+								posts = posts.concat(eventPosts);
 								if (i == len1-1) {
 									posts.sort(function(a,b) {
 										if (a.postdate.getTime() > b.postdate.getTime()) {
