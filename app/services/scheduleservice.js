@@ -2,4 +2,4 @@ var ScheduleService = function() {
 	
 }
 
-exports.ScheduleService = ScheduleService;
+module.exports = new ScheduleService();
