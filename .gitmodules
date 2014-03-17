@@ -1,0 +1,3 @@
+[submodule "lib/jsLPSolver"]
+	path = lib/jsLPSolver
+	url = https://github.com/JWally/jsLPSolver.git
