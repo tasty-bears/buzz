@@ -15,14 +15,24 @@ var Event = function () {
   this.courseHasName = function () {
     var self = this;
     var name = null;
+    var courseId = null;
+    
+    //searches the list of schedules for the schedule that the event belongs to
+    geddy.model.Schedule.first(self.scheduleId, function(err, schedule) {
+      if (err) {
+        throw err;
+      }
+      //assign course id of schedule to the local var
+      courseId = schedule.courseId;
+    });
     //searches all courses for course that the event belongs to
-    geddy.model.Course.first(self.courseId, function(err, course) {
+    geddy.model.Course.first(self.courseId, function(err, course){
       if (err) {
         throw err;
       }
       // assign name of course to variable name
       name = course.name;
-    });
+    })
     //returns course's name
     return name;
   };
@@ -30,8 +40,18 @@ var Event = function () {
   //returns courseNumber of course that event belongs to
   this.courseHasNumber = function () {
     var self = this;
-    var name = null;
-    //searches all courses for course that the event belongs to
+    var number = null;
+    var courseId = null;
+
+    //searches all schedules for the schedule the event belongs to
+    geddy.model.Schedule.first(self.scheduleId, function(err, schedule) {
+      if (err) {
+        throw err;
+      }
+      //assign course id of schedule to the local var
+      courseId = schedule.courseId;
+    });
+    //searches all courses for course that the schedule belongs to
     geddy.model.Course.first(self.courseId, function(err, course) {
       if (err) {
         throw err;

@@ -106,7 +106,17 @@ var Event = function () {
   this.courseHasNumber = function () {
     var self = this;
     var number = null;
-    //searches all courses for course that the event belongs to
+    var courseId = null;
+
+    //searches all schedules for the schedule the event belongs to
+    geddy.model.Schedule.first(self.scheduleId, function(err, schedule) {
+      if (err) {
+        throw err;
+      }
+      //assign course id of schedule to the local var
+      courseId = schedule.courseId;
+    });
+    //searches all courses for course that the schedule belongs to
     geddy.model.Course.first(self.courseId, function(err, course) {
       if (err) {
         throw err;
@@ -176,6 +186,9 @@ Passport = geddy.model.register('Passport', Passport);
 
 (function () {
 var Schedule = function() {
+	this.defineProperties({
+    	name: {type: 'string', required: true},
+  	});
 	this.belongsTo('Course');
 	this.hasMany('Events');
 }
