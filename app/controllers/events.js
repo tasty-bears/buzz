@@ -77,7 +77,20 @@ var Events = function () {
 
   this.show = function (req, resp, params) {
     var self = this;
-
+    var data = {
+        params: params,
+        event: null,
+        events: null,
+        posts: null,
+        selectedEvent: -1
+    };
+    geddy.model.Event.all(function(err, events) {
+       if (err) {
+           throw err;
+       } else {
+           data.events = events;
+       }
+    });
     geddy.model.Event.first(params.id, function(err, event) {
       if (err) {
         throw err;
@@ -86,9 +99,15 @@ var Events = function () {
         throw new geddy.errors.NotFoundError();
       }
       else {
-        var cName = eventservice.getCourseName(event);
-        var cNum = eventservice.getCourseNumber(event);
-        self.respond({event: event, eventCourseName: cName, eventCourseNumber: cNum});
+        data.event = event;
+        data.selectedEvent = event.id;
+        var posts = eventservice.getPostsToDisplay(data.events, data.selectedEvent, function(err, posts) {
+            if (err) {
+                throw err;
+            } else {
+                self.respond(data);
+            }
+        });
       }
     });
   };
@@ -161,3 +180,5 @@ var Events = function () {
 };
 
 exports.Events = Events;
+
+
