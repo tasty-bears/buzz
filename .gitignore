@@ -1,5 +1,11 @@
-*.log
+# files
+.env
 _datastore.json
 _session_store.json
+
+# directories
 node_modules
-config/secrets.json
+
+# patterns
+*.log
+
