@@ -143,6 +143,34 @@ var Courses = function () {
     });
   };
 
+  this.subscribeUser = function (req, resp, params) {
+    var self = this;
+    var uId = this.session.get('userId');
+    var cId = params.courseId;
+    var myUser = null;
+    var myCourse = null;
+
+    geddy.model.User.first(uId, function (err, user){
+      if (err){
+        throw err;
+      }
+      myUser = user;
+    });
+    geddy.model.Course.first(cId, function (err, course){
+      if (err){
+        throw err;
+      }
+      myCourse = course;
+    });
+    courseservice.addCourse(myUser, myCourse, function(err, courses) {
+      self.respond({params: params}, {
+        format: 'html'
+        , template: 'app/views/courses/index'
+        , layout: false
+      });
+    });
+  };
+
 };
 
 exports.Courses = Courses;

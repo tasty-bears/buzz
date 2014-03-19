@@ -8,10 +8,26 @@
 <% for (var i = 0, ii = courses.length; i < ii; i++) { %>
   <div class="row list-item" id="course-<%= courses[i].id; %>">
     <div class="span12">
-      <h3 class="list-height"><%- linkTo(courses[i].name + " " + courses[i].courseNumber, coursePath(courses[i].id)); %></h3>
+      <h3 class="list-height span8"><%- linkTo(courses[i].name + " " + courses[i].courseNumber, coursePath(courses[i].id)); %></h3>
+      <input type="button" value="Subscribe" class="btn pull-right sub" id="<%= courses[i].id %>"/>
     </div>
-
   </div>
 <% } %>
 <% } %>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".sub").click(function(event) {
+      var id = event.target.id;
+      $.ajax({
+        type: "POST",
+        url: '/courses/subscribeUser',
+        data: {int: id} , // serializes the form's elements.
+        success: function(data)
+        {
+          $("#index").html(data);
+        }
+      });
+    });
+  });
+</script>
 </div>
