@@ -9,13 +9,23 @@ var Courses = function () {
 
   this.index = function (req, resp, params) {
     var self = this;
+    var courses = null;
+    var myCoursesIds = null;
 
-    geddy.model.Course.all(function(err, courses) {
+    courseservice.getUserCoursesIds(this.session.get('userId'), function (err, data){
+      if (err){
+        throw err;
+      }
+      myCoursesId = data;
+    });
+
+    geddy.model.Course.all(function (err, data) {
       if (err) {
         throw err;
       }
-      self.respondWith(courses, {type:'Course'});
+      courses = data;
     });
+    self.respond({courses: courses, usercoursesId: myCoursesIds});
   };
 
   this.add = function (req, resp, params) {
@@ -163,6 +173,37 @@ var Courses = function () {
       myCourse = course;
     });
     courseservice.addCourse(myUser, myCourse, function(err, courses) {
+      if (err) {
+        throw err;
+      }
+      self.respond({params: params, courses: courses}, {
+        format: 'html'
+        , template: 'app/views/courses/index'
+        , layout: false
+      });
+    });
+  };
+
+  this.unsubscribeUser = function (req, resp, params) {
+    var self = this;
+    var uId = this.session.get('userId');
+    var cId = params.id;
+    var myUser = null;
+    var myCourse = null;
+
+    geddy.model.User.first(uId, function (err, user){
+      if (err){
+        throw err;
+      }
+      myUser = user;
+    });
+    geddy.model.Course.first(cId, function (err, course){
+      if (err){
+        throw err;
+      }
+      myCourse = course;
+    });
+    courseservice.removeThisCourse(myUser, myCourse, function (err, courses) {
       if (err) {
         throw err;
       }
