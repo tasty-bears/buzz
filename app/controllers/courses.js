@@ -203,11 +203,11 @@ var Courses = function () {
       }
       myCourse = course;
     });
-    courseservice.removeThisCourse(myUser, myCourse, function (err, courses) {
+    courseservice.removeThisCourse(myUser, myCourse, function (err, data) {
       if (err) {
         throw err;
       }
-      self.respond({params: params, courses: courses}, {
+      self.respond({params: params}, {
         format: 'html'
         , template: 'app/views/courses/index'
         , layout: false

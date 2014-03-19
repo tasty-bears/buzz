@@ -34,11 +34,6 @@ var CourseService = function() {
       		if (err) {
         		action(err, null);
       		}
-      	});
-      	geddy.model.Course.all(function(err, data){
-      		if (err) {
-      			action(err, null);
-      		}
       		action(null, data);
       	});
  	};
@@ -50,13 +45,8 @@ var CourseService = function() {
  			if (err) {
  				action(err,null);
  			}
+ 			action(null, data);
  		});
- 		geddy.model.Course.all(function(err, data){
-      		if (err) {
-      			action(err, null);
-      		}
-      		action(null, data);
-      	});
  	};
 }
 
