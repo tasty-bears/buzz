@@ -16,7 +16,7 @@ var Courses = function () {
       if (err){
         throw err;
       }
-      myCoursesId = data;
+      myCoursesIds = data;
     });
 
     geddy.model.Course.all(function (err, data) {
