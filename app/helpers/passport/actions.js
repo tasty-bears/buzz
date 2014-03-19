@@ -7,9 +7,8 @@ var passport = require('passport')
   , cryptPass;
 
 var SUPPORTED_SERVICES = [
+      'facebook',
       'twitter'
-    , 'facebook'
-    , 'yammer'
     ];
 
 SUPPORTED_SERVICES.forEach(function (item) {
