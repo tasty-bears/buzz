@@ -144,7 +144,7 @@ var Event = function () {
  // this.hasMany('Users', {through: "Enrollments"})
 
   //returns name of course that event belongs to
-  this.courseHasName = function () {
+  this.getEventsCourseName = function () {
     var self = this;
     var name = null;
     var courseId = null;
@@ -170,7 +170,7 @@ var Event = function () {
   };
 
   //returns courseNumber of course that event belongs to
-  this.courseHasNumber = function () {
+  this.getEventsCourseNumber = function () {
     var self = this;
     var number = null;
     var courseId = null;

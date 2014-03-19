@@ -16,7 +16,9 @@
  *
 */
 var strategies = require('../helpers/passport/strategies')
-  , authTypes = geddy.mixin(strategies, {local: {name: 'local account'}});;
+  , authTypes = geddy.mixin(strategies, {local: {name: 'local account'}});
+var courseservice = require('../services/courseservice');
+var eventservice = require('../services/eventservice');
 
 var Main = function () {
 
@@ -29,22 +31,51 @@ var Main = function () {
       , authType: null
       , courses: null
       , events: null
+      , eventnames: null
+      , eventnumbers: null
       };
       if (user) {
         data.user = user;
         data.authType = authTypes[self.session.get('authType')].name;
+
+        //get the courses the user is enrolled in
         data.user.getCourses(function(err, myCourses) {
           if (err) {
             throw err;
           }
           data.courses = myCourses;
-        }); 
-        geddy.model.Event.all(function(err, allEvents) {
-          if (err) {
-            throw err;
-          }
-          data.events = allEvents;
-        }); 
+        });
+
+        //make temp array for all of events the user must attend
+        var myEvents = new Array();
+        //loop through and get all events for each course user is in
+        for (var i = 0; i < data.courses.length; i++){
+          courseservice.getEventsFromSchedule(data.courses[i], function(err, data) {
+            if (err) {
+              throw err;
+            }
+            // add each event to temp array
+            for (var x in data){
+              myEvents.push(data[x]);
+            }
+          });
+        }
+        //assign data events array for view use
+        data.events = myEvents;
+
+        //get course names and numbers for event naming on view
+        //temp arrays to get values
+        var names = new Array();
+        var numbers = new Array();
+        for (var i = 0; i < data.events.length; i++) {
+          //call functions from event service to get corresponding name and number
+          names.push(eventservice.getCourseName(data.events[i]));
+          numbers.push(eventservice.getCourseNumber(data.events[i]));
+        }
+        //assign values to data to pass to view
+        data.eventnames = names;
+        data.eventnumbers = numbers;
+
       }
       self.respond(data, {
         format: 'html'
@@ -72,5 +103,3 @@ var Main = function () {
 };
 
 exports.Main = Main;
-
-

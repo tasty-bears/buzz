@@ -86,8 +86,8 @@ var Events = function () {
         throw new geddy.errors.NotFoundError();
       }
       else {
-        var cName = event.courseHasName();
-        var cNum = event.courseHasNumber();
+        var cName = event.getEventsCourseName();
+        var cNum = event.getEventsCourseNumber();
         self.respond({event: event, eventCourseName: cName, eventCourseNumber: cNum});
       }
     });

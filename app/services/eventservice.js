@@ -7,7 +7,8 @@ var EventService = function() {
 		var coursenames = new Array();
 
 		for (var i = 0; i < events.length; i++) {
-			coursenames[i] = events[i].courseHasName();
+			geddy.log.debug("all: " + events[i]);
+			coursenames[i] = events[i].getEventsCourseName();
 		}
 		action(null, coursenames);
 	};
@@ -17,10 +18,22 @@ var EventService = function() {
 		var coursenumbers = new Array();
 
 		for (var i = 0; i < events.length; i++) {
-			coursenumbers[i] = events[i].courseHasNumber();
+			coursenumbers[i] = events[i].getEventsCourseNumber();
 		}
 		action(null, coursenumbers);
 	};
+
+	this.getCourseName = function (event){
+		var self = this;
+		var coursename = event.getEventsCourseName();
+		return coursename;
+	}
+
+	this.getCourseNumber = function (event){
+		var self = this;
+		var coursenumber = event.getEventsCourseNumber();
+		return coursenumber;
+	}
 
 	this.addEvent = function(userModel, eventModel, action) {
 		var self = this;

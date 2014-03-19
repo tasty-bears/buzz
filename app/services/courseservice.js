@@ -48,6 +48,25 @@ var CourseService = function() {
  			action(null, data);
  		});
  	};
+
+	this.getEventsFromSchedule = function (course, action) {
+		var self = this;
+		var sched = null;
+		var myEvents = new Array();
+
+		course.getSchedule(function (err, data) {
+			if (err) {
+				action(err, null);
+			}
+			sched = data;
+		});
+		sched.getEvents(function (err, data){
+			if (err) {
+				action(err, null);
+			}
+			action(null, data);
+		});
+	};
 }
 
 module.exports = new CourseService();
