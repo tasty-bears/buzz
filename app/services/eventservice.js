@@ -107,7 +107,7 @@ var EventService = function() {
 	    // that way it will be getTweetsToDisplay(feeds, action)
 	    // will be called in posts.js and main.js
 		if (selectedEvent != -1) {
-			for (var i = 0,len = events.length; i < len; i++) {
+			for (var i = 0, len = events.length; i < len; i++) {
 				if (events[i].id == selectedEvent) {
 					events = [events[i]];
 					break;
@@ -164,6 +164,6 @@ var EventService = function() {
 			}
 		}());
 	};
-};
+}
 
 module.exports = new EventService();
