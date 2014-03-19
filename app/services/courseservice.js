@@ -24,7 +24,7 @@ var CourseService = function() {
 		} else {
 			action(null, null);
 		}
-		
+
 	};
 
 	this.addCourse = function (myUser, myCourse, action) {

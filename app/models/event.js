@@ -16,7 +16,7 @@ var Event = function () {
     locationLong: {type: 'number'},
 
     // //none, daily, weekly, monthly
-    repeats: {type: 'string', required: true},
+    repeats: {type: 'string', required: false},
 
     //pass in array of weekday indexes (0-6) (start sunday)
      repeatDaysOfWeek: {type: 'object'},
@@ -44,7 +44,7 @@ var Event = function () {
     var self = this;
     var name = null;
     var courseId = null;
-    
+
     //searches the list of schedules for the schedule that the event belongs to
     geddy.model.Schedule.first(self.scheduleId, function(err, schedule) {
       if (err) {
@@ -130,4 +130,3 @@ Event.someStaticProperty = 'YYZ';
 */
 
 Event = geddy.model.register('Event', Event);
-

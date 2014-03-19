@@ -39,7 +39,7 @@ var Courses = function () {
       this.respondWith(course);
     }
     else {
-      
+
       course.save(function(err, data) {
         if (err) {
           throw err;
@@ -172,11 +172,11 @@ var Courses = function () {
       }
       myCourse = course;
     });
-    courseservice.addCourse(myUser, myCourse, function(err, courses) {
+    courseservice.addCourse(myUser, myCourse, function(err, data) {
       if (err) {
         throw err;
       }
-      self.respond({params: params, courses: courses}, {
+      self.respond({params: params}, {
         format: 'html'
         , template: 'app/views/courses/index'
         , layout: false
@@ -218,4 +218,3 @@ var Courses = function () {
 };
 
 exports.Courses = Courses;
-
