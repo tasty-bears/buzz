@@ -11,9 +11,7 @@ var Course = function () {
 
   this.hasMany('Enrollments');
   this.hasMany('Users',{through: 'Enrollments'});
-
  
-
   /*
   this.property('login', 'string', {required: true});
   this.property('password', 'string', {required: true});

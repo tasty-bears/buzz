@@ -1,5 +1,7 @@
 var passport = require('../helpers/passport')
   , requireAuth = passport.requireAuth;
+var courseservice = require('../services/courseservice');
+
 
 var Courses = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
@@ -23,15 +25,26 @@ var Courses = function () {
   this.create = function (req, resp, params) {
     var self = this
       , course = geddy.model.Course.create(params);
-
     if (!course.isValid()) {
       this.respondWith(course);
     }
     else {
+      
       course.save(function(err, data) {
         if (err) {
           throw err;
         }
+        geddy.log.debug('in create');
+        var schedule = geddy.model.Schedule.createSchedule(course);
+        geddy.log.debug('before association');
+        course.setSchedule(schedule);
+        geddy.log.debug(schedule.name);
+        course.save(function(err, data){
+          if (err){
+            throw err;
+          }
+        });
+        //course.setSchedule(schedule);
         self.respondWith(course, {status: err});
       });
     }
@@ -39,6 +52,7 @@ var Courses = function () {
 
   this.show = function (req, resp, params) {
     var self = this;
+    var mySchedule = null;
 
     geddy.model.Course.first(params.id, function(err, course) {
       if (err) {
@@ -48,8 +62,22 @@ var Courses = function () {
         throw new geddy.errors.NotFoundError();
       }
       else {
-        course.getEvents(function (err, data) {
-          self.respond({course: course, events: data});
+        course.getSchedule(function (err, schedule){
+          if (err){
+            throw err;
+          }
+          mySchedule = schedule;
+
+          if (schedule == null) {
+            geddy.log.debug('schedule NULL');
+            geddy.log.debug(mySchedule.name);
+          }
+        });
+        mySchedule.getEvents(function (err, data) {
+          if (err) {
+            throw err;
+          }
+          self.respond({course: course, schedule: mySchedule, events: data});
         });
       }
     });
