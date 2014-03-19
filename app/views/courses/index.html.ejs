@@ -21,7 +21,7 @@
       $.ajax({
         type: "POST",
         url: '/courses/subscribeUser',
-        data: {int: id} , // serializes the form's elements.
+        data: {id: id}, 
         success: function(data)
         {
           $("#index").html(data);

@@ -1,7 +1,6 @@
 var CourseService = function() {
 	this.addCourse = function (myUser, myCourse, action) {
 		var self = this;
-		geddy.log.debug('hellloooooo');
 		myUser.addCourse(myCourse);
 		myUser.save(function(err, data) {
       		if (err) {
@@ -14,6 +13,9 @@ var CourseService = function() {
       		}
       		action(null, data);
       	});
+ 	};
+ 	this.removeCourse = function (myUser, myCourse, action) {
+
  	};
 }
 

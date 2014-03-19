@@ -33,11 +33,11 @@ var Main = function () {
       if (user) {
         data.user = user;
         data.authType = authTypes[self.session.get('authType')].name;
-        geddy.model.Course.all(function(err, allCourses) {
+        data.user.getCourses(function(err, myCourses) {
           if (err) {
             throw err;
           }
-          data.courses = allCourses;
+          data.courses = myCourses;
         }); 
         geddy.model.Event.all(function(err, allEvents) {
           if (err) {

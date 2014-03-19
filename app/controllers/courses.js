@@ -146,7 +146,7 @@ var Courses = function () {
   this.subscribeUser = function (req, resp, params) {
     var self = this;
     var uId = this.session.get('userId');
-    var cId = params.courseId;
+    var cId = params.id;
     var myUser = null;
     var myCourse = null;
 
@@ -163,7 +163,10 @@ var Courses = function () {
       myCourse = course;
     });
     courseservice.addCourse(myUser, myCourse, function(err, courses) {
-      self.respond({params: params}, {
+      if (err) {
+        throw err;
+      }
+      self.respond({params: params, courses: courses}, {
         format: 'html'
         , template: 'app/views/courses/index'
         , layout: false
