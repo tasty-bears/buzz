@@ -2,6 +2,26 @@
 var EventService = function() {
 	var userservice = require('../services/userservice');
 
+	this.getCourseNames = function (events, action){
+		var self = this;
+		var coursenames = new Array();
+
+		for (var i = 0; i < events.length; i++) {
+			coursenames[i] = events[i].courseHasName();
+		}
+		action(null, coursenames);
+	};
+
+	this.getCourseNumbers = function (events, action){
+		var self = this;
+		var coursenumbers = new Array();
+
+		for (var i = 0; i < events.length; i++) {
+			coursenumbers[i] = events[i].courseHasNumber();
+		}
+		action(null, coursenumbers);
+	};
+
 	this.addEvent = function(userModel, eventModel, action) {
 		var self = this;
 		userModel.addEvent(eventModel);

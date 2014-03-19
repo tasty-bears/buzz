@@ -54,7 +54,7 @@ var Event = function () {
       courseId = schedule.courseId;
     });
     //searches all courses for course that the event belongs to
-    geddy.model.Course.first(self.courseId, function(err, course){
+    geddy.model.Course.first(courseId, function(err, course){
       if (err) {
         throw err;
       }
@@ -80,7 +80,7 @@ var Event = function () {
       courseId = schedule.courseId;
     });
     //searches all courses for course that the schedule belongs to
-    geddy.model.Course.first(self.courseId, function(err, course) {
+    geddy.model.Course.first(courseId, function(err, course) {
       if (err) {
         throw err;
       }
