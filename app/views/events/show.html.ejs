@@ -1,14 +1,115 @@
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      #map-canvas { height: 400px }
+    </style>
+<script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7-Lbo8t0W1I9_Uo3logWrK3EsdkQzGVQ&sensor=false">
+    </script>
+    <script type="text/javascript">
+
+      function initialize() {
+
+        var myLatlng = new google.maps.LatLng( <%= event.locationLat %>, <%= event.locationLong %>);
+        var mapOptions = {
+          zoom: 12,
+          center: myLatlng
+        }
+        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            title: 'Hello World!'
+        });
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+
+
+
 <div class="hero-unit">
   <h2 class="name"><%- geddy.date.strftime(event.date, "%m/%d") + " - " + event.courseHasName() + " " + event.courseHasNumber() + " - " + event.name; %></h2>
   <%- linkTo('Edit this event', editEventPath(params.id), {class: 'btn pull-right'}); %>
   <%- linkTo('Back to list', eventPath(''), {class: 'btn pull-right'}); %>
 </div>
+
 <h3>Event Description</h3>
 <div class="row list-item">
   <div class="span12">  
     <p class="description"><%= event.description %></p>
   </div>
 </div>
+
+<h3>Time</h3>
+<div class="row list-item">
+  <div class="span12">  
+    <p class="time"><%= event.time %></p>
+  </div>
+</div>
+
+<h3>Duration (Minutes)</h3>
+<div class="row list-item">
+  <div class="span12">  
+    <p class="duration"><%= event.duration %></p>
+  </div>
+</div>
+
+<h3>Location Description</h3>
+<div class="row list-item">
+  <div class="span12">  
+    <p class="locationDescription"><%= event.locationDescription %></p>
+  </div>
+</div>
+
+<h3>Repeat Type</h3>
+<div class="row list-item">
+  <div class="span12">  
+    <p class="repeat"><%= event.repeat %></p>
+  </div>
+</div>
+
+<h3>Repeats on these days:</h3>
+<div class="row list-item">
+  <div class="span12">  
+    <p class="repeatDaysOfWeek"><%= event.repeatDaysOfWeek %></p>
+  </div>
+</div>
+
+<h3>Repeats on this day of month:</h3>
+<div class="row list-item">
+  <div class="span12">  
+    <p class="repeatDayOfMonth"><%= event.repeatDayOfMonth %></p>
+  </div>
+</div>
+
+<h3>Repeats on this day of month:</h3>
+<div class="row list-item">
+  <div class="span12">  
+    <p class="repeatDayOfMonth"><%= event.repeatDayOfMonth %></p>
+  </div>
+</div>
+
+<h3>Number of Reccurences:</h3>
+<div class="row list-item">
+  <div class="span12">  
+    <p class="numberOfReccurences"><%= event.numberOfReccurences %></p>
+  </div>
+</div>
+<div id="map-canvas"/>
+
+
+  
+
+
+    
+ 
+ 
+
+
+
+
 
 <!-- <h2>Event Properties</h2>
 <% for(var i in event) { -%>
