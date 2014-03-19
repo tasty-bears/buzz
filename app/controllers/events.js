@@ -23,10 +23,6 @@ this.addEvent = function(req, resp, params) {
     });
   };
 
-
-
-  
-
   this.index = function (req, resp, params) {
     var self = this;
 
