@@ -20,8 +20,8 @@ var config = {
   appName: 'Angora (development)'
 , detailedErrors: true
 , debug: true
-, hostname: 'localhost'
-, port: 4000
+, hostname: 'localhost' // set back to null?
+                        // or leave to prevent dev on a prod environment?
 , model: {
     defaultAdapter: 'filesystem'
   }
