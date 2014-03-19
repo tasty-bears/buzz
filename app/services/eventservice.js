@@ -47,7 +47,7 @@ var EventService = function() {
 	    // that way it will be getTweetsToDisplay(feeds, action)
 	    // will be called in posts.js and main.js
 		if (selectedEvent != -1) {
-			for (var i = 0, len = events.length; i < len; i++) {
+			for (var i = 0,len = events.length; i < len; i++) {
 				if (events[i].id == selectedEvent) {
 					events = [events[i]];
 					break;
@@ -64,7 +64,7 @@ var EventService = function() {
 							if (err) {
 								action(err, null);
 							} else {
-								posts = posts.concat(eventPosts);
+								tweets = tweets.concat(eventPosts);
 								if (i == len1-1) {
 									posts.sort(function(a,b) {
 										if (a.postdate.getTime() > b.postdate.getTime()) {
@@ -104,6 +104,6 @@ var EventService = function() {
 			}
 		}());
 	};
-}
+};
 
 module.exports = new EventService();
