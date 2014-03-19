@@ -1,19 +1,17 @@
 <div class="control-group">
-  <label for="name" class="control-label">Name*</label>
+  <label for="name" class="control-label">Name</label>
   <div class="controls">
     <%- contentTag('input', event.name, {type:'text', class:'span6', name:'name'}) %>
   </div>
 </div>
-
 <div class="control-group">
-  <label for="description" class="control-label">Description*</label>
+  <label for="description" class="control-label">Description</label>
   <div class="controls">
     <%- contentTag('input', event.description, {type:'text', class:'span6', name:'description'}) %>
   </div>
 </div>
-
 <div class="control-group">
-  <label for="isPrivate" class="control-label">Private*</label>
+  <label for="isPrivate" class="control-label">Private</label>
   <div class="controls">
     <select name="isPrivate", class="span1">
       <% if(event.isPrivate) { -%>
@@ -25,98 +23,16 @@
       <% } -%>
     </select>
   </div>
+  
 </div>
-
 <div class="control-group">
-  <label for="date" class="control-label">Event Date*</label>
+  <label for="date" class="control-label">Event Date</label>
   <div class="controls">
     <%- contentTag('input', event.date, {type:'date', class:'span2', name:'date'}) %>
   </div>
 </div>
-
-
 <div class="control-group">
-  <label for="time" class="control-label">Event Time*</label>
-  <div class="controls">
-    <%- contentTag('input', event.time, {type:'time', class:'span2', name:'time'}) %>
-  </div>
-</div>
-
-
-<div class="control-group">
-  <label for="duration" class="control-label">Duration (Minutes)</label>
-  <div class="controls">
-    <%- contentTag('input', event.duration, {type:'number', class:'span2', name:'duration'}) %>
-  </div>
-</div>
-
-<div class="control-group">
-  <label for="locationDescription" class="control-label">Location Description*</label>
-  <div class="controls">
-    <%- contentTag('input', event.locationDescription, {type:'text', class:'span2', name:'locationDescription'}) %>
-  </div>
-</div>
-
-<div class="control-group">
-  <label for="locationLat" class="control-label">Location Latitude</label>
-  <div class="controls">
-    <%- contentTag('input', event.locationLat, {type:'number', class:'span2', name:'locationLat'}) %>
-  </div>
-</div>
-
-<div class="control-group">
-  <label for="locationLong" class="control-label">Location Longitude</label>
-  <div class="controls">
-    <%- contentTag('input', event.locationLong, {type:'number', class:'span2', name:'locationLong'}) %>
-  </div>
-</div>
-
-<div class="control-group">
-  <label for="repeats" class="control-label">Repeat Type*</label>
-  <div class="controls">
-    <select name="repeats", class="span1">
-      <option selected>none</option>
-      <option>weekly</option>
-      <option>monthly</option>
-      
-    </select>
-  </div>
-</div>
-
-<div class="control-group">
-  <label for="repeatDaysOfWeek" class="control-label">Repeat on what days?</label>
-  <div class="controls">
-    <form action="">
-      <input type="checkbox" name="repeatDaysOfWeek" value=0>Sunday<br>
-      <input type="checkbox" name="repeatDaysOfWeek" value=1>Monday<br>
-      <input type="checkbox" name="repeatDaysOfWeek" value=2>Tuesday<br>
-      <input type="checkbox" name="repeatDaysOfWeek" value=3>Wednesday<br>
-      <input type="checkbox" name="repeatDaysOfWeek" value=4>Thursday<br>
-      <input type="checkbox" name="repeatDaysOfWeek" value=5>Friday<br>
-      <input type="checkbox" name="repeatDaysOfWeek" value=6>Saturday<br>
-
-
-    </form>
-  </div>
-</div>
-
-<div class="control-group">
-  <label for="repeatDayOfMonth" class="control-label">Repeat on what day of month?</label>
-  <div class="controls">
-    <%- contentTag('input', event.repeatDayOfMonth, {type:'number', class:'span2', name:'repeatDayOfMonth'}) %>
-  </div>
-</div>
-
-<div class="control-group">
-  <label for="numberOfReccurences" class="control-label">Number of Recurrences</label>
-  <div class="controls">
-    <%- contentTag('input', event.numberOfReccurences, {type:'number', class:'span2', name:'numberOfReccurences'}) %>
-  </div>
-</div>
-
-
-<div class="control-group">
-  <label for="title" class="control-label">Assign Course*</label>
+  <label for="title" class="control-label">Assign Course</label>
   <div class="controls">
     <%- selectTag(courses, event.courseId, {
       name: 'courseId'

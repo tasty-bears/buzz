@@ -1,31 +1,9 @@
 var passport = require('../helpers/passport')
   , requireAuth = passport.requireAuth;
-  var userservice = require('../services/userservice');
-var eventservice = require('../services/eventservice');
 
 var Events = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
   this.before(requireAuth, {});
-
-
-// this.addEvent = function(req, resp, params) {
-
-//     var self = this;
-//     userservice.loadUserFromSession(self.session, function(err, user) {
-//       var event = geddy.model.Event.create(params);
-//       eventservice.addEvent(user, event, function(err, events) {
-//         self.respond({params: params, events: events, selectedEvent: -1}, {
-//           format: 'html'
-//           , template: 'app/views/main/_eventView'
-//           , layout: false
-//         });
-//       });
-//     });
-//   };
-
-
-
-  
 
   this.index = function (req, resp, params) {
     var self = this;
