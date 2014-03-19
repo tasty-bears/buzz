@@ -18,11 +18,11 @@ var Events = function () {
 
   this.add = function (req, resp, params) {
     var self = this;
-    geddy.model.Course.all(function (err, data) {
+    geddy.model.Schedule.all(function (err, data) {
       if (err) {
         throw err;
       }
-      self.respond({params: params, courses: data});
+      self.respond({params: params, schedules: data});
     });
   };
 
@@ -70,11 +70,11 @@ var Events = function () {
         throw new geddy.errors.BadRequestError();
       }
       else {
-        geddy.model.Course.all(function (err, data) {
+        geddy.model.Schedule.all(function (err, data) {
           if (err) {
             throw err;
           }
-          self.respond({event: event, courses: data});
+          self.respond({event: event, schedules: data});
         });
       }
     });

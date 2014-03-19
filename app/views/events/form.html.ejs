@@ -34,8 +34,8 @@
 <div class="control-group">
   <label for="title" class="control-label">Assign Course</label>
   <div class="controls">
-    <%- selectTag(courses, event.courseId, {
-      name: 'courseId'
+    <%- selectTag(schedules, event.scheduleId, {
+      name: 'scheduleId'
       , valueField: 'id'
       , textField: 'name'
       }); %>
