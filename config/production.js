@@ -19,7 +19,7 @@
 var config = {
   appName: 'Angora'
 , detailedErrors: false
-, hostname: 'localhost'
+, hostname: null
 , port: 4000
 
 , email_activation: false
