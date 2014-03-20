@@ -29,11 +29,6 @@
 
 <div class="span8 offset0 events-list pull-right">
   <% if (events) { %>
-  <% events = events.sort(function(a, b){ %>
-      <% if(a.date < b.date) return -1; %>
-      <% if(a.date > b.date) return 1; %>
-      <% return 0; %>
-    <% }); %>
     <% for (var i = 0, ii = events.length; i < ii; i++) { %>
       <div class="row list-item" id="event-<%= events[i].id; %>">
         <div class="span8">
