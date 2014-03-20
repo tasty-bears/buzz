@@ -60,6 +60,11 @@ var Main = function () {
             }
           });
         }
+        myEvents = myEvents.sort(function(a, b){
+            if(a.date < b.date) return -1;
+            if(a.date > b.date) return 1;
+            return 0;
+        }); 
         //assign data events array for view use
         data.events = myEvents;
 
