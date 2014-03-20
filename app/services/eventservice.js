@@ -1,14 +1,14 @@
 
 var EventService = function() {
 	var userservice = require('../services/userservice');
+	var eventserviceSelf = this;
 
 	this.getCourseNames = function (events, action){
 		var self = this;
 		var coursenames = new Array();
 
 		for (var i = 0; i < events.length; i++) {
-			geddy.log.debug("all: " + events[i]);
-			coursenames[i] = events[i].getEventsCourseName();
+			coursenames[i] = eventserviceSelf.getCourseName(events[i]);
 		}
 		action(null, coursenames);
 	};
@@ -18,21 +18,48 @@ var EventService = function() {
 		var coursenumbers = new Array();
 
 		for (var i = 0; i < events.length; i++) {
-			coursenumbers[i] = events[i].getEventsCourseNumber();
+			coursenumbers[i] = eventserviceSelf.getCourseNumber(events[i]);
 		}
 		action(null, coursenumbers);
 	};
 
-	this.getCourseName = function (event){
+	this.getCourseName = function (myEvent){
 		var self = this;
-		var coursename = event.getEventsCourseName();
-		return coursename;
+		myEvent.getSchedule(function (err, data){
+			if(err){
+				throw err;
+			}
+			sched = data;
+		});
+		var course = null;
+		sched.getCourse(function (err,data){
+			if(err){
+				throw err;
+			}
+			course = data;
+		});
+		var name = course.name;
+		return name;
 	}
 
-	this.getCourseNumber = function (event){
+	this.getCourseNumber = function (myEvent){
 		var self = this;
-		var coursenumber = event.getEventsCourseNumber();
-		return coursenumber;
+		var sched = null;
+		myEvent.getSchedule(function (err, data){
+			if(err){
+				throw err;
+			}
+			sched = data;
+		});
+		var course = null;
+		sched.getCourse(function (err,data){
+			if(err){
+				throw err;
+			}
+			course = data;
+		});
+		var number = course.courseNumber;
+		return number;
 	}
 
 	this.addEvent = function(userModel, eventModel, action) {
