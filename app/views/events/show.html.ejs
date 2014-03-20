@@ -75,16 +75,21 @@ border-color:#30D8F0;
 <!--<div style="background: white; width: 200px; height: 200px; position:
 absolute; left: 50%; top: 50%; margin-left: -100px; margin-top: -100px"
 id="modal">I'm a modal</div>-->
-<div class="row list-item">
+
+<div id="postView">
+  <%= partial("_postView", {event: event, events: events, posts: posts, selectedEvent: selectedEvent}); %>
+</div>
+
+<!-- <div class="row list-item">
 	<div class="span12">
 		<% for (var i in posts) { -%>
 		<%if (i !== 'saved') { -%>
 		<p><%= i %></p>
 		<% } -%><% } -%>
 	</div>
-</div>
+</div> -->
 
-<h3>Duration (Minutes)</h3>
+<!-- <h3>Duration (Minutes)</h3>
 <div class="row list-item">
   <div class="span12">
     <p class="duration"><%= event.duration %></p>

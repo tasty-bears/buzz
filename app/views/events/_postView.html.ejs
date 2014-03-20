@@ -1,0 +1,55 @@
+<div id="feedWarning">
+    <% if (!posts || posts.length == 0) { %>
+    <div class="alert alert-danger alert-dismissable">
+        <h4 class="alert-heading">Oh shit! You don't have any posts!</h4>
+    </div>
+	
+	<div id="newPost">
+        <div>
+            <form id="postForm">
+                <!-- <%- selectTag(events, selectedEvent, {
+                  name: 'eventToPostTo'
+                , valueField: 'id'
+                , textField: 'name'
+                }); %> -->
+
+                <textarea value="" name="content" style="margin-top: 10px; margin-bottom: 20px; width: 90%; font-size: 16pt"
+                  rows="3" placeholder="Compose a new Post..."></textarea><br/>
+                <input type="button" onclick="submitPost()" value="Post" class="btn btn-primary"/>
+            </form>
+            <script type="text/javascript">
+			  function submitPost() {
+                $.ajax({
+                  type: "POST",
+                  url: '/posts/addPost/',
+                  data: $("#postForm").serialize(),
+                  success: function(data)
+                  {
+                    $("#postView").html(data);
+                  }
+                });
+              }
+            </script>
+        </div>
+    </div>
+    <h3>Posts</h3>
+    <div id="posts">
+            <% if (posts) {
+              posts.forEach(function(post) { %>
+                <div class="well">
+                    <h3>
+                        <small>Posted by <%- post.author.name %> in
+                            <%- post.event.name %> at
+                            <span><%- post.postdate.toLocaleTimeString() %> on <%- post.postdate.toLocaleDateString() %></span>
+                        </small><br />
+                        <%- post.content %>
+                    </h3>
+                </div>
+            <% });} %>
+    </div>
+	
+    <% } else { %>
+	
+	
+    <% } %>
+</div>

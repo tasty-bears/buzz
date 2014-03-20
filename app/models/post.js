@@ -14,48 +14,10 @@ var Post = function () {
 //    nativePost: {type: 'boolean', required: true}
   });
 
-  // each post is associated with one event
   this.belongsTo('Event');
-  // each event may have many posts
-  this.hasMany('Comment');
-
-//  //? is this correct
-//  this.validatesPresent('postingUser');
-
-//  // returns the name of event that the post belongs to
-//  this.getEventName = function () {
-//    var self = this;
-//    var name = null;
-//    // searches all events for event that the post belongs to
-//    geddy.model.Event.first(self.eventId, function(err, event) {
-//      if (err) {
-//        throw err;
-//      }
-//      // assign name of event to variable name
-//      name = event.name;
-//    });
-//    // returns event's name
-//    return name;
-//  };
-//
-//  // returns the dateTime of the event that the post belongs to
-//  this.getEventDateTime = function () {
-//    var self = this;
-//    var dateTime = null;
-//    // search all events for the event that the post belongs to
-//    geddy.model.Event.first(self.eventId, function(err, event) {
-//      if (err) {
-//        throw err;
-//      }
-//      // assign dateTime of event to dateTime
-//      dateTime = event.dateTime;
-//    });
-//    // return event's dateTime
-//    return dateTime;
-//  };
-
-  // TODO write method to somehow associate file with post
-
+  
+  // this.belongsTo('User');
+  this.hasMany('Comments');
 };
 
 exports.Post = Post;
