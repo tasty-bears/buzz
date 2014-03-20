@@ -16,7 +16,7 @@ var Event = function () {
     locationLong: {type: 'number'},
 
     // //none, daily, weekly, monthly
-    repeats: {type: 'string', required: true},
+    repeats: {type: 'string', required: false},
 
     //pass in array of weekday indexes (0-6) (start sunday)
      repeatDaysOfWeek: {type: 'object'},
@@ -31,45 +31,13 @@ var Event = function () {
     //inviteIsRecurring: {type: 'bool'},
   });
 
-  //this.validatesPresent('name');
-  this.belongsTo('Course');
+  this.validatesPresent('name');
+  this.belongsTo('Schedule');
 
   this.hasOne('User'); //creator
   //this.hasMany('Posts');
  // this.hasMany('Enrollments'); //attendees
  // this.hasMany('Users', {through: "Enrollments"})
-
-  //returns name of course that event belongs to
-  this.courseHasName = function () {
-    var self = this;
-    var name = null;
-    //searches all courses for course that the event belongs to
-    geddy.model.Course.first(self.courseId, function(err, course) {
-      if (err) {
-        throw err;
-      }
-      // assign name of course to variable name
-      name = course.name;
-    });
-    //returns course's name
-    return name;
-  };
-
-  //returns courseNumber of course that event belongs to
-  this.courseHasNumber = function () {
-    var self = this;
-    var name = null;
-    //searches all courses for course that the event belongs to
-    geddy.model.Course.first(self.courseId, function(err, course) {
-      if (err) {
-        throw err;
-      }
-      //assign course's number to variable number
-      number = course.courseNumber;
-    });
-    //return value
-    return number;
-  };
 
   // this.validatesPresent('description');
 
@@ -110,4 +78,3 @@ Event.someStaticProperty = 'YYZ';
 */
 
 Event = geddy.model.register('Event', Event);
-
