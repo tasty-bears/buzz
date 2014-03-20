@@ -1,4 +1,22 @@
 (function () {
+var Comment = function () {
+
+  this.defineProperties({
+    author: {type: 'object', required: true},
+    timestamp: {type: 'datetime', required: true},
+    message: {type: 'string', required: true}
+  });
+
+  this.belongsTo('Post');
+
+//  //? is this correct
+//  this.validatesPresent('postingUser');
+};
+
+exports.Comment = Comment;
+}());
+
+(function () {
 var Course = function () {
 
   this.defineProperties({
@@ -85,6 +103,7 @@ var Event = function () {
 
   //this.validatesPresent('name');
   this.belongsTo('Course');
+  this.hasMany('Post');
 
   this.hasOne('User'); //creator
   //this.hasMany('Posts');
@@ -162,7 +181,7 @@ Event.someStaticProperty = 'YYZ';
 */
 
 Event = geddy.model.register('Event', Event);
-
+exports.Event = Event;
 }());
 
 (function () {
@@ -177,6 +196,32 @@ var Passport = function () {
 
 Passport = geddy.model.register('Passport', Passport);
 
+}());
+
+(function () {
+
+var Post = function () {
+
+  this.defineProperties({
+  // we will want to query for posts primarily by their datetime
+    timestamp: {type: 'datetime', required: true},
+    locationDescription: {type: 'string'},
+    locationLat: {type: 'number'},
+    locationLong: {type: 'number'},
+    // querying by posting user will also be important
+    author: {type: 'object', required: true},
+    comments: {type: 'object'}
+//    // is the post natively created in Buzz, or pulled in from Twitter/Facebook?
+//    nativePost: {type: 'boolean', required: true}
+  });
+
+  this.belongsTo('Event');
+  
+  // this.belongsTo('User');
+  this.hasMany('Comments');
+};
+
+exports.Post = Post;
 }());
 
 (function () {

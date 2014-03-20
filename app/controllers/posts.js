@@ -11,11 +11,12 @@ var Posts = function () {
 
     this.addPost = function(req, resp, params) {
         var self = this;
-        evenservice.findEventById(params['postEvent'], function(err, event) {
+		geddy.log.debug("Attempting to add Post");
+        eventservice.findEventById(params['postEvent'], function(err, event) {
             if (err) {
                 console.log("Error getting the Event");
             } else {
-                params['postdate'] = new Date();
+                params['timestamp'] = new Date();
                 var post = geddy.model.Post.create(params);
 
                 eventservice.addPostToEvent(event, post, function(err, post) {
