@@ -21,5 +21,5 @@ Alpha Release Notes
 
 ###Building Angora###
 1. Run build/dev.sh for development environment
-1. In web directory, run 'geddy'
-1. In browser, visit http://localhost:4000
+1. In web directory, run the generated start.sh script
+1. In browser, visit http://localhost:5000
