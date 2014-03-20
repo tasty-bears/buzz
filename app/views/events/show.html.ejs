@@ -28,21 +28,21 @@
   </head>
   
 <div class="hero-unit">
-  <h2 class="name"><%- geddy.date.strftime(event.date, "%m/%d") + " - " + event.courseHasName() + " " + event.courseHasNumber() + " - " + event.name; %></h2>
+  <h2 class="name"><%- geddy.date.strftime(event.date, "%m/%d") + " - " + eventCourseName + " " + eventCourseNumber + " - " + event.name; %></h2>
   <%- linkTo('Edit this event', editEventPath(params.id), {class: 'btn pull-right'}); %>
   <%- linkTo('Back to list', eventPath(''), {class: 'btn pull-right'}); %>
 </div>
 
 <h3>Event Description</h3>
 <div class="row list-item">
-  <div class="span12">  
+  <div class="span12">
     <p class="description"><%= event.description %></p>
   </div>
 </div>
 
 <h3>Time</h3>
 <div class="row list-item">
-  <div class="span12">  
+  <div class="span12">
     <p class="time"><%= event.time %></p>
   </div>
 </div>
@@ -68,50 +68,75 @@ id="modal">I'm a modal</div>-->
 
 <!-- <h3>Duration (Minutes)</h3>
 <div class="row list-item">
-  <div class="span12">  
+  <div class="span12">
     <p class="duration"><%= event.duration %></p>
   </div>
 </div>
 
 <h3>Location Description</h3>
 <div class="row list-item">
-  <div class="span12">  
+  <div class="span12">
     <p class="locationDescription"><%= event.locationDescription %></p>
   </div>
 </div>
 
 <h3>Repeat Type</h3>
 <div class="row list-item">
-  <div class="span12">  
+  <div class="span12">
     <p class="repeat"><%= event.repeat %></p>
   </div>
 </div>
 
 <h3>Repeats on these days:</h3>
 <div class="row list-item">
-  <div class="span12">  
+  <div class="span12">
     <p class="repeatDaysOfWeek"><%= event.repeatDaysOfWeek %></p>
   </div>
 </div>
 
 <h3>Repeats on this day of month:</h3>
 <div class="row list-item">
-  <div class="span12">  
+  <div class="span12">
     <p class="repeatDayOfMonth"><%= event.repeatDayOfMonth %></p>
   </div>
 </div>
 
 <h3>Repeats on this day of month:</h3>
 <div class="row list-item">
-  <div class="span12">  
+  <div class="span12">
     <p class="repeatDayOfMonth"><%= event.repeatDayOfMonth %></p>
   </div>
 </div>
 
 <h3>Number of Reccurences:</h3>
 <div class="row list-item">
-  <div class="span12">  
+  <div class="span12">
     <p class="numberOfReccurences"><%= event.numberOfReccurences %></p>
   </div>
 </div>
-<div id="map-canvas"/> -->
+<div id="map-canvas"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <h2>Event Properties</h2>
+<% for(var i in event) { -%>
+<% if(i !== 'saved') { -%>
+<div class="row list-item">
+  <div class="span4">
+    <h3><%= i %></h3>
+  </div>
+  <div class="span8">
+    <h3><i class="icon-list-alt"></i><span class="<%= i %>"><%= event[i] %></span></h3>
+  </div>
+</div>
+<% } -%><% } -%> -->

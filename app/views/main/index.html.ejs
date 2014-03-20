@@ -37,7 +37,7 @@
     <% for (var i = 0, ii = events.length; i < ii; i++) { %>
       <div class="row list-item" id="event-<%= events[i].id; %>">
         <div class="span8">
-          <h3 class="list-height"><%- linkTo(geddy.date.strftime(events[i].date, "%m/%d") + " - " + events[i].courseHasName() + " " + events[i].courseHasNumber() +  " - " + events[i].name, eventPath(events[i].id)); %></h3>
+          <h3 class="list-height"><%- linkTo(geddy.date.strftime(events[i].date, "%m/%d") + " - " + eventnames[i] + " " + eventnumbers[i] +  " - " + events[i].name, eventPath(events[i].id)); %></h3>
         </div>
       </div>
     <% } %>
@@ -50,5 +50,3 @@
     <p><%- linkTo('Log in', loginPath) %></p>
 </div>
   <% } %>
-
-

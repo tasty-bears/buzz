@@ -53,5 +53,6 @@ router.resource('users');
 router.resource('events');
 router.resource('courses');
 
-router.resource('posts');
+router.match('/:controller/:action').to({controller: ':controller', action: ':action'});
+
 exports.router = router;

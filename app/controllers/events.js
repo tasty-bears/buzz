@@ -8,39 +8,53 @@ var Events = function () {
   this.before(requireAuth, {});
 
 
-this.addEvent = function(req, resp, params) {
+  this.addEvent = function(req, resp, params) {
 
-    var self = this;
-    userservice.loadUserFromSession(self.session, function(err, user) {
-      var event = geddy.model.Event.create(params);
-      eventservice.addEvent(user, event, function(err, events) {
-        self.respond({params: params, events: events, selectedEvent: -1}, {
-          format: 'html'
-          , template: 'app/views/main/_eventView'
-          , layout: false
+      var self = this;
+      userservice.loadUserFromSession(self.session, function(err, user) {
+        var event = geddy.model.Event.create(params);
+        eventservice.addEvent(user, event, function(err, events) {
+          self.respond({params: params, events: events, selectedEvent: -1}, {
+            format: 'html'
+            , template: 'app/views/main/_eventView'
+            , layout: false
+          });
         });
       });
-    });
   };
 
   this.index = function (req, resp, params) {
     var self = this;
+    var courseNames = new Array();
+    var courseNumbers = new Array();
 
     geddy.model.Event.all({createdAt: {ne: null}}, {sort: {date: 'asc'}},function(err, events) {
       if (err) {
         throw err;
       }
-      self.respond({events: events});
+      eventservice.getCourseNames(events, function (err, data){
+        if (err) {
+          throw err;
+        }
+        courseNames = data;
+      });
+      eventservice.getCourseNumbers(events, function (err, data){
+        if (err) {
+          throw err;
+        }
+        courseNumbers = data;
+      });
+      self.respond({events: events, eventCourseNames: courseNames, eventCourseNumbers: courseNumbers});
     });
   };
 
   this.add = function (req, resp, params) {
     var self = this;
-    geddy.model.Course.all(function (err, data) {
+    geddy.model.Schedule.all(function (err, data) {
       if (err) {
         throw err;
       }
-      self.respond({params: params, courses: data});
+      self.respond({params: params, schedules: data});
     });
   };
 
@@ -134,11 +148,11 @@ this.addEvent = function(req, resp, params) {
         throw new geddy.errors.BadRequestError();
       }
       else {
-        geddy.model.Course.all(function (err, data) {
+        geddy.model.Schedule.all(function (err, data) {
           if (err) {
             throw err;
           }
-          self.respond({event: event, courses: data});
+          self.respond({event: event, schedules: data});
         });
       }
     });
@@ -191,5 +205,3 @@ this.addEvent = function(req, resp, params) {
 };
 
 exports.Events = Events;
-
-

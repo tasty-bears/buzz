@@ -8,10 +8,41 @@
 <% for (var i = 0, ii = courses.length; i < ii; i++) { %>
   <div class="row list-item" id="course-<%= courses[i].id; %>">
     <div class="span12">
-      <h3 class="list-height"><%- linkTo(courses[i].name + " " + courses[i].courseNumber, coursePath(courses[i].id)); %></h3>
+      <h3 class="list-height span8"><%- linkTo(courses[i].name + " " + courses[i].courseNumber, coursePath(courses[i].id)); %></h3>
+      <% var enrolled = false; %>
+      <% for (var id in usercoursesId) { %>
+      <%	if (usercoursesId[id] == courses[i].id){ %> 
+      <%		enrolled = true; %>
+      <%	}%>
+      <%}%>
+      <% if (usercoursesId && enrolled){ %>
+      <input type="button" value="Unsubscribe" class="btn pull-right sub" id="<%= courses[i].id %>"/>
+      <% } else { %> 
+      <input type="button" value="Subscribe" class="btn pull-right sub" id="<%= courses[i].id %>"/>
+      <% } %>
     </div>
-
   </div>
 <% } %>
 <% } %>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".sub").click(function(event) {
+      if (event.target.value == "Unsubscribe") {
+      	var myUrl = '/courses/unsubscribeUser';
+      } else {
+      	var myUrl = '/courses/subscribeUser';
+      }
+      var id = event.target.id;
+      $.ajax({
+        type: "POST",
+        url: myUrl,
+        data: {id: id}, 
+        success: function(data)
+        {
+          $("#index").html(data);
+        }
+      });
+    });
+  });
+</script>
 </div>

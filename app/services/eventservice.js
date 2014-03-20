@@ -1,6 +1,66 @@
 
 var EventService = function() {
 	var userservice = require('../services/userservice');
+	var eventserviceSelf = this;
+
+	this.getCourseNames = function (events, action){
+		var self = this;
+		var coursenames = new Array();
+
+		for (var i = 0; i < events.length; i++) {
+			coursenames[i] = eventserviceSelf.getCourseName(events[i]);
+		}
+		action(null, coursenames);
+	};
+
+	this.getCourseNumbers = function (events, action){
+		var self = this;
+		var coursenumbers = new Array();
+
+		for (var i = 0; i < events.length; i++) {
+			coursenumbers[i] = eventserviceSelf.getCourseNumber(events[i]);
+		}
+		action(null, coursenumbers);
+	};
+
+	this.getCourseName = function (myEvent){
+		var self = this;
+		myEvent.getSchedule(function (err, data){
+			if(err){
+				throw err;
+			}
+			sched = data;
+		});
+		var course = null;
+		sched.getCourse(function (err,data){
+			if(err){
+				throw err;
+			}
+			course = data;
+		});
+		var name = course.name;
+		return name;
+	}
+
+	this.getCourseNumber = function (myEvent){
+		var self = this;
+		var sched = null;
+		myEvent.getSchedule(function (err, data){
+			if(err){
+				throw err;
+			}
+			sched = data;
+		});
+		var course = null;
+		sched.getCourse(function (err,data){
+			if(err){
+				throw err;
+			}
+			course = data;
+		});
+		var number = course.courseNumber;
+		return number;
+	}
 
 	this.addEvent = function(userModel, eventModel, action) {
 		var self = this;
