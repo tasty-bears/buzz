@@ -9,6 +9,9 @@ scriptdir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd $scriptdir/..
 npm install
 
+# setup environmental variables
+cp $scriptdir/.env $scriptdir/../
+
 # setup db
 cp $scriptdir/_datastore.json $scriptdir/../
 
