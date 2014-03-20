@@ -9,3 +9,4 @@ node_modules
 # patterns
 *.log
 
+start.sh
