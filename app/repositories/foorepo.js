@@ -105,7 +105,7 @@ var FooRepo = function() {
         // Example Request Body: {"Account Key":"000-000-0000", "MimeType":"image/jpg"} 
         // Response: 3a39c0ef-7f37-475f-a2f4-d7ea19a31081
         
-        var endpoint = '/api/content/new'
+        var endpoint = '/api/content/add'
         geddy.request(
             {
                 url:'http://{0}{1}/'.format(hostname, endpoint),
