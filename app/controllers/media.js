@@ -1,6 +1,7 @@
 var formidable = require('formidable')
   , fs = require('fs')
   , path = require('path');
+var util = require('util');
 
 var Media = function () {
 
@@ -19,31 +20,38 @@ var Media = function () {
   this.upload = function (req, resp, params) {
     var self = this
       , form = new formidable.IncomingForm()
-      , uploadedFile
-      , savedFile;
+      , filename
+      , fileStream;
 
     // Handle each part of the multi-part post
     form.onPart = function (part) {
       // Handle each data chunk as data streams in
       part.addListener('data', function (data) {
         // Initial chunk, set the filename and create the FS stream
-        if (!uploadedFile) {
-          uploadedFile = encodeURIComponent(part.filename);
-          savedFile = fs.createWriteStream(path.join('public', 'media', 'uploads', uploadedFile));
+        if (!fileStream) {
+          filename = encodeURIComponent(part.filename);
+          fileStream = fs.createWriteStream(path.join('public', 'media', 'uploads', filename));
         }
         // Write each chunk to disk
-        savedFile.write(data);
+        fileStream.write(data);
       });
+
       // The part is done
       part.addListener('end', function () {
-        var err;
+        // woops, looks like we were't given a file
+        if (!filename) {
+          self.flash.error('Please select a file to upload.');
+          self.redirect('/media');
+          return;
+        }
+
         // If everything went well, close the FS stream
-        if (uploadedFile) {
-          savedFile.end();
+        if (fileStream) {
+          fileStream.end();
         }
         // Something went wrong
         else {
-          err = new Error('Something went wrong in the upload.');
+          var err = new Error('Something went wrong in the upload.');
           self.error(err);
         }
       });
@@ -52,7 +60,21 @@ var Media = function () {
     // Multi-part form is totally done, redirect back to index
     // and pass filename
     form.addListener('end', function () {
-      self.redirect('/media?uploaded_file=' + uploadedFile);
+      // woops, looks like we were't given a file
+      if (!filename) {
+        self.flash.error('Please select a file to upload.');
+        self.redirect('/media');
+        return;
+      }
+
+      // javascript is bad with multiline strings :(
+      self.flash.success(
+        util.format('Successfully uploaded ' +
+                    '<a style="text-decoration: underline"' +
+                    ' href="/media/uploads/%s">%s</a>',
+                filename, filename))
+      //self.redirect('/media?uploaded_file=' + filename);
+      self.redirect('/media');
     });
 
     // Do it
