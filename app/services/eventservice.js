@@ -86,15 +86,16 @@ var EventService = function() {
 				action(null, data);
 			}
 		});
+		console.log("added post to event");
 	};
 
 	this.findEventById = function(eventId, action) {
 		geddy.model.Event.first({id: eventId}, function(err, event) {
 			if (err || !event) {
-				// TODO : single or double quote here?
-				action({event: 'The event was not found'}, null);
+				console.log("Could not find event by ID");
+				// action({event: 'The event was not found'}, null);
 			} else {
-				action(null, feed);
+				action(null, event);
 			}
 		});
 	};
