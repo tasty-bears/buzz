@@ -11,12 +11,36 @@ var Posts = function () {
 
     this.addPost = function(req, resp, params) {
         var self = this;
-		geddy.log.debug("Attempting to add Post");
-        eventservice.findEventById(params['postEvent'], function(err, event) {
-            if (err) {
+		var uId = this.session.get('userId');
+		var eId = params.id;
+		var currentEvent = null;
+
+		userservice.findUserById(uId, function(err, user) {
+			if (err) {
+				console.log("Error getting the User");
+			} else {
+				params.author = user;
+				console.log("Got user");
+			}
+		});
+		
+	    geddy.model.Event.first(eId, function (err, event){
+	      if (err){
+			console.log("error getting the event");
+	        throw err;
+	      } else {
+			  console.log("got event");
+		      currentUser = event;
+			  params.timestamp = new Date();
+		  }
+	    });
+		
+        eventservice.findEventById(eId, function(err, event) {
+        	if (err) {
                 console.log("Error getting the Event");
             } else {
-                params['timestamp'] = new Date();
+				console.log("got event");
+                params.timestamp = new Date();
                 var post = geddy.model.Post.create(params);
 
                 eventservice.addPostToEvent(event, post, function(err, post) {
@@ -27,7 +51,8 @@ var Posts = function () {
     };
 
     this.refreshPosts = function(req, resp, params) {
-        var self = this;
+        console.log("refreshing posts");
+		var self = this;
         userservice.loadUserFromSession(self.session, function(err, user) {
             user.getEvents(function(err, events) {
                 var selectedEvent = -1;

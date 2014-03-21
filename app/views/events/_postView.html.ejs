@@ -3,15 +3,15 @@
     <div class="alert alert-danger alert-dismissable">
         <h4 class="alert-heading">Oh shit! You don't have any posts!</h4>
     </div>
-	
+
 	<div id="newPost">
         <div>
             <form id="postForm">
-                <!-- <%- selectTag(events, selectedEvent, {
+                <%- selectTag(events, selectedEvent, {
                   name: 'eventToPostTo'
                 , valueField: 'id'
                 , textField: 'name'
-                }); %> -->
+                }); %>
 
                 <textarea value="" name="content" style="margin-top: 10px; margin-bottom: 20px; width: 90%; font-size: 16pt"
                   rows="3" placeholder="Compose a new Post..."></textarea><br/>
@@ -22,7 +22,15 @@
                 $.ajax({
                   type: "POST",
                   url: '/posts/addPost/',
-                  data: $("#postForm").serialize(),
+                  var content = $("#postForm").serialize();
+				  var id = event.target.id;
+				  data: 
+				  {
+					  content: content,
+					  eventId: id,
+					  timestamp: null,
+					  author: null
+			  	  }
                   success: function(data)
                   {
                     $("#postView").html(data);
@@ -47,9 +55,9 @@
                 </div>
             <% });} %>
     </div>
-	
+
     <% } else { %>
-	
-	
+
+
     <% } %>
 </div>
