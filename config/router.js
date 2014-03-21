@@ -53,6 +53,10 @@ router.resource('users');
 router.resource('events');
 router.resource('courses');
 
+// media upload
+router.match('/media').to({controller: 'Media', action: 'index'});
+router.match('/media/:action').to({controller: 'Media', action: ':action'});
+
 router.match('/:controller/:action').to({controller: ':controller', action: ':action'});
 
 exports.router = router;

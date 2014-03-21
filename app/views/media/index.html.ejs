@@ -1,0 +1,20 @@
+<div class="hero-unit">
+  <h2>Media</h2>
+  <%  if (uploadedFile) { %>
+  <p>Successfully uploaded
+    <a href="/media/uploads/<%= uploadedFile; %>">
+      <%= uploadedFile; %>
+    </a>
+  </p>
+  <p><a href="/media">Upload another file</a></p>
+  <%  }
+      else { %>
+  <h3>Upload a file</h3>
+
+  <form action="/media/upload" method="post" enctype="multipart/form-data">
+    <div><input type="file" name="name" /></div>
+    <div><input type="submit" value="Upload" /></div>
+  </form>
+  <%  } %>
+</div>
+
