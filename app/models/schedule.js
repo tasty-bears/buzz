@@ -1,17 +1,12 @@
-var Course = function () {
+var Schedule = function () {
 
   this.defineProperties({
-    name: {type: 'string', required: true},
-    courseNumber: {type: 'int'},
-    section: {type: 'int'},
-    professor: {type: 'string'}
+    name: {type: 'string', required: true}
   });
+  this.belongsTo('Course');
+  this.hasMany('Events');
 
-  this.hasOne('Schedule');
-
-  this.hasMany('Enrollments');
-  this.hasMany('Users',{through: 'Enrollments'});
- 
+  
   /*
   this.property('login', 'string', {required: true});
   this.property('password', 'string', {required: true});
@@ -36,16 +31,35 @@ var Course = function () {
 
 };
 
+Schedule.createSchedule = function(course){
+  var self = this
+  , scheduleName = course.name + ' Schedule';
+  var schedule = geddy.model.Schedule.create({name: scheduleName});
+  if (!schedule.isValid()){
+    geddy.log.debug('not valid schedule');
+    self.respondWith(schedule);
+  }
+  schedule.save(function(err, data){
+    if (err) {
+      throw err;
+      geddy.log.debug('error in save schedule');
+    } 
+    geddy.log.debug(scheduleName + ' as it should be');
+  });
+  return schedule;
+};
+
 /*
 // Can also define them on the prototype
-Course.prototype.someOtherMethod = function () {
+Schedule.prototype.someOtherMethod = function () {
   // Do some other stuff
 };
 // Can also define static methods and properties
-Course.someStaticMethod = function () {
+Schedule.someStaticMethod = function () {
   // Do some other stuff
 };
-Course.someStaticProperty = 'YYZ';
+Schedule.someStaticProperty = 'YYZ';
 */
 
-Course = geddy.model.register('Course', Course);
+exports.Schedule = Schedule;
+
