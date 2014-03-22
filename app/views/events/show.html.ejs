@@ -25,6 +25,29 @@
       }
       google.maps.event.addDomListener(window, 'load', initialize);
     </script>
+
+<style>
+    div.fb
+{
+width:175px;
+padding:10px;
+border:10px;
+margin:0px;
+border-style:solid;
+border-color:#3B5998;
+}
+
+div.twitter
+{
+width:175px;
+padding:10px;
+border:10px;
+margin:0px;
+border-style:solid;
+border-color:#30D8F0;
+}
+
+</style>
   </head>
 
 <div class="hero-unit">
@@ -114,17 +137,34 @@ id="modal">I'm a modal</div>-->
     <p class="numberOfReccurences"><%= event.numberOfReccurences %></p>
   </div>
 </div>
+
+
+<h3>Feed:</h3>
+<blockquote class="twitter-tweet" lang="en"><p>Funny, people often ask me if being a scientist is like The Nutty Professor. But it&#39;s not really.</p>&mdash; Stephen Hawking (@Prof_S_Hawking) <a href="https://twitter.com/Prof_S_Hawking/statuses/1357746603">March 20, 2009</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
+<div class="fb-post" data-href="https://www.facebook.com/photo.php?fbid=10152067657376961&amp;set=a.10150331291841961.334784.216311481960&amp;type=1" data-width="466"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?fbid=10152067657376961&amp;set=a.10150331291841961.334784.216311481960&amp;type=1">Post</a> by <a href="https://www.facebook.com/BillGates">Bill Gates</a>.</div></div>
+
+
+
+    <div class="fb">
+      <form action="">
+<input type="checkbox" name="vehicle" value="Bike">Post to Facebook</form>
+</div>
+ 
+
+    <div class="twitter">
+      <form action="">
+<input type="checkbox" name="vehicle" value="Car">Post to Twitter 
+</form>
+    </div>
+
+
+
+
+<h3>Map:</h3>
 <div id="map-canvas"/>
-
-
-
-
-
-
-
-
-
-
 
 
 
