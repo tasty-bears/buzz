@@ -54,8 +54,8 @@ router.resource('events');
 router.resource('courses');
 
 // media upload
-router.match('/media').to({controller: 'Media', action: 'index'});
-router.match('/media/:action').to({controller: 'Media', action: ':action'});
+router.match('/store').to({controller: 'Store', action: 'index'});
+router.match('/store/:action').to({controller: 'Store', action: ':action'});
 
 router.match('/:controller/:action').to({controller: ':controller', action: ':action'});
 

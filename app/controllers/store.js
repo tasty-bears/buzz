@@ -3,7 +3,7 @@ var formidable = require('formidable')
   , path = require('path');
 var util = require('util');
 
-var Media = function () {
+var Store = function () {
 
   this.index = function (req, resp, params) {
     var data = {
@@ -12,7 +12,7 @@ var Media = function () {
         }
       , opts = {
           format: 'html'
-        , template: 'app/views/media/index'
+        , template: 'app/views/store/index'
         };
     this.respond(data, opts);
   };
@@ -30,7 +30,7 @@ var Media = function () {
         // Initial chunk, set the filename and create the FS stream
         if (!fileStream) {
           filename = encodeURIComponent(part.filename);
-          fileStream = fs.createWriteStream(path.join('public', 'media', 'uploads', filename));
+          fileStream = fs.createWriteStream(path.join('public', 'store', 'uploads', filename));
         }
         // Write each chunk to disk
         fileStream.write(data);
@@ -41,7 +41,7 @@ var Media = function () {
         // woops, looks like we were't given a file
         if (!filename) {
           self.flash.error('Please select a file to upload.');
-          self.redirect('/media');
+          self.redirect('/store');
           return;
         }
 
@@ -63,7 +63,7 @@ var Media = function () {
       // woops, looks like we were't given a file
       if (!filename) {
         self.flash.error('Please select a file to upload.');
-        self.redirect('/media');
+        self.redirect('/store');
         return;
       }
 
@@ -71,10 +71,10 @@ var Media = function () {
       self.flash.success(
         util.format('Successfully uploaded ' +
                     '<a style="text-decoration: underline"' +
-                    ' href="/media/uploads/%s">%s</a>',
+                    ' href="/store/uploads/%s">%s</a>',
                 filename, filename))
-      //self.redirect('/media?uploaded_file=' + filename);
-      self.redirect('/media');
+      //self.redirect('/store?uploaded_file=' + filename);
+      self.redirect('/store');
     });
 
     // Do it
@@ -82,4 +82,4 @@ var Media = function () {
   };
 };
 
-exports.Media = Media;
+exports.Store = Store;
