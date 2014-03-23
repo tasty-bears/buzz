@@ -59,4 +59,5 @@ router.match('/store/:action').to({controller: 'Store', action: ':action'});
 
 router.match('/:controller/:action').to({controller: ':controller', action: ':action'});
 
+router.resource('medias');
 exports.router = router;
