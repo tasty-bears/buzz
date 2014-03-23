@@ -11,13 +11,13 @@
       <h3 class="list-height span8"><%- linkTo(courses[i].name + " " + courses[i].courseNumber, coursePath(courses[i].id)); %></h3>
       <% var enrolled = false; %>
       <% for (var id in usercoursesId) { %>
-      <%	if (usercoursesId[id] == courses[i].id){ %> 
+      <%	if (usercoursesId[id] == courses[i].id){ %>
       <%		enrolled = true; %>
       <%	}%>
       <%}%>
       <% if (usercoursesId && enrolled){ %>
       <input type="button" value="Unsubscribe" class="btn pull-right sub" id="<%= courses[i].id %>"/>
-      <% } else { %> 
+      <% } else { %>
       <input type="button" value="Subscribe" class="btn pull-right sub" id="<%= courses[i].id %>"/>
       <% } %>
     </div>
@@ -27,7 +27,9 @@
 <script type="text/javascript">
   $(document).ready(function() {
     $(".sub").click(function(event) {
+      var subscribe = false;
       if (event.target.value == "Unsubscribe") {
+        subscribe = true;
       	var myUrl = '/courses/unsubscribeUser';
       } else {
       	var myUrl = '/courses/subscribeUser';
@@ -36,12 +38,14 @@
       $.ajax({
         type: "POST",
         url: myUrl,
-        data: {id: id}, 
-        success: function(data)
-        {
-          $("#index").html(data);
-        }
+        data: {id: id},
+        success: function(data){}
       });
+      if(subscribe) {
+        $("#"+id).val("Subscribe");
+      } else {
+        $("#"+id).val("Unsubscribe");
+      }
     });
   });
 </script>
