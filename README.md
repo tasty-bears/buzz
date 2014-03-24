@@ -4,7 +4,7 @@ Angora Social Media
 Web Application
 
 
-Alpha Release Notes
+v0.2.0 (Beta) Release Notes
 -------------------
 
 ###Functionality###
