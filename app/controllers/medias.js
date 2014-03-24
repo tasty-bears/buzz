@@ -8,6 +8,7 @@ var Medias = function () {
       if (err) {
         throw err;
       }
+      console.log("medias: " + medias); //DEBUG
       self.respondWith(medias, {type:'Media'});
     });
   };
@@ -20,6 +21,7 @@ var Medias = function () {
     var self = this
       , media = geddy.model.Media.create(params);
 
+    geddy.log.debug("Medias.create params: " + JSON.stringify(params));
     if (!media.isValid()) {
       this.respondWith(media);
     }

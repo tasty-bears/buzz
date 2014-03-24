@@ -52,6 +52,7 @@ router.resource('users');
 
 router.resource('events');
 router.resource('courses');
+router.resource('medias');
 
 // media upload
 router.match('/store').to({controller: 'Store', action: 'index'});
@@ -59,5 +60,4 @@ router.match('/store/:action').to({controller: 'Store', action: ':action'});
 
 router.match('/:controller/:action').to({controller: ':controller', action: ':action'});
 
-router.resource('medias');
 exports.router = router;
