@@ -1,23 +1,26 @@
-Tasty Development Group
+Tasty Bears Development Group
 =========================
 Angora Social Media
 Web Application
 
 
-Alpha Release Notes
+v0.2.0 (Beta) Release Notes
 -------------------
 
-###Functionality###
-* Create a new user and log in
-* Login with Twitter and Facebook is not yet fully supported
-* View basic user profile information and log out
-* Create and view courses
-* Create events, assign to courses, and view existing events
+###New functionality###
+* Users can subscribe to courses
+* Courses and events are user-specific
+* Google Maps plugin for event locations
+* Improved event creation and display
+* Facebook and Twitter Post display
+* Post text/media composition display
+* First iteration iOS client
+* Build improvements using *foreman*
+* App is hosted on the web via Heroku
+* Google Analytics have been implemented
 
 ###Known Issues###
-* __running Geddy app on Windows does not build__
-* We set up Mocha as our testing framework, but have had issues integrating Mocha tests with Geddy
-* Trying to run Geddy in production mode produces no errors but hangs on creating the worker process
+* __Only Mac OS X is supported__ - contact developer for more information
 
 ###Building Angora###
 1. Run build/dev.sh for development environment
