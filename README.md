@@ -4,7 +4,7 @@ Angora Social Media
 Web Application
 
 
-v0.2.0 (Beta) Release Notes
+v0.2.1 (Beta) Release Notes
 -------------------
 
 ###New functionality###
@@ -16,13 +16,17 @@ v0.2.0 (Beta) Release Notes
 * Post text/media composition display
 * First iteration iOS client
 * Build improvements using *foreman*
-* App is hosted on the web via Heroku
-* Google Analytics have been implemented
+* Web hosting via Heroku
+* Google Analytics
 
 ###Known Issues###
 * __Only Mac OS X is supported__ - contact developer for more information
+* Heroku/prod app not fully functional due to Mongo issues
 
 ###Building Angora###
 1. Run build/dev.sh for development environment
 1. In web directory, run the generated start.sh script
 1. In browser, visit http://localhost:5000
+
+###Angora on the web###
+https://tastybears-angora.herokuapp.com/
