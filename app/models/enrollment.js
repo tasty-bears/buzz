@@ -1,17 +1,11 @@
-var Course = function () {
+var Enrollment = function () {
 
   this.defineProperties({
-    name: {type: 'string', required: true},
-    courseNumber: {type: 'int'},
-    section: {type: 'int'},
-    professor: {type: 'string'}
+    
   });
-
-  this.hasOne('Schedule');
-
-  this.hasMany('Enrollments');
-  this.hasMany('Users',{through: 'Enrollments'});
- 
+  
+  this.belongsTo('User');
+  this.belongsTo('Course');
   /*
   this.property('login', 'string', {required: true});
   this.property('password', 'string', {required: true});
@@ -38,14 +32,15 @@ var Course = function () {
 
 /*
 // Can also define them on the prototype
-Course.prototype.someOtherMethod = function () {
+Enrollment.prototype.someOtherMethod = function () {
   // Do some other stuff
 };
 // Can also define static methods and properties
-Course.someStaticMethod = function () {
+Enrollment.someStaticMethod = function () {
   // Do some other stuff
 };
-Course.someStaticProperty = 'YYZ';
+Enrollment.someStaticProperty = 'YYZ';
 */
 
-Course = geddy.model.register('Course', Course);
+exports.Enrollment = Enrollment;
+

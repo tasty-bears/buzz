@@ -4,7 +4,7 @@ Angora Social Media
 Web Application
 
 
-Alpha Release Notes
+v0.2.0 (Beta) Release Notes
 -------------------
 
 ###Functionality###
@@ -15,11 +15,10 @@ Alpha Release Notes
 * Create events, assign to courses, and view existing events
 
 ###Known Issues###
-* __running Geddy app on Windows does not build__
-* We set up Mocha as our testing framework, but have had issues integrating Mocha tests with Geddy
-* Trying to run Geddy in production mode produces no errors but hangs on creating the worker process
+* Only Mac OS X is supported.
+* Production is totally untested (lol).
 
 ###Building Angora###
 1. Run build/dev.sh for development environment
-1. In web directory, run 'geddy'
-1. In browser, visit http://localhost:4000
+1. In web directory, run the generated start.sh script
+1. In browser, visit http://localhost:5000

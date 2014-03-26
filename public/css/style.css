@@ -61,6 +61,17 @@ code {
   margin-left: 0px;
 }
 
+.list-item div .sub {
+  padding: 2px 5px;
+  font-size: 11.9px;
+  margin: 5px;
+  display: inline;
+  vertical-align: middle;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+}
+
 #flash-container {
   margin-top: 48px;
 }
