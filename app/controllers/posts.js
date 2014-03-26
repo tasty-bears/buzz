@@ -9,7 +9,6 @@ var Posts = function () {
     };
 
     this.addPost = function(req, resp, params) {
-        console.log("posts/addPost");
 		var self = this;
 		var uId = this.session.get('userId');
 		var eId = params.id;
@@ -20,7 +19,6 @@ var Posts = function () {
 				console.log("Error getting the User");
 			} else {
 				params.author = user;
-				console.log("Got user");
 			}
 		});
 		
@@ -29,7 +27,6 @@ var Posts = function () {
 			console.log("error getting the event");
 	        throw err;
 	      } else {
-			  console.log("got event");
 		      currentUser = event;
 			  params.timestamp = new Date();
 		  }
@@ -39,7 +36,6 @@ var Posts = function () {
         	if (err) {
                 console.log("Error getting the Event");
             } else {
-				console.log("got event");
                 params.timestamp = new Date();
                 var post = geddy.model.Post.create(params);
 
@@ -51,7 +47,6 @@ var Posts = function () {
     };
 
     this.refreshPosts = function(req, resp, params) {
-        console.log("refreshing posts");
 		var self = this;
         userservice.loadUserFromSession(self.session, function(err, user) {
             user.getEvents(function(err, events) {
