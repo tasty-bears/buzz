@@ -53,8 +53,14 @@ router.get('/auth/facebook/callback').to('Auth.facebookCallback');
 router.resource('users');
 router.resource('events');
 router.resource('courses');
+router.resource('posts');
+
+// media upload
+router.match('/media').to({controller: 'Media', action: 'index'});
+router.match('/media/:action').to({controller: 'Media', action: ':action'});
 
 // general / fallback
 router.match('/:controller/:action').to({controller: ':controller', action: ':action'});
+router.match('/:controller').to({controller: ':controller', action: 'index'});
 
 exports.router = router;
