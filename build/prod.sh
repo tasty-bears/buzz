@@ -14,8 +14,8 @@ read -p "Are you sure? [y/N] " response
 if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
 then
     echo -e ""
-    git clean -X -f
-    echo -e "===================="
+    git clean -x -f
+    echo "===================="
 else
     echo -e "\ndude wat r u doin\n===================="
     exit 0
@@ -27,16 +27,26 @@ cd $scriptdir/..
 npm install
 echo -e "===================="
 
-# setup env file, filestore db, and sessions
-echo -e "Setting up environment...\n"
-cp $scriptdir/.env $scriptdir/../
-cp $scriptdir/_datastore.json $scriptdir/../
-echo -e "===================="
+
+# # clear local env file, filestore db, and sessions
+# echo -e "Setting up environment...\n"
+#
+# heroku_env=$(heroku config --app tastybears-angora | sed 1d | sed s/:/=/ | sed -e "s/ //g")
+#
+# read -p "Would you like to reset the Mongo database? [y/N] " response
+# if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
+# then
+#     echo -e ""
+#     env $heroku_env node $scriptdir/seed_mongo.js 
+# fi
+# echo -e "===================="
+
 
 # create server start script
 echo -e "Creating server start script 'start.sh'..."
 echo "#!/usr/bin/env bash
-node node_modules/foreman/nf.js start" > $scriptdir/../start.sh
+heroku_env=$(heroku config --app tastybears-angora | sed 1d | sed s/:/=/ | sed -e "s/ //g")
+env $heroku_env PORT=5000 node server.js" > $scriptdir/../start.sh
 chmod +x $scriptdir/../start.sh
 echo -e "===================="
 # use ../start.sh to run server
