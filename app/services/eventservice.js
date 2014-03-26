@@ -1,4 +1,3 @@
-
 var EventService = function() {
 	var userservice = require('../services/userservice');
 	var eventserviceSelf = this;
@@ -86,15 +85,16 @@ var EventService = function() {
 				action(null, data);
 			}
 		});
+		console.log("added post to event");
 	};
 
 	this.findEventById = function(eventId, action) {
 		geddy.model.Event.first({id: eventId}, function(err, event) {
 			if (err || !event) {
-				// TODO : single or double quote here?
-				action({event: 'The event was not found'}, null);
+				console.log("Could not find event by ID");
+				// action({event: 'The event was not found'}, null);
 			} else {
-				action(null, feed);
+				action(null, event);
 			}
 		});
 	};
@@ -107,7 +107,7 @@ var EventService = function() {
 	    // that way it will be getTweetsToDisplay(feeds, action)
 	    // will be called in posts.js and main.js
 		if (selectedEvent != -1) {
-			for (var i = 0,len = events.length; i < len; i++) {
+			for (var i = 0, len = events.length; i < len; i++) {
 				if (events[i].id == selectedEvent) {
 					events = [events[i]];
 					break;
@@ -124,7 +124,7 @@ var EventService = function() {
 							if (err) {
 								action(err, null);
 							} else {
-								tweets = tweets.concat(eventPosts);
+								posts = posts.concat(eventPosts);
 								if (i == len1-1) {
 									posts.sort(function(a,b) {
 										if (a.postdate.getTime() > b.postdate.getTime()) {
@@ -164,6 +164,6 @@ var EventService = function() {
 			}
 		}());
 	};
-};
+}
 
 module.exports = new EventService();
