@@ -164,6 +164,7 @@ var Event = function () {
 };
 
 Event = geddy.model.register('Event', Event);
+exports.Event = Event;
 }());
 
 (function () {
