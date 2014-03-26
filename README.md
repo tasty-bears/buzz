@@ -18,6 +18,8 @@ v0.2.1 (Beta) Release Notes
 * Build improvements using *foreman*
 * Web hosting via Heroku
 * Google Analytics
+* Ability to upload and view files
+* Barebones FooCDN repository
 
 ###Known Issues###
 * __Only Mac OS X is supported__ - contact developer for more information
