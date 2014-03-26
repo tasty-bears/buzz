@@ -159,7 +159,7 @@ var Courses = function () {
     var cId = params.id;
     var myUser = null;
     var myCourse = null;
-
+	
     geddy.model.User.first(uId, function (err, user){
       if (err){
         throw err;

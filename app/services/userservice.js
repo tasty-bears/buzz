@@ -1,4 +1,3 @@
-
 var UserService = function() {
 
 	this.loadUserFromSession = function(session, action) {

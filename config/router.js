@@ -57,5 +57,6 @@ router.resource('posts');
 
 // general / fallback
 router.match('/:controller/:action').to({controller: ':controller', action: ':action'});
+router.match('/:controller').to({controller: ':controller', action: 'index'});
 
 exports.router = router;

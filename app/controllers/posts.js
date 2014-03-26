@@ -1,4 +1,3 @@
-
 var userservice = require('../services/userservice');
 var eventservice = require('../services/eventservice');
 
@@ -10,7 +9,8 @@ var Posts = function () {
     };
 
     this.addPost = function(req, resp, params) {
-        var self = this;
+        console.log("posts/addPost");
+		var self = this;
 		var uId = this.session.get('userId');
 		var eId = params.id;
 		var currentEvent = null;

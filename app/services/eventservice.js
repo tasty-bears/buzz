@@ -1,4 +1,3 @@
-
 var EventService = function() {
 	var userservice = require('../services/userservice');
 	var eventserviceSelf = this;

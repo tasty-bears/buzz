@@ -1,4 +1,3 @@
-
 var Post = function () {
 
   this.defineProperties({

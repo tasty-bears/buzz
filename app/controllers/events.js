@@ -77,10 +77,10 @@ var Events = function () {
 
   this.show = function (req, resp, params) {
     var self = this;
-
+	
     var data = {
         params: params,
-		    // user: null,
+		// user: null,
         event: null,
         eventCourseName: null,
         eventCourseNumber: null,
@@ -111,6 +111,7 @@ var Events = function () {
             if (err) {
                 throw err;
             } else {
+				data.posts = posts;
                self.respond(data);
             }
         });
