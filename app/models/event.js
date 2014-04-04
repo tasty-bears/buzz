@@ -9,20 +9,22 @@ var Event = function () {
     time: {type: 'time', required: true},
     //datetimeEnd: {type: 'datetime'},
     //creator: {type: 'object'},
-    duration: {type: 'number', required: true},
+    duration: {type: 'number', required: false},
 
     locationDescription: {type: 'string', required: true},
-    locationLat: {type: 'number'},
-    locationLong: {type: 'number'},
+    // locationLat: {type: 'number'},
+    // locationLong: {type: 'number'},
+    latlng: {type: 'string'},
 
     //none, daily, weekly, monthly
     repeats: {type: 'string', required: false},
 
     //pass in array of weekday indexes (0-6) (start sunday)
     repeatDaysOfWeek: {type: 'object'},
-    repeatDayOfMonth: {type: 'number'},
+    endDate: {type: 'date'},
+    //repeatDayOfMonth: {type: 'number'},
     //recurrenceEndDate: {type: 'datetime'},
-    numberOfRecurrences: {type: 'number'}
+    //numberOfRecurrences: {type: 'number'}
 
     //inviteList: {?},
     //attendeeList: {?},
