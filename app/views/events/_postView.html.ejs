@@ -1,18 +1,16 @@
 <div id="newPost">
     <div>
         <form id="postForm">
-			<textarea value="" name="content" style="margin-top: 10px; margin-bottom: 20px; width: 75%; font-size: 16pt" rows="3" placeholder="Compose a new Post...">
-			</textarea>
-			<!-- <textarea value="" name="attachments" style="margin-top: 10px; margin-bottom: 20px; width: 25%; font-size: 12pt" rows="1" placeholder="Attachments">
-			</textarea><br/> -->
+			<textarea value="" type="text" id="content" name="content" style="margin-top: 10px; margin-bottom: 20px; width: 75%; font-size: 16pt" rows="3" placeholder="Compose a new Post..."></textarea>
+			<textarea value="" name="attachments" id="attachments" style="margin-top: 10px; margin-bottom: 20px; width: 25%; font-size: 12pt" rows="1" placeholder="Attachments"></textarea><br/>
 			<input type="button" onclick="submitPost()" value="Post" class="btn btn-primary" id="<%= event.id %>"/>
-			<!-- <input type="button" onclick="attachMedia()" value="Attach media" class="btn btn-primary"/>
-			<input type="button" onclick="" value="Post to Twitter" class="btn btn-secondary"/>
+			<input type="button" onclick="attachMedia()" value="Attach media" class="btn btn-primary"/>
+			<!-- <input type="button" onclick="" value="Post to Twitter" class="btn btn-secondary"/>
 			<input type="button" onclick="" value="Post to Facebook" class="btn btn-secondary"/> -->
         </form>
         <script type="text/javascript">
 			function submitPost() {
-				var content = $("#postForm").serialize();
+				var content = $("#content").val();
 				var id = event.target.id;
 				$.ajax({
 					type: "POST",
@@ -36,26 +34,10 @@
 </div>
 <div id="feedWarning">
 	<h3>Posts</h3>
-    <% if (posts.length == 0) { %>
+    <% if (!posts || posts.length == 0) { %>
     <div class="alert alert-danger alert-dismissable">
         <h4 class="alert-heading">Shucks! No posts here!</h4>
     </div>
-	<!-- <div id="fake_posts">
-		<div class="well">
-			<h3>Class notes</br>
-				<small>Posted by Rocky Balboa at 
-					<span>8:38 PM on October 28, 1985</span>
-				</small></br>
-				<img src="http://www.empireonline.com/images/features/100greatestcharacters/photos/34.jpg" alt="User profile image" width="100" height="100">
-				Lol just kicked Drago's ass #Merica
-				<div id="media">
-					<small>
-						Notes: <a href="http://www.bodybuilding.com/fun/rocky_workout.htm">How I did it</a>
-					</small>
-				</div>
-			</h3>
-		</div>
-	</div> -->
 
     <% } else { %>
 	    <div id="posts">
@@ -63,7 +45,7 @@
 	              posts.forEach(function(post) { %>
 	                <div class="well">
 	                    <h3>
-	                        <small>Posted by <%- post.author.name %> in
+	                        <small>Posted by <%- post.author.username %> in
 	                            <%- post.event.name %> at
 	                            <span><%- post.timestamp.toLocaleTimeString() %> on <%- post.timestamp.toLocaleDateString() %></span>
 	                        </small><br />

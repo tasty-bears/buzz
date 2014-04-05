@@ -43,15 +43,13 @@ var Posts = function () {
 		};
 		
 		var post = geddy.model.Post.create(data);
-		
+				
 		post.save(function(err, data) {
 			if (err) {
 				throw err;
 			}
 		});
-		
-		console.log(post);
-		
+						
 		eventservice.addPostToEvent(currentEvent, post, function(err, post) {
 			if (err) {
 				throw err;
@@ -60,7 +58,7 @@ var Posts = function () {
 				self.refreshPosts(currentEvent);
 			}
 		});
-    };
+	};
 
     this.refreshPosts = function(event, req, resp, params) {
 		console.log("refreshing posts\n");

@@ -141,8 +141,7 @@ var EventService = function() {
 											var post = posts[j];
 
 											post.getEvent(function(err, event) {
-												event.getUser(function(err, owner) {
-													post.author = owner ? owner : {name: "No Author"};
+												event.getUser(function(err, user) {
 													post.event = event;
 													unpacked.push(post);
 													if (j == len2-1) {

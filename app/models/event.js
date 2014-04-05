@@ -34,9 +34,8 @@ var Event = function () {
   this.validatesPresent('name');
   this.belongsTo('Schedule');
   this.hasMany('Posts');
-
   this.hasOne('User'); //creator
-  //this.hasMany('Posts');
+  
   //this.hasMany('Enrollments'); //attendees
   //this.hasMany('Users', {through: "Enrollments"})
 };
