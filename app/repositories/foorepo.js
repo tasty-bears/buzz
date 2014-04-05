@@ -2,17 +2,6 @@
 
 var hostname = "foocdn.azurewebsites.net"
 
-// returns a cookie-cutter callback closure
-var request_callback = function(action) {
-    return function(err,data) {
-        if (err) {
-            action(err, null);
-        } else {
-            action(null, data);
-        }
-    }
-}
-
 var FooRepo = function() {
     // http://geddyjs.org/reference#utilities_request
 
@@ -24,7 +13,7 @@ var FooRepo = function() {
                 url:'http://{0}{1}'.format(hostname, endpoint),
                 method:'GET'
             },
-            request_callback(action)
+            action
         );
     };
 
@@ -37,7 +26,7 @@ var FooRepo = function() {
                 url:'http://{0}{1}/'.format(hostname, endpoint),
                 method:'POST'
             },
-            request_callback(action)
+            action
         );
     };
 
@@ -53,7 +42,7 @@ var FooRepo = function() {
                 method:'PUT',
                 data:'?type={0}'.format(locationType)
             },
-            request_callback(action)
+            action
         );
     };
 
@@ -66,7 +55,7 @@ var FooRepo = function() {
                 url:'http://{0}{1}/'.format(hostname, endpoint),
                 method:'DELETE'
             },
-            request_callback(action)
+            action
         );
     };
 
@@ -93,7 +82,7 @@ var FooRepo = function() {
                 url:'http://{0}{1}/'.format(hostname, endpoint),
                 method:'GET'
             },
-            request_callback(action)
+            action
         );
     };
 
@@ -117,7 +106,7 @@ var FooRepo = function() {
                 // geddy reference says data should be a string, but FooCDN
                 // implies it should be JSON
             },
-            request_callback(action)
+            action
         );
     }
 
