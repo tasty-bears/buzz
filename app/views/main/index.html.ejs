@@ -1,5 +1,5 @@
 <!-- Lets talk about geddy -->
-<div class="hero-unit geddy-welcome-box">
+<div class="hero-unit geddy-welcome-box" id="homepage">
 
   <% if (user) { %>
     <div>
@@ -11,32 +11,24 @@
     <!-- <p><%- linkTo('See Courses', '/courses', {class: 'btn btn-primary btn-large'}) %></p>
     <p><%- linkTo('See Events', '/events', {class: 'btn btn-primary btn-large'}) %></p> -->
 </div>
+<div class="span2 offset0">
+<h4> My Courses </h4>
 
-<h2 class="span4 offset0"> My Courses </h2>
-<h2 class="span8 offset0 pull-right"> My Events </h2>
-
-<div class="span4 offset0 courses-list ">
+<div class="span2 offset0 courses-list ">
   <% if (courses) { %>
     <% for (var i = 0, ii = courses.length; i < ii; i++) { %>
       <div class="row list-item pull-left" id="course-<%= courses[i].id; %>">
-        <div class="span4">
-          <h3 class="list-height"><%- linkTo(courses[i].name + " " + courses[i].courseNumber, coursePath(courses[i].id)); %></h3>
+        <div class="span2">
+          <h5 class="list-height"><%- linkTo(courses[i].name + " " + courses[i].courseNumber, coursePath(courses[i].id)); %></h5>
         </div>
       </div>
     <% } %>
   <% } %>
 </div>
+</div>
 
-<div class="span8 offset0 events-list pull-right">
-  <% if (events) { %>
-    <% for (var i = 0, ii = events.length; i < ii; i++) { %>
-      <div class="row list-item" id="event-<%= events[i].id; %>">
-        <div class="span8">
-          <h3 class="list-height"><%- linkTo(geddy.date.strftime(events[i].date, "%m/%d") + " - " + eventnames[i] + " " + eventnumbers[i] +  " - " + events[i].name, eventPath(events[i].id)); %></h3>
-        </div>
-      </div>
-    <% } %>
-  <% } %>
+<div class="span10 offset0 events-list pull-right" id="calendar">
+  <%- partial('calendar', {events: events, eventnames: eventnames, eventnumbers: eventnumbers}) %>
 </div>
   <% } else { %>
     <h1>Hello, stranger</h1>
