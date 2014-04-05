@@ -11,8 +11,10 @@ var Events = function () {
   this.addEvent = function(req, resp, params) {
 
       var self = this;
+	  
       userservice.loadUserFromSession(self.session, function(err, user) {
-        var event = geddy.model.Event.create(params);
+		var event = geddy.model.Event.create(params);
+				
         eventservice.addEvent(user, event, function(err, events) {
           self.respond({params: params, events: events, selectedEvent: -1}, {
             format: 'html'

@@ -1,7 +1,7 @@
 var userservice = require('../services/userservice');
 var eventservice = require('../services/eventservice');
 
-var Posts = function () {
+var Posts = function () {	
     this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
 
     this.index = function (req, resp, params) {
@@ -11,53 +11,73 @@ var Posts = function () {
     this.addPost = function(req, resp, params) {
 		var self = this;
 		var uId = this.session.get('userId');
-		var eId = params.id;
+		var eId = params.eventId;
+		var author;
 		var currentEvent = null;
-
+		
+		// use loadUserFromSession
+		
 		userservice.findUserById(uId, function(err, user) {
 			if (err) {
 				console.log("Error getting the User");
 			} else {
-				params.author = user;
+				 author = user;
 			}
 		});
+		
+		// TODO eventservice.findEventById
 		
 	    geddy.model.Event.first(eId, function (err, event){
 	      if (err){
 			console.log("error getting the event");
 	        throw err;
 	      } else {
-		      currentUser = event;
-			  params.timestamp = new Date();
+		      currentEvent = event;
 		  }
 	    });
+						
+		var data = {
+			content: params.content,
+			timestamp: new Date(),
+			author: author
+		};
 		
-        eventservice.findEventById(eId, function(err, event) {
-        	if (err) {
-                console.log("Error getting the Event");
-            } else {
-                params.timestamp = new Date();
-                var post = geddy.model.Post.create(params);
-
-                eventservice.addPostToEvent(event, post, function(err, post) {
-                    self.refreshPosts();
-                });
-            }
-        });
+		var post = geddy.model.Post.create(data);
+		
+		post.save(function(err, data) {
+			if (err) {
+				throw err;
+			}
+		});
+		
+		console.log(post);
+		
+		eventservice.addPostToEvent(currentEvent, post, function(err, post) {
+			if (err) {
+				throw err;
+			}
+			else {
+				self.refreshPosts(currentEvent);
+			}
+		});
     };
 
-    this.refreshPosts = function(req, resp, params) {
+    this.refreshPosts = function(event, req, resp, params) {
+		console.log("refreshing posts\n");
 		var self = this;
-        userservice.loadUserFromSession(self.session, function(err, user) {
+        userservice.loadUserFromSession(self.session, function(err, user) {			
+			// TODO in show.html.ejs:
+			// only show event button if event's user = current user
+				
             user.getEvents(function(err, events) {
                 var selectedEvent = -1;
                 eventservice.getPostsToDisplay(events, selectedEvent, function(err, posts) {
                     if (err) {
-                        // TODO do something with err
+                        console.log("err getting posts to display");
                     } else {
-                        self.respond({params: params, events: events, posts: posts, selectedEvent: selectedEvent}, {
+                        self.respond({params: params, event: event, events: events, posts: posts}, {
                             format: 'html'
-                            , template: 'app/views/main/_postView'
+                            , template: 'app/views/events/_postView'
                             , layout: false
                         });
                     }

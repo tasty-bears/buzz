@@ -85,21 +85,20 @@ var EventService = function() {
 				action(null, data);
 			}
 		});
-		console.log("added post to event");
 	};
 
 	this.findEventById = function(eventId, action) {
 		geddy.model.Event.first({id: eventId}, function(err, event) {
 			if (err || !event) {
-				console.log("Could not find event by ID");
-				// action({event: 'The event was not found'}, null);
+				console.log("Could not find event by ID" + eventId);
+				action(err, null);
 			} else {
 				action(null, event);
 			}
 		});
 	};
 
-	this.getPostsToDisplay = function(events, selectedEvent, action) {
+	this.getPostsToDisplay = function(events, selectedEvent, action) {		
 		var posts = new Array();
 
 		// TODO make this block its own function in the controller that calls
@@ -127,9 +126,9 @@ var EventService = function() {
 								posts = posts.concat(eventPosts);
 								if (i == len1-1) {
 									posts.sort(function(a,b) {
-										if (a.postdate.getTime() > b.postdate.getTime()) {
+										if (a.timestamp.getTime() > b.timestamp.getTime()) {
 											return -1;
-										} else if (a.postdate.getTime() < b.postdate.getTime()) {
+										} else if (a.timestamp.getTime() < b.timestamp.getTime()) {
 											return 1;
 										} else {
 											return 0;
