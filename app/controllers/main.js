@@ -46,41 +46,43 @@ var Main = function () {
           data.courses = myCourses;
         });
 
-        //make temp array for all of events the user must attend
-        var myEvents = new Array();
-        //loop through and get all events for each course user is in
-        for (var i = 0; i < data.courses.length; i++){
-          courseservice.getEventsFromSchedule(data.courses[i], function(err, data) {
-            if (err) {
-              throw err;
-            }
-            // add each event to temp array
-            for (var x in data){
-              myEvents.push(data[x]);
-            }
+        if(data.courses != null){
+          //make temp array for all of events the user must attend
+          var myEvents = new Array();
+          //loop through and get all events for each course user is in
+          for (var i = 0; i < data.courses.length; i++){
+            courseservice.getEventsFromSchedule(data.courses[i], function(err, data) {
+              if (err) {
+                throw err;
+              }
+              // add each event to temp array
+              for (var x in data){
+                myEvents.push(data[x]);
+              }
+            });
+          }
+          myEvents = myEvents.sort(function(a, b){
+              if(a.date < b.date) return -1;
+              if(a.date > b.date) return 1;
+              return 0;
           });
-        }
-        myEvents = myEvents.sort(function(a, b){
-            if(a.date < b.date) return -1;
-            if(a.date > b.date) return 1;
-            return 0;
-        }); 
-        //assign data events array for view use
-        data.events = myEvents;
+          //assign data events array for view use
+          data.events = myEvents;
 
-        //get course names and numbers for event naming on view
-        //temp arrays to get values
-        var names = new Array();
-        var numbers = new Array();
-        for (var i = 0; i < data.events.length; i++) {
-          //call functions from event service to get corresponding name and number
-          names.push(eventservice.getCourseName(data.events[i]));
-          numbers.push(eventservice.getCourseNumber(data.events[i]));
+          //get course names and numbers for event naming on view
+          //temp arrays to get values
+          var names = new Array();
+          var numbers = new Array();
+          for (var i = 0; i < data.events.length; i++) {
+            //call functions from event service to get corresponding name and number
+            names.push(eventservice.getCourseName(data.events[i]));
+            numbers.push(eventservice.getCourseNumber(data.events[i]));
+          }
+          //assign values to data to pass to view
+          data.eventnames = names;
+          data.eventnumbers = numbers;
         }
-        //assign values to data to pass to view
-        data.eventnames = names;
-        data.eventnumbers = numbers;
-
+        
       }
       self.respond(data, {
         format: 'html'

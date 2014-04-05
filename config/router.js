@@ -19,8 +19,6 @@
 
 var router = new geddy.RegExpRouter();
 
-router.get('/').to('Main.index');
-
 // Basic routes
 // router.match('/moving/pictures/:id', 'GET').to('Moving.pictures');
 //
@@ -39,25 +37,31 @@ router.get('/').to('Main.index');
 //   this.get('/print(.:format)').to('Hemispheres.print');
 // });
 
+// root
+router.get('/').to('Main.index');
 router.get('/login').to('Main.login');
 router.get('/logout').to('Main.logout');
+
+// authentication
 router.post('/auth/local').to('Auth.local');
 router.get('/auth/twitter').to('Auth.twitter');
 router.get('/auth/twitter/callback').to('Auth.twitterCallback');
 router.get('/auth/facebook').to('Auth.facebook');
 router.get('/auth/facebook/callback').to('Auth.facebookCallback');
-router.get('/auth/yammer').to('Auth.yammer');
-router.get('/auth/yammer/callback').to('Auth.yammerCallback');
-router.resource('users');
 
+// resources
+router.resource('users');
 router.resource('events');
 router.resource('courses');
 router.resource('medias');
+router.resource('posts');
 
 // media upload
 router.match('/stash').to({controller: 'Stash', action: 'index'});
 router.match('/stash/:action').to({controller: 'Stash', action: ':action'});
 
+// general / fallback
 router.match('/:controller/:action').to({controller: ':controller', action: ':action'});
+router.match('/:controller').to({controller: ':controller', action: 'index'});
 
 exports.router = router;

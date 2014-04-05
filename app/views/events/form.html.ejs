@@ -1,33 +1,12 @@
-<!-- 
-<head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style type="text/css">
-      #map-canvas { height: 400px }
-    </style>
-<script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7-Lbo8t0W1I9_Uo3logWrK3EsdkQzGVQ&sensor=false">
-    </script>
-    <script type="text/javascript">
 
-      function initialize() {
+<head lang="en">
+  <meta charset="utf-8">
+  <title>jQuery Location Picker</title>
+  <link type="text/css" rel="stylesheet" href="/css/locationpicker.css" />
+</head>
 
-        var myLatlng = new google.maps.LatLng(40.836334, -96.695191);
-        var mapOptions = {
-          zoom: 12,
-          center: myLatlng
-        }
-        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-        var marker = new google.maps.Marker({
-            position: myLatlng,
-            map: map,
-            title: 'Hello World!'
-        });
-      }
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
-  </head>
- -->
+
 
 
 <div class="control-group">
@@ -85,11 +64,11 @@
 <div class="control-group">
   <label for="locationDescription" class="control-label">Location Description*</label>
   <div class="controls">
-    <%- contentTag('input', event.locationDescription, {type:'text', class:'span2', name:'locationDescription'}) %>
+    <%- contentTag('input', event.locationDescription, {type:'text', class:'span6', name:'locationDescription'}) %>
   </div>
 </div>
 
-<div class="control-group">
+<!-- <div class="control-group">
   <label for="locationLat" class="control-label">Location Latitude</label>
   <div class="controls">
     <%- contentTag('input', event.locationLat, {type:'float', class:'span2', name:'locationLat'}) %>
@@ -101,7 +80,7 @@
   <div class="controls">
     <%- contentTag('input', event.locationLong, {type:'float', class:'span2', name:'locationLong'}) %>
   </div>
-</div>
+</div> -->
 
 <!-- <div class="control-group">
   <label for="repeats" class="control-label">Repeat Type*</label>
@@ -145,6 +124,30 @@
 </div> -->
 
 
+<!-- This location picker code was found at https://code.google.com/p/locationpicker/
+We used this to reuse the complicated process of finding a location by search or map -->
+<div class="control-group">
+  <label for="location" class="control-label">Select Location* </label>
+  <div class="controls">
+    <p>
+
+      <%- contentTag('input', event.latlng, {type:'text', class:'span2 latlng', name:'latlng'}) %>
+     
+     <!--  <input class='latlng' type='text' id="latlng" value=/> -->
+    </p>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/js/jquery.locationpicker.js"></script>
+    <script>
+      $('.latlng').locationPicker();
+      // var latlangArray = $('.latlng').split(",");
+      // event.locationLong = latlangArray[0];
+      // event.locationLat = latlangArray[1];
+    </script>
+  </div>
+</div>
+
 <div class="control-group">
   <label for="title" class="control-label">Assign Course*</label>
   <div class="controls">
@@ -155,8 +158,3 @@
       }); %>
   </div>
 </div>
-
-
-<!-- <H2>Select Location</H2>
-<div id="map-canvas"/>
- -->
