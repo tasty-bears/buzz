@@ -3,7 +3,7 @@ var formidable = require('formidable')
   , path = require('path');
 var util = require('util');
 
-var Store = function () {
+var Stash = function () {
 
   this.index = function (req, resp, params) {
     var data = {
@@ -12,7 +12,7 @@ var Store = function () {
         }
       , opts = {
           format: 'html'
-        , template: 'app/views/store/index'
+        , template: 'app/views/stash/index'
         };
     this.respond(data, opts);
   };
@@ -30,7 +30,7 @@ var Store = function () {
         // Initial chunk, set the filename and create the FS stream
         if (!fileStream) {
           filename = encodeURIComponent(part.filename);
-          fileStream = fs.createWriteStream(path.join('public', 'store', 'uploads', filename));
+          fileStream = fs.createWriteStream(path.join('public', 'stash', 'uploads', filename));
         }
         // Write each chunk to disk
         fileStream.write(data);
@@ -41,7 +41,7 @@ var Store = function () {
         // woops, looks like we were't given a file
         if (!filename) {
           self.flash.error('Please select a file to upload.');
-          self.redirect('/store');
+          self.redirect('/stash');
           return;
         }
 
@@ -63,7 +63,7 @@ var Store = function () {
       // woops, looks like we were't given a file
       if (!filename) {
         self.flash.error('Please select a file to upload.');
-        self.redirect('/store');
+        self.redirect('/stash');
         return;
       }
 
@@ -71,10 +71,10 @@ var Store = function () {
       self.flash.success(
         util.format('Successfully uploaded ' +
                     '<a style="text-decoration: underline"' +
-                    ' href="/store/uploads/%s">%s</a>',
+                    ' href="/stash/uploads/%s">%s</a>',
                 filename, filename))
-      //self.redirect('/store?uploaded_file=' + filename);
-      self.redirect('/store');
+      //self.redirect('/stash?uploaded_file=' + filename);
+      self.redirect('/stash');
     });
 
     // Do it
@@ -82,4 +82,4 @@ var Store = function () {
   };
 };
 
-exports.Store = Store;
+exports.Stash = Stash;
