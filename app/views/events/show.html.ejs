@@ -27,8 +27,21 @@
   <script type="text/javascript">
 
     function initialize() {
+      var lat;
+      var lng;
+      var latlng;
+     console.log(<%= event.latlng %>);
+      latlng = "<%= event.latlng %>";
+     console.log(latlng);
 
-      var myLatlng = new google.maps.LatLng( <%= event.locationLat %>, <%= event.locationLong %>);
+      var latlangArray = latlng.split(",");
+       lat = latlangArray[0];
+       lng = latlangArray[1];
+       console.log(lat);
+       console.log(lng);
+
+
+      var myLatlng = new google.maps.LatLng( lat , lng);
       var mapOptions = {
         zoom: 12,
         center: myLatlng
