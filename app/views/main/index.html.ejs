@@ -27,8 +27,8 @@
 </div>
 </div>
 
-<div class="span10 offset0 events-list pull-right" id="calendar">
-  <%- partial('calendar', {events: events, eventnames: eventnames, eventnumbers: eventnumbers}) %>
+<div class="span10 offset0 pull-right" id="calendarpartial">
+  <%- partial('calendar', {myEvents: events}) %>
 </div>
   <% } else { %>
     <h1>Hello, stranger</h1>

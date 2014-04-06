@@ -5,18 +5,22 @@
   <script type='text/javascript'>
     $(document).ready(function() {
 
-      // page is now ready, initialize the calendar...
+      var calEvents = new Array();
 
+      calEvents = <%- JSON.stringify(myEvents) %>;
+
+      //initialize the calendar.
       $('#calendar').fullCalendar({
         // put your options and callbacks here
         header:
         {
 				      left: 'prev,next today',
-				          center: 'title',
-				              right: 'month,agendaWeek,agendaDay'
+				      center: 'title',
+				      right: 'month,agendaWeek,agendaDay'
 			  },
-        defaultView: 'agendaWeek'
-      })
+      defaultView: 'agendaWeek',
+      events: calEvents
+      });
 
     });
   </script>
