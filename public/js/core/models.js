@@ -173,7 +173,9 @@ exports.Event = Event;
 var Media = function () {
 
   this.defineProperties({
-    url: {type: 'string', required: true}
+    mimeType: {type: 'string', required: true},
+    hostname: {type: 'string', required: true},
+    blobId: {type: 'string', required: true}
   });
 
 };
