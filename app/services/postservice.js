@@ -40,6 +40,17 @@ var PostService = function() {
 		});
 	};
 
+	// compare by timestamp
+	this.compare = function(a,b) {
+		if (a.timestamp.getTime() > b.timestamp.getTime()) {
+			return -1;
+		} else if (a.timestamp.getTime() < b.timestamp.getTime()) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+
 	this.getCommentsToDisplay = function(posts, selectedPost, action) {
 		var comments = new Array();
 

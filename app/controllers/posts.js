@@ -1,5 +1,6 @@
 var userservice = require('../services/userservice');
 var eventservice = require('../services/eventservice');
+var postservice = require('../services/postservice');
 
 var Posts = function () {	
     this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
@@ -11,6 +12,7 @@ var Posts = function () {
         geddy.log.debug(params);
 
         eventservice.getPostsToDisplay(event, function(err, posts) {
+            posts.sort(postservice.compare);
             self.respond({event: event, posts: posts});
         });
     };

@@ -104,17 +104,6 @@ var EventService = function() {
 				action(err, null);
 			} else {
 
-				// sort posts by timestamp
-				// posts.sort(function(a,b) {
-				// 	if (a.timestamp.getTime() > b.timestamp.getTime()) {
-				// 		return -1;
-				// 	} else if (a.timestamp.getTime() < b.timestamp.getTime()) {
-				// 		return 1;
-				// 	} else {
-				// 		return 0;
-				// 	}
-				// });
-
 				// add event attribute to each post(the view needs it I guess)
 				for (var i = 0; i < posts.length; i++) {
 					posts[i].getEvent(function(err, event) {
