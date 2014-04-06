@@ -8,13 +8,10 @@ var Post = function () {
 	  // locationLong: {type: 'number'},
 	  author: {type: 'object', required: true}
 	  // comments: {type: 'object'}
-	  
-	  // is the post natively created or pulled in from FB/Tw?
-	  // nativePost: {type: 'boolean', required: true}
   });
 
   this.belongsTo('Event');
-  
+  this.hasOne('Media');
   // this.belongsTo('User');
   this.hasMany('Comments');
 };
