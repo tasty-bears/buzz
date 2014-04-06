@@ -81,7 +81,8 @@
 <h3>Create a new Post</h3>
 
 <div id="post">
-  <%= partial("../posts/show", {event: event, events: events, posts: posts, selectedEvent: selectedEvent}); %>
+  <%= partial("posts/form", {event: event}); %>
+  <%= partial("posts/index", {event: event, posts: posts}); %>
 </div>
 
 <h3>Feed</h3>

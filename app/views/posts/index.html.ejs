@@ -1,0 +1,24 @@
+<div id="posts-list">
+    <h3>Posts</h3>
+    <% if (!posts || posts.length == 0) { %>
+    <div class="alert alert-danger alert-dismissable">
+        <h4 class="alert-heading">Shucks! No posts here!</h4>
+    </div>
+
+    <% } else { %>
+        <div id="posts">
+                <% if (posts) {
+                  posts.forEach(function(post) { %>
+                    <div class="well">
+                        <h3>
+                            <small>Posted by <%- post.author.username %> in
+                                <%- post.event.name %> at
+                                <span><%- post.timestamp.toLocaleTimeString() %> on <%- post.timestamp.toLocaleDateString() %></span>
+                            </small><br />
+                            <%- post.content %>
+                        </h3>
+                    </div>
+                <% });} %>
+        </div>
+    <% } %>
+</div>
