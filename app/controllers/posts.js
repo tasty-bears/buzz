@@ -8,8 +8,6 @@ var Posts = function () {
     this.index = function (req, resp, params) {
         var self = this;
         var event = params.event;
-        
-        geddy.log.debug(params);
 
         eventservice.getPostsToDisplay(event, function(err, posts) {
             posts.sort(postservice.compare);
@@ -51,33 +49,18 @@ var Posts = function () {
 			author: author
 		};
 		
-		var post = geddy.model.Post.create(data);
-				
-		post.save(function(err, data) {
-			if (err) {
-				throw err;
-			}
-		});
-						
-		eventservice.addPostToEvent(currentEvent, post, function(err, post) {
-			if (err) {
-				throw err;
-			}
-			else {
-                params.event = currentEvent;
-                self.transfer("index");
-			}
-		});
+		postservice.create(data, function(err, post) {	
+    		eventservice.addPostToEvent(currentEvent, post, function(err, post) {
+    			if (err) {
+    				throw err;
+    			}
+    			else {
+                    params.event = currentEvent;
+                    self.transfer("index");
+    			}
+    		});
+        });
 	};
-
-    this.show = function(req, resp, params) {
-        geddy.log.debug("why am i here");
-    }
-
-    // this.create = function (req, resp, params) {
-    // // Save the resource, then display index page
-    // this.redirect({controller: this.name});
-    // };
 
     // this.show = function (req, resp, params) {
     // this.respond({params: params});

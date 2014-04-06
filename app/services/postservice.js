@@ -3,6 +3,19 @@ var PostService = function() {
 	var userservice = require('../services/userservice');
 	var eventservice = require('../services/eventservice');
 
+	this.create = function(params, action) {
+		var self = this
+          , post = geddy.model.Post.create(params);
+
+        // save calls isValid, will throw err if false
+        post.save(function(err, data) {
+            if (err) {
+              throw err;
+            }
+            action(err, post);
+        });
+	}
+
 	this.addPost = function(eventModel, postModel) {
 		var self = this;
 		eventModel.addPost(postModel);
