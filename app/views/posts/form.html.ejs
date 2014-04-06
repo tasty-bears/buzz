@@ -11,6 +11,7 @@
         <script type="text/javascript">
 			function submitPost() {
 				var content = $("#content").val();
+				clearContents('content');
 				var id = event.target.id;
 				$.ajax({
 					type: "POST",
@@ -29,6 +30,9 @@
 			}
 			function attachMedia() {
 				
+			}
+			function clearContents(element) {
+				document.getElementById(element).value = '';
 			}
         </script>
     </div>
