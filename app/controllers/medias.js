@@ -1,3 +1,5 @@
+var mediaService = require('../services/mediaservice');
+
 var Medias = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
 
