@@ -7,7 +7,7 @@ var Comments = function () {
 
     this.addComment = function(req, resp, params) {
         var self = this;
-        postservice.findPostById(params['addPost'], function(err, post) {
+        postservice.findPostById(params['add'], function(err, post) {
             if (err) {
                 console.log("Error getting the Post");
             } else {
@@ -25,8 +25,8 @@ var Comments = function () {
         var self = this;
         userservice.loadUserFromSession(self.session, function(err, user) {
             user.getEvents(function(err, events) {
-                var selectedEvent = -1;
-                eventservice.getPostsToDisplay(events, selectedEvent, function(err, posts) {
+                
+                eventservice.getAllPostsToDisplay(events, function(err, posts) {
                     if (err) {
                         // TODO do something with err
                     } else {

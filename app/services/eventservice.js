@@ -98,70 +98,47 @@ var EventService = function() {
 		});
 	};
 
-	this.getPostsToDisplay = function(events, selectedEvent, action) {		
-		var posts = new Array();
+	this.getPostsToDisplay = function(event, action) {
+		event.getPosts(function(err, posts) {
+			if (err) {
+				action(err, null);
+			} else {
 
-		// TODO make this block its own function in the controller that calls
-	    // getTweetsToDisplay
-	    // that way it will be getTweetsToDisplay(feeds, action)
-	    // will be called in posts.js and main.js
-		if (selectedEvent != -1) {
-			for (var i = 0, len = events.length; i < len; i++) {
-				if (events[i].id == selectedEvent) {
-					events = [events[i]];
-					break;
+				// sort posts by timestamp
+				// posts.sort(function(a,b) {
+				// 	if (a.timestamp.getTime() > b.timestamp.getTime()) {
+				// 		return -1;
+				// 	} else if (a.timestamp.getTime() < b.timestamp.getTime()) {
+				// 		return 1;
+				// 	} else {
+				// 		return 0;
+				// 	}
+				// });
+
+				// add event attribute to each post(the view needs it I guess)
+				for (var i = 0; i < posts.length; i++) {
+					posts[i].getEvent(function(err, event) {
+						posts[i].event = event;
+					});
 				}
+
+				action(null, posts);
 			}
+		});
+	};
+
+	this.getAllPostsToDisplay = function(events, action) {
+		var posts = [];
+
+		for(var i in events) {
+			this.getPostsToDisplay(events[i], function(err, data) {
+				posts.concat(data);
+			}); 
 		}
 
-		// iterate through posts in an event
-		(function() {
-			if (events.length > 0) {
-				for (var i = 0, len1=events.length; i < len1; i++) {
-					(function () {
-						events[i].getPosts(function(err, eventPosts) {
-							if (err) {
-								action(err, null);
-							} else {
-								posts = posts.concat(eventPosts);
-								if (i == len1-1) {
-									posts.sort(function(a,b) {
-										if (a.timestamp.getTime() > b.timestamp.getTime()) {
-											return -1;
-										} else if (a.timestamp.getTime() < b.timestamp.getTime()) {
-											return 1;
-										} else {
-											return 0;
-										}
-									});
-
-									(function() {
-										var unpacked = new Array();
-										for (var j = 0, len2 = posts.length; j < len2; j++) {
-											var post = posts[j];
-
-											post.getEvent(function(err, event) {
-												event.getUser(function(err, user) {
-													post.event = event;
-													unpacked.push(post);
-													if (j == len2-1) {
-														action(null, unpacked);
-													}
-												});
-											});
-										}
-										action(null, posts);
-									}());
-								}
-							}
-						});
-					}());
-				}
-			} else {
-				action(null, []);
-			}
-		}());
+		action(null, posts);
 	};
+
 }
 
 module.exports = new EventService();
