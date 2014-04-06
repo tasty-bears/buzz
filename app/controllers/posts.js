@@ -75,7 +75,7 @@ var Posts = function () {
                     } else {
                         self.respond({params: params, event: event, events: events, posts: posts}, {
                             format: 'html'
-                            , template: 'app/views/events/_postView'
+                            , template: 'app/views/posts/show'
                             , layout: false
                         });
                     }

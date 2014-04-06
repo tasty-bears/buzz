@@ -1,54 +1,49 @@
 <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style type="text/css">
-      #map-canvas { height: 400px }
-    </style>
-<script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7-Lbo8t0W1I9_Uo3logWrK3EsdkQzGVQ&sensor=false">
-    </script>
-    <script type="text/javascript">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <style type="text/css">
+    #map-canvas { height: 400px }
 
-      function initialize() {
+    div.fb {
+      width:475px;
+      padding:10px;
+      border:10px;
+      margin:0px;
+      border-style:solid;
+      border-color:#3B5998;
+    }
 
-        var myLatlng = new google.maps.LatLng( <%= event.locationLat %>, <%= event.locationLong %>);
-        var mapOptions = {
-          zoom: 12,
-          center: myLatlng
-        }
-        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    div.twitter {
+      width:500px;
+      padding:10px;
+      border:10px;
+      margin:0px;
+      border-style:solid;
+      border-color:#30D8F0;
+    }
+  </style>
+  <script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7-Lbo8t0W1I9_Uo3logWrK3EsdkQzGVQ&sensor=false">
+  </script>
+  <script type="text/javascript">
 
-        var marker = new google.maps.Marker({
-            position: myLatlng,
-            map: map,
-            title: 'Hello World!'
-        });
+    function initialize() {
+
+      var myLatlng = new google.maps.LatLng( <%= event.locationLat %>, <%= event.locationLong %>);
+      var mapOptions = {
+        zoom: 12,
+        center: myLatlng
       }
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+      var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-<style>
-    div.fb
-{
-width:475px;
-padding:10px;
-border:10px;
-margin:0px;
-border-style:solid;
-border-color:#3B5998;
-}
-
-div.twitter
-{
-width:500px;
-padding:10px;
-border:10px;
-margin:0px;
-border-style:solid;
-border-color:#30D8F0;
-}
-
-</style>
-  </head>
+      var marker = new google.maps.Marker({
+          position: myLatlng,
+          map: map,
+          title: 'Hello World!'
+      });
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+  </script>
+</head>
 
 <div class="hero-unit">
   <h2 class="name"><%- geddy.date.strftime(event.date, "%m/%d") + " - " + eventCourseName + " " + eventCourseNumber + " - " + event.name; %></h2>
@@ -72,8 +67,8 @@ border-color:#30D8F0;
 
 <h3>Create a new Post</h3>
 
-<div id="postView">
-  <%= partial("_postView", {event: event, events: events, posts: posts, selectedEvent: selectedEvent}); %>
+<div id="post">
+  <%= partial("../posts/show", {event: event, events: events, posts: posts, selectedEvent: selectedEvent}); %>
 </div>
 
 <h3>Feed</h3>
