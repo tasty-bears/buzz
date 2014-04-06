@@ -1,6 +1,7 @@
 var courseservice = require('../services/courseservice.js');
 
 var ScheduleService = function() {
+	var schedServiceSelf = this;
 
 	this.getCalendarEvents = function(userModel, action) {
 		var self = this;
@@ -41,19 +42,38 @@ var ScheduleService = function() {
 
 		//make calendar event array
 		for (var x in nonFormattedEvents) {
-			//implement start and end dates.
-			//var startDateTime = nonFormattedEvents[x].date + nonFormattedEvents[x].time;
-			//var endDateTime = nonFormattedEvents[x].date + nonFormattedEvents[x].time
+			var allDay = true;
+			var startDateTime = schedServiceSelf.getDateTime(nonFormattedEvents[x].date, nonFormattedEvents[x].time,0 );
+			var endDateTime = schedServiceSelf.getDateTime(nonFormattedEvents[x].date, nonFormattedEvents[x].time, nonFormattedEvents[x].duration);
+			if (endDateTime != null) {
+				allDay = false;
+			}
 			var temp = {
 				id: nonFormattedEvents[x].id,
 				title: nonFormattedEvents[x].name,
-				start: nonFormattedEvents[x].date,
+				start: startDateTime,
+				end: endDateTime,
+				allDay: allDay,
 				url: '/events/' + nonFormattedEvents[x].id
 			}
 			formattedEvents.push(temp);
 		}
 
 		action(null, formattedEvents);
+	}
+
+	this.getDateTime = function(date, time, timeOffset) {
+		var dateTime = new Date();
+
+		dateTime.setFullYear(date.getFullYear());
+		dateTime.setMonth(date.getMonth());
+		dateTime.setDate(date.getDate());
+		dateTime.setHours(time.getHours());
+		dateTime.setMinutes(time.getMinutes() + timeOffset);
+		var correctDate = dateTime.toUTCString();
+
+		return correctDate;
+
 	}
 
 }
