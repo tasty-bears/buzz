@@ -4,7 +4,7 @@ var EventService = function() {
 
 	this.getCourseNames = function (events, action){
 		var self = this;
-		var coursenames = new Array();
+		var coursenames = [];
 
 		for (var i = 0; i < events.length; i++) {
 			coursenames[i] = eventserviceSelf.getCourseName(events[i]);
@@ -14,7 +14,7 @@ var EventService = function() {
 
 	this.getCourseNumbers = function (events, action){
 		var self = this;
-		var coursenumbers = new Array();
+		var coursenumbers = [];
 
 		for (var i = 0; i < events.length; i++) {
 			coursenumbers[i] = eventserviceSelf.getCourseNumber(events[i]);
@@ -61,6 +61,7 @@ var EventService = function() {
 		return number;
 	}
 
+	//TODO: move to UserService
 	this.addEvent = function(userModel, eventModel, action) {
 		var self = this;
 		userModel.addEvent(eventModel);
@@ -98,6 +99,7 @@ var EventService = function() {
 		});
 	};
 
+	//TODO: not convinced we need this (especially monkey-patching events)
 	this.getPostsToDisplay = function(event, action) {
 		event.getPosts(function(err, posts) {
 			if (err) {
