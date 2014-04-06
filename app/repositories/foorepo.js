@@ -42,7 +42,7 @@ var FooRepo = function() {
             {
                 url: this._format_url(endpoint),
                 method: 'PUT',
-                data: '?type={0}'.format(locationType)
+                data: sprintf('?type=%s', locationType)
             },
             action
         );
@@ -52,7 +52,7 @@ var FooRepo = function() {
     // identifier
     //TODO: untested
     this.delete_content = function(blobId, action) {
-        var endpoint = sprintf('/api/content/{0}', blobId);
+        var endpoint = sprintf('/api/content/%s', blobId);
         geddy.request(
             {
                 url: this._format_url(endpoint),
@@ -80,7 +80,7 @@ var FooRepo = function() {
         //     "DeletedOn":null
         // }
         
-        var endpoint = sprintf('/api/content/{0}/info', blobId);
+        var endpoint = sprintf('/api/content/%s/info', blobId);
         geddy.request(
             {
                 url: this._format_url(endpoint),
