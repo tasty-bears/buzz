@@ -75,7 +75,7 @@ var EventService = function() {
 		});
 	};
 
-	this.addPostToEvent = function(eventModel, postModel, action) {
+	this.addPost = function(eventModel, postModel, action) {
 		var self = this;
 		eventModel.addPost(postModel);
 		eventModel.save(function(err, data) {

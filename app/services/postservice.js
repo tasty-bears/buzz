@@ -16,20 +16,6 @@ var PostService = function() {
         });
 	}
 
-	this.addPost = function(eventModel, postModel) {
-		var self = this;
-		eventModel.addPost(postModel);
-		eventModel.save(function(err, data) {
-			if (err) {
-				action(err, null);
-			} else {
-				data.getPosts(function(err, data) {
-					action(null, data);
-				});
-			}
-		});
-	};
-
 	this.addCommentToPost = function(postModel, commentModel, action) {
 		var self = this;
 		postModel.addComment(commentModel);

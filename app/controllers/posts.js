@@ -50,7 +50,7 @@ var Posts = function () {
 		};
 		
 		postservice.create(data, function(err, post) {	
-    		eventservice.addPostToEvent(currentEvent, post, function(err, post) {
+    		eventservice.addPost(currentEvent, post, function(err, post) {
     			if (err) {
     				throw err;
     			}
