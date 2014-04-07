@@ -11,14 +11,28 @@
 	function submitPost() {
 		var content = $("#content").val();
 		clearContents('content');
+		
+		var mediaData = null;
+		
+		if($('#attachments').val()) {
+			mediaData = {
+				mimeType: 'plain/text',
+				hostname: 'http://foocdn.azurewebsites.net/',
+				blobId: 'a1bc0c85-c66a-4e9a-9617-cc70528e48ff'
+			};
+		}
+		clearContents('attachments');
+		
 		var id = event.target.id;
+		
 		$.ajax({
 			type: "POST",
 			url: '/posts/add/',
 			data: 
 			{
 				content: content,
-				eventId: id
+				eventId: id,
+				mediaData: mediaData
 			},
             success: function(data)
             {
@@ -28,7 +42,7 @@
 		});
 	}
 	function attachMedia() {
-		
+		document.getElementById('attachments').value='blah.txt';
 	}
 	function clearContents(element) {
 		document.getElementById(element).value = '';
