@@ -19,8 +19,10 @@ var strategies = require('../helpers/passport/strategies')
   , authTypes = geddy.mixin(strategies, {local: {name: 'local account'}});
 var courseservice = require('../services/courseservice');
 var eventservice = require('../services/eventservice');
+var scheduleservice = require('../services/scheduleservice');
 
 var Main = function () {
+  var mainControllerSelf = this;
 
   this.index = function (req, resp, params) {
     var self = this
@@ -31,8 +33,6 @@ var Main = function () {
       , authType: null
       , courses: null
       , events: null
-      , eventnames: null
-      , eventnumbers: null
       };
       if (user) {
         data.user = user;
@@ -66,23 +66,10 @@ var Main = function () {
               if(a.date > b.date) return 1;
               return 0;
           });
-          //assign data events array for view use
-          data.events = myEvents;
 
-          //get course names and numbers for event naming on view
-          //temp arrays to get values
-          var names = new Array();
-          var numbers = new Array();
-          for (var i = 0; i < data.events.length; i++) {
-            //call functions from event service to get corresponding name and number
-            names.push(eventservice.getCourseName(data.events[i]));
-            numbers.push(eventservice.getCourseNumber(data.events[i]));
-          }
-          //assign values to data to pass to view
-          data.eventnames = names;
-          data.eventnumbers = numbers;
+          data.events = mainControllerSelf.getEventsForCalendar();
         }
-        
+
       }
       self.respond(data, {
         format: 'html'
@@ -106,6 +93,33 @@ var Main = function () {
     , template: 'app/views/main/logout'
     });
   };
+
+  this.getEventsForCalendar = function() {
+    var self = this;
+    var currentUser = null;
+    var nonFormattedEvents = null;
+    var calEvents = null;
+
+    geddy.model.User.first(this.session.get('userId'), function(err, user) {
+      if (err) {
+        throw err;
+      }
+      currentUser = user;
+    });
+    scheduleservice.getCalendarEvents(currentUser, function(err, events){
+      if (err) {
+        throw err;
+      }
+      nonFormattedEvents = events;
+    });
+    scheduleservice.formatEventsForCalendar(nonFormattedEvents, function(err, events){
+      if (err) {
+        throw err;
+      }
+      calEvents = events;
+    });
+    return calEvents;
+  }
 
 };
 

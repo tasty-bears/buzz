@@ -31,6 +31,11 @@ code {
   margin: 0 auto;
 }
 
+#homepage {
+  padding: 0px;
+  margin-bottom: 5px;
+}
+
 .geddy-welcome-box .btn-large {
   margin-top: 20px;
   width: 100px;
@@ -82,5 +87,3 @@ code {
     margin-top: 10px;
   }
 }
-
-
