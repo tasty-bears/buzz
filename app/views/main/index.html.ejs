@@ -25,7 +25,9 @@
     <% } %>
   <% } %>
 </div>
+<%- linkTo('Create a new Event', addEventPath, {class: 'btn pull-left'}); %>
 </div>
+
 
 <div class="span10 offset0 pull-right" id="calendarpartial">
   <%- partial('calendar', {myEvents: events}) %>
