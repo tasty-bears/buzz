@@ -1,6 +1,7 @@
 var userservice = require('../services/userservice');
 var eventservice = require('../services/eventservice');
 var postservice = require('../services/postservice');
+var mediaservice = require('../services/mediaservice');
 
 var Posts = function () {	
     this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
@@ -21,9 +22,9 @@ var Posts = function () {
 		var eId = params.eventId;
 		var author;
 		var currentEvent = null;
+		var media;
 		
-		// use loadUserFromSession
-		
+		// TODO use loadUserFromSession
 		userservice.findUserById(uId, function(err, user) {
 			if (err) {
 				console.log("Error getting the User");
@@ -33,7 +34,6 @@ var Posts = function () {
 		});
 		
 		// TODO eventservice.findEventById
-		
 	    geddy.model.Event.first(eId, function (err, event){
 	      if (err){
 			console.log("error getting the event");
@@ -42,15 +42,32 @@ var Posts = function () {
 		      currentEvent = event;
 		  }
 	    });
-						
+
+		if (params.mediaData) {
+			mediaservice.create(params.mediaData, function(err, postMedia) {
+				if (err) {
+					throw err;
+				} else {
+					media = postMedia;
+				}
+			});
+		} 
+		// if no media data, no media
+		else {
+			media = null;
+		}
+
 		var data = {
+			// these will be used to create the new post
 			content: params.content,
 			timestamp: new Date(),
-			author: author
+			author: author,
+			// if media exists, it will be set as the new post's media
+			media: media
 		};
-		
-		postservice.create(data, function(err, post) {	
-    		eventservice.addPost(currentEvent, post, function(err, post) {
+				
+		postservice.create(data, function(err, post) {
+			eventservice.addPost(currentEvent, post, function(err, post) {
     			if (err) {
     				throw err;
     			}
