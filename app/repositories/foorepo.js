@@ -1,16 +1,16 @@
 // Repository pattern for FooCDN
 
-var sprintf = require("sprintf-js").sprintf;
+var format = require('util').format;
 
 var FooRepo = function() {
     // http://geddyjs.org/reference#utilities_request
 
     // Returns the binary content associated with provided blob identifier
     this.get_content = function(blobId, action) {
-        var endpoint = sprintf('/api/content/%s', blobId);
+        
         geddy.request(
             {
-                url: this._format_url(endpoint),
+                url: this.get_content_url(blobId),
                 method:'GET'
             },
             action
@@ -21,10 +21,9 @@ var FooRepo = function() {
     // request body in the storage location associated with the provided blob identifier
     //TODO: untested
     this.set_content = function(blobId, content, action) {
-        var endpoint = sprintf('/api/content/%s', blobId);
         geddy.request(
             {
-                url: this._format_url(endpoint),
+                url: this.set_content_url(blobId),
                 method: 'POST'
             },
             action
@@ -37,12 +36,11 @@ var FooRepo = function() {
     this.move_content = function(blobID, locationType, action) {
         // locationType: (MEMCACHE | DISK | TAPE)
 
-        var endpoint = sprintf('/api/content/%s', blobId);
         geddy.request(
             {
-                url: this._format_url(endpoint),
+                url: this.move_content_url(blobId),
                 method: 'PUT',
-                data: sprintf('?type=%s', locationType)
+                data: format('?type=%s', locationType)
             },
             action
         );
@@ -52,10 +50,9 @@ var FooRepo = function() {
     // identifier
     //TODO: untested
     this.delete_content = function(blobId, action) {
-        var endpoint = sprintf('/api/content/%s', blobId);
         geddy.request(
             {
-                url: this._format_url(endpoint),
+                url: this.delete_content_url(blobId),
                 method: 'DELETE'
             },
             action
@@ -80,10 +77,9 @@ var FooRepo = function() {
         //     "DeletedOn":null
         // }
         
-        var endpoint = sprintf('/api/content/%s/info', blobId);
         geddy.request(
             {
-                url: this._format_url(endpoint),
+                url: this.get_content_info_url(blobId),
                 method: 'GET'
             },
             action
@@ -94,15 +90,14 @@ var FooRepo = function() {
     this.create_container = function(accountKey, mimeType, action) {
         // POST /api/content/new
         // Creates a new container and blob identifier into which content can be
-        // stored and retrieved 
+        // stored and retrieved
         
         // Example Request Body: {"Account Key":"000-000-0000", "MimeType":"image/jpg"} 
         // Response: 3a39c0ef-7f37-475f-a2f4-d7ea19a31081
         
-        var endpoint = '/api/content/add';
         geddy.request(
             {
-                url: this._format_url(endpoint),
+                url: this.create_container_url(),
                 method: 'POST',
                 data: {
                     "Account Key": accountKey,
@@ -119,9 +114,37 @@ var FooRepo = function() {
 
 FooRepo.prototype.hostname = "foocdn.azurewebsites.net";
 
-// "static" method to piece together a content url given an endpoint
-FooRepo.prototype._format_url = function(endpoint) {
-    return sprintf('http://%s%s/', this.hostname, endpoint);
+// urls
+FooRepo.prototype.get_content_url =
+FooRepo.prototype.set_content_url =
+FooRepo.prototype.move_content_url =
+FooRepo.prototype.delete_content_url = function(blobId) {
+    return this._format_url(blobId, null);
 }
+FooRepo.prototype.get_content_info_url = function(blobId) {
+    return this._format_url(blobId, "info");
+}
+FooRepo.prototype.create_container_url = function() {
+    return this._format_url(null, "add");
+}
+
+// "static" method to piece together a content url given an endpoint
+FooRepo.prototype._format_url = function(blobId, suffix) {
+    var apiPath = "/api/content/"
+    return format('http://%s%s%s%s',
+                  this.hostname,
+                  apiPath,
+                  blobId ? (blobId + '/') : '',
+                  suffix ? (suffix + '/') : ''
+                  );
+}
+
+//TODO: make a test!
+// console.log(FooRepo.prototype.get_content_url('1234'));
+// console.log(FooRepo.prototype.set_content_url('1234'));
+// console.log(FooRepo.prototype.move_content_url('1234'));
+// console.log(FooRepo.prototype.delete_content_url('1234'));
+// console.log(FooRepo.prototype.get_content_info_url('1234'));
+// console.log(FooRepo.prototype.create_container_url());
 
 module.exports = new FooRepo();
