@@ -15,7 +15,11 @@
                                 <%- post.event.name %> at
                                 <span><%- post.timestamp.toLocaleTimeString() %> on <%- post.timestamp.toLocaleDateString() %></span>
                             </small><br />
-                            <%- post.content %>
+                            	<%- post.content %>
+							<br/>
+							<small>
+								<a href="<%- post.mediaLink %>"></a>
+							</small>
                         </h3>
                     </div>
                 <% });} %>
