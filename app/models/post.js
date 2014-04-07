@@ -6,12 +6,15 @@ var Post = function () {
 	  // locationDescription: {type: 'string'},
 	  // locationLat: {type: 'number'},
 	  // locationLong: {type: 'number'},
-	  author: {type: 'object', required: true}
+	  author: {type: 'object', required: true},
+	  media: {type: 'object'},
+	  // TODO icky...this link is should be reimplemented
+	  mediaLink: {type: 'string'}
 	  // comments: {type: 'object'}
   });
 
   this.belongsTo('Event');
-  this.hasOne('Media');
+  // this.hasOne('Media');
   // this.belongsTo('User');
   this.hasMany('Comments');
 };

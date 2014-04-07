@@ -6,7 +6,7 @@ var Media = function () {
 		blobId: {type: 'string', required: true}
 	});
 
-	this.belongsTo('Post');
+	// this.belongsTo('Post');
 
 };
 
