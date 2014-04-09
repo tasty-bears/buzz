@@ -83,7 +83,7 @@ var EventService = function() {
 			if (err) {
 				action(err, null);
 			} else {
-				action(null, data);
+				action(null, postModel);
 			}
 		});
 	};

@@ -33,7 +33,7 @@ var Posts = function () {
 			}
 		});
 		
-		eventservice.findEventById(pId, function(err, event) {
+		eventservice.findEventById(eId, function(err, event) {
             if (err) {
                 throw err;
             } else {
@@ -70,7 +70,7 @@ var Posts = function () {
     				throw err;
     			} else {
                     params.event = currentEvent;
-                    self.transfer("index");
+					self.transfer("index");
     			}
     		});
         });
