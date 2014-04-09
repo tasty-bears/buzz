@@ -27,21 +27,19 @@ var Posts = function () {
 		// TODO use loadUserFromSession
 		userservice.findUserById(uId, function(err, user) {
 			if (err) {
-				console.log("Error getting the User");
+				throw err;
 			} else {
 				 author = user;
 			}
 		});
 		
-		// TODO eventservice.findEventById
-	    geddy.model.Event.first(eId, function (err, event){
-	      if (err){
-			console.log("error getting the event");
-	        throw err;
-	      } else {
-		      currentEvent = event;
-		  }
-	    });
+		eventservice.findEventById(pId, function(err, event) {
+            if (err) {
+                throw err;
+            } else {
+                currentEvent = event;
+            }
+        });
 
 		if (params.mediaData) {
 			mediaservice.create(params.mediaData, function(err, postMedia) {
@@ -70,8 +68,7 @@ var Posts = function () {
 			eventservice.addPost(currentEvent, post, function(err, post) {
     			if (err) {
     				throw err;
-    			}
-    			else {
+    			} else {
                     params.event = currentEvent;
                     self.transfer("index");
     			}
