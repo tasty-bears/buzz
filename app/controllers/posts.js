@@ -8,12 +8,18 @@ var Posts = function () {
 
     this.index = function (req, resp, params) {
         var self = this;
-        var event = params.event;
-
-        eventservice.getPostsToDisplay(event, function(err, posts) {
-            posts.sort(postservice.compare);
-            self.respond({event: event, posts: posts});
-        });
+        
+        eventservice.findEventById(params.id,
+            function(err, event) {
+                eventservice.getPostsToDisplay(event, function(err, posts) {
+                    posts.sort(postservice.compare);
+                    self.respond(
+                        {event: event, posts: posts},
+                        {layout: false}
+                    );
+                });
+            }
+        );
     };
 
     this.add = function(req, resp, params) {
@@ -69,7 +75,7 @@ var Posts = function () {
     			if (err) {
     				throw err;
     			} else {
-                    params.event = currentEvent;
+                    self.params = currentEvent;
 					self.transfer("index");
     			}
     		});

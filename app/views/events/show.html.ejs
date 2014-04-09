@@ -82,10 +82,31 @@
 
 <div id="post">
   <%= partial("posts/form", {event: event}); %>
-  <%= partial("posts/index", {event: event, posts: posts}); %>
+  <div id="posts-index"></div>
 </div>
 
 <h3>Feed</h3>
 
 <h3>Map:</h3>
 <div id="map-canvas"/>
+
+<script>
+  var eventObj = <%- JSON.stringify(event) %>;
+
+  $(document).ready(function() {
+    load_posts_index();
+  });
+
+  function load_posts_index() {
+    $.ajax({
+      type: "GET",
+      url: '/posts',
+      data: eventObj,
+            success: function(response)
+            {
+                //TODO: get rid of hardcoded id
+                $("#posts-index").html(response);
+            }
+    });
+  }
+</script>
