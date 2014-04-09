@@ -11,15 +11,21 @@
                   posts.forEach(function(post) { %>
                     <div class="well">
                         <h3>
+                        	<%- post.content %>
+							<br/>
+							
+							<% if (post.media) { %>
+								<small>
+									<%- post.media_link %>
+									<!-- <a href="<%- post.media_link %>"></a> -->
+								</small>
+								<br/>
+							<% } %>
                             <small>Posted by <%- post.author.username %> in
                                 <%- post.event.name %> at
                                 <span><%- post.timestamp.toLocaleTimeString() %> on <%- post.timestamp.toLocaleDateString() %></span>
-                            </small><br />
-                            	<%- post.content %>
-							<br/>
-							<small>
-								<a href="<%- post.mediaLink %>"></a>
-							</small>
+                            </small>
+							
                         </h3>
                     </div>
                 <% });} %>
