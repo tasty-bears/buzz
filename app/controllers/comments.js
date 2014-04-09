@@ -1,3 +1,7 @@
+var userservice = require('../services/userservice');
+var eventservice = require('../services/eventservice');
+var postservice = require('../services/postservice');
+
 var Comments = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
 
@@ -5,74 +9,68 @@ var Comments = function () {
     this.respond({params: params});
     };
 
-    this.addComment = function(req, resp, params) {
-        var self = this;
-        postservice.findPostById(params['add'], function(err, post) {
-            if (err) {
-                console.log("Error getting the Post");
-            } else {
-                params['commentdate'] = new Date();
-                var post = geddy.model.Comment.create(params);
+    this.add = function(req, resp, params) {
+        var self = this
+        , uId = this.session.get('userId')
+        , pId = params.postId
+        , author
+        , currentPost = null;
 
-                postservice.addCommentToPost(post, comment, function(err, comment) {
-                    self.refreshComments();
-                });
+        userservice.findUserById(uId, function(err, user) {
+            if (err) {
+                throw err;
+            } else {
+                author = user;
             }
         });
-    };
 
-    this.refreshComments = function(req, resp, params) {
-        var self = this;
-        userservice.loadUserFromSession(self.session, function(err, user) {
-            user.getEvents(function(err, events) {
-                
-                eventservice.getAllPostsToDisplay(events, function(err, posts) {
-                    if (err) {
-                        // TODO do something with err
-                    } else {
-                        var selectedPost = -1;
-                        postservice.getCommentsToDisplay(posts, selectedPost, function(err, comments) {
-                            if (err) {
-                                // TODO do something with err
-                            } else {
-                                self.respond({params: params, events: events, posts: posts, comments: comments, selectedEvent: selectedEvent, selectedPost: selectedPost}, {
-                                    format: 'html'
-                                    , template: 'app/views/main/_postView'
-                                    , layout: false
-                                });
-                            }
-                        });
-                    }
-                });
-            });
+        postservice.findPostById(pId, function(err, post) {
+            if (err) {
+                throw err;
+            } else {
+                currentPost = post;
+            }
+        });
+
+        var commentParams = {
+            author: param.content,
+            timestamp: new Date(),
+            author: author
+        };
+
+        commentservice.create(data, function(err, comment) {
+            postservice.addComment(currentPost, comment, function(err, comment) {
+                if (err) {
+                    throw err;
+                } else {
+                    params.post = currentPost;
+                    self.transfer('index');
+                }
+            })
         });
     };
 
-//  this.add = function (req, resp, params) {
-//    this.respond({params: params});
-//  };
+    // this.create = function (req, resp, params) {
+    //     // Save the resource, then display index page
+    //     this.redirect({controller: this.name});
+    // };
 
-    this.create = function (req, resp, params) {
-        // Save the resource, then display index page
-        this.redirect({controller: this.name});
-    };
+    // this.show = function (req, resp, params) {
+    //     this.respond({params: params});
+    // };
 
-    this.show = function (req, resp, params) {
-        this.respond({params: params});
-    };
+    // this.edit = function (req, resp, params) {
+    //     this.respond({params: params});
+    // };
 
-    this.edit = function (req, resp, params) {
-        this.respond({params: params});
-    };
+    // this.update = function (req, resp, params) {
+    //     // Save the resource, then display the item page
+    //     this.redirect({controller: this.name, id: params.id});
+    // };
 
-    this.update = function (req, resp, params) {
-        // Save the resource, then display the item page
-        this.redirect({controller: this.name, id: params.id});
-    };
-
-    this.remove = function (req, resp, params) {
-        this.respond({params: params});
-    };
+    // this.remove = function (req, resp, params) {
+    //     this.respond({params: params});
+    // };
 
 };
 

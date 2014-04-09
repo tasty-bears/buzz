@@ -36,25 +36,18 @@ var PostService = function() {
               action(err, null);
             }
         });
-						
-		// TODO implement post hasOne media...fuck bugs
-		// // check that media is present; if so, add the media object to the post
-		// // post hasOne media
-		// if (params.media) {
-		// 	media = params.media;
-		// 	post.setMedia(media);
-		// 	post.save(function(err, data) {
-		// 		if (err) {
-		// 			action(err, null);
-		// 		}
-		// 	});
-		// 	console.log(post);
-		// 	console.log(media);
-		// 	console.log('---');
-		// 	var temp = post.getMedia();
-		// 	console.log(temp);
-		// }
-		
+			
+	// TODO implement post hasOne media
+	// if (params.media) {
+	// 	post.setMedia(post, params.media, function(err, post) {
+	// 		if (err) {
+	// 			throw err;
+	// 		} else {
+	// 			console.log(post.getMedia());
+	// 		}
+	// 	});
+	// }
+
 		action(null, post);
 	}
 
@@ -78,83 +71,58 @@ var PostService = function() {
 			return 0;
 		}
 	}
-	
-	// this.addCommentToPost = function(postModel, commentModel, action) {
-	// 	var self = this;
-	// 	postModel.addComment(commentModel);
-	// 	postModel.save(function(err, data) {
-	// 		if (err) {
-	// 			action(err, null);
-	// 		} else {
-	// 			action(null, data);
-	// 		}
-	// 	});
-	// };
-	
-	// this.getCommentsToDisplay = function(posts, selectedPost, action) {
-	// 	var comments = new Array();
-	// 
-	// 	// TODO make this like getPostsToDisplay
-	// 	if (selectedPost != -1) {
-	// 		for (var i = 0, len = posts.length; i < len; i++) {
-	// 			if (posts[i].id == selectedPost) {
-	// 				posts = [posts[i]];
-	// 				break;
-	// 			}
-	// 		}
-	// 	}
-	// 
-	// 	// iterate through comments in a post
-	// 	(function() {
-	// 		if (feeds.length > 0) {
-	// 			for (var i = 0, len1 = posts.length; i < len1; i++) {
-	// 				(function() {
-	// 					posts[i].getComments(function(err, postComments) {
-	// 						if (err) {
-	// 							action(err, null);
-	// 						} else {
-	// 							comments = comments.concat(postComments);
-	// 							if (i == len1-1) {
-	// 								comments.sort(function(a,b) {
-	// 									if (a.postdate.getTime() > b.post.getTime()) {
-	// 										return -1;
-	// 									} else if (a.postdate.getTime() < b.postdate.getTime()) {
-	// 										return 1;
-	// 									} else {
-	// 										return 0;
-	// 									}
-	// 								});
-	// 
-	// 								(function() {
-	// 									var unpacked = new Array();
-	// 									for (var j = 0, len2 = comments.length; j < len2; j++) {
-	// 										var comment = comments[j];
-	// 
-	// 										comment.getPost(function(err, post) {
-	// 											post.getEvent(function(err, event) {
-	// 												event.getUser(function(err, user) {
-	// 													comment.author = owner ? owner : {name: "No Author"};
-	// 													comment.post = post;
-	// 													unpacked.push(comment);
-	// 													if (j == len2-1) {
-	// 														action(null, unpacked);
-	// 													}
-	// 												});
-	// 											});
-	// 										});
-	// 									}
-	// 									action(null, comments);
-	// 								}());
-	// 							}
-	// 						}
-	// 					});
-	// 				}());
-	// 			}
-	// 		} else {
-	// 			action(null, []);
-	// 		}
-	// 	}());
-	// };
+
+	this.addComment = function(postModel, commentModel, action) {
+		var self = this;
+		postModel.addPost(commentModel);
+		postModel.save(function(err, data) {
+			if (err) {
+				action(err, null);
+			} else {
+				action(null, data);
+			}
+		});
+	};
+
+	this.setMedia = function(postModel, mediaModel, action) {
+		var self = this;
+		postModel.setMedia(mediaModel);
+		postModel.save(function(err, data) {
+			if (err) {
+				action(err, null);
+			} else {
+				action(null, data);
+			}
+		})
+	}
+
+	this.getCommentsToDisplay = function(post, action) {
+		post.getComments(function(err, comments) {
+			if (err) {
+				action(err, null);
+			} else {
+				// add event attribute to each post(the view needs it I guess)
+				for (var i = 0; i < posts.length; i++) {
+					comments[i].getPost(function(err, post) {
+						comments[i].post = post;
+					});
+				}
+				action(null, comments);
+			}
+		});
+	};
+
+	this.getAllCommentsToDisplay = function(posts, action) {
+		var comments = [];
+
+		for(var i in posts) {
+			this.getCommentsToDisplay(posts[i], function(err, data) {
+				comments.concat(data);
+			}); 
+		}
+
+		action(null, comments);
+	};
 };
 
 module.exports = new PostService();
