@@ -16,8 +16,8 @@
 							
 							<% if (post.media) { %>
 								<small>
-									<%- post.media_link %>
-									<!-- <a href="<%- post.media_link %>"></a> -->
+									<!-- <%- post.medialink %> -->
+									<a href="<%= post.medialink %>">blah.txt</a>
 								</small>
 								<br/>
 							<% } %>
@@ -25,7 +25,6 @@
                                 <%- post.event.name %> at
                                 <span><%- post.timestamp.toLocaleTimeString() %> on <%- post.timestamp.toLocaleDateString() %></span>
                             </small>
-							
                         </h3>
                     </div>
                 <% });} %>

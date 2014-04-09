@@ -19,17 +19,18 @@ var PostService = function() {
 			content: params.content,
 			timestamp: params.timestamp,
 			author: params.author,
-			media: params.media
+			media: params.media,
+			medialink: null
 		};
 				
         var post = geddy.model.Post.create(data);
 		
 		if (post.media) {
-			post.mediaLink = mediaservice.get_content_url(post.media);
+			post.medialink = mediaservice.get_content_url(post.media);
 		} else {
-			post.mediaLink = 'No media';
+			post.medialink = 'No media';
 		}
-
+		
         // save calls isValid, will throw err if false
         post.save(function(err, data) {
             if (err) {

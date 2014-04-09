@@ -9,7 +9,7 @@ var Post = function () {
 	  author: {type: 'object', required: true},
 	  media: {type: 'object'},
 	  // TODO icky...this link is should be reimplemented
-	  mediaLink: {type: 'string'}
+	  medialink: {type: 'string'}
 	  // comments: {type: 'object'}
   });
 
