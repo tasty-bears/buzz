@@ -1,19 +1,31 @@
-
 var PostService = function() {
 	var userservice = require('../services/userservice');
 	var eventservice = require('../services/eventservice');
 
 	this.create = function(params, action) {
 		var self = this
-          , post = geddy.model.Post.create(params);
+		, post = geddy.model.Post.create(params);
 
-        // save calls isValid, will throw err if false
-        post.save(function(err, data) {
-            if (err) {
-              throw err;
-            }
-            action(err, post);
-        });
+		// save calls isValid, will throw err if false
+		post.save(function(err, data) {
+			if (err) {
+				throw err;
+			}
+			action(err, post);
+		});
+			
+	// TODO implement post hasOne media
+	// if (params.media) {
+	// 	post.setMedia(post, params.media, function(err, post) {
+	// 		if (err) {
+	// 			throw err;
+	// 		} else {
+	// 			console.log(post.getMedia());
+	// 		}
+	// 	});
+	// }
+
+		action(null, post);
 	}
 
 	this.addCommentToPost = function(postModel, commentModel, action) {
@@ -50,72 +62,56 @@ var PostService = function() {
 		}
 	}
 
-	this.getCommentsToDisplay = function(posts, selectedPost, action) {
-		var comments = new Array();
-
-		// TODO make this block its own function in the controller that calls
-	    // getTweetsToDisplay
-	    // that way it will be getTweetsToDisplay(feeds, action)
-	    // will be called in posts.js and main.js
-		if (selectedPost != -1) {
-			for (var i = 0, len = posts.length; i < len; i++) {
-				if (posts[i].id == selectedPost) {
-					posts = [posts[i]];
-					break;
-				}
+	this.addComment = function(postModel, commentModel, action) {
+		var self = this;
+		postModel.addPost(commentModel);
+		postModel.save(function(err, data) {
+			if (err) {
+				action(err, null);
+			} else {
+				action(null, data);
 			}
+		});
+	};
+
+	this.setMedia = function(postModel, mediaModel, action) {
+		var self = this;
+		postModel.setMedia(mediaModel);
+		postModel.save(function(err, data) {
+			if (err) {
+				action(err, null);
+			} else {
+				action(null, data);
+			}
+		})
+	}
+
+	this.getCommentsToDisplay = function(post, action) {
+		post.getComments(function(err, comments) {
+			if (err) {
+				action(err, null);
+			} else {
+				// add event attribute to each post(the view needs it I guess)
+				for (var i = 0; i < posts.length; i++) {
+					comments[i].getPost(function(err, post) {
+						comments[i].post = post;
+					});
+				}
+				action(null, comments);
+			}
+		});
+	};
+
+	this.getAllCommentsToDisplay = function(posts, action) {
+		var comments = [];
+
+		for(var i in posts) {
+			this.getCommentsToDisplay(posts[i], function(err, data) {
+				comments.concat(data);
+			}); 
 		}
 
-		// iterate through comments in a post
-		(function() {
-			if (feeds.length > 0) {
-				for (var i = 0, len1 = posts.length; i < len1; i++) {
-					(function() {
-						posts[i].getComments(function(err, postComments) {
-							if (err) {
-								action(err, null);
-							} else {
-								comments = comments.concat(postComments);
-								if (i == len1-1) {
-									comments.sort(function(a,b) {
-										if (a.postdate.getTime() > b.post.getTime()) {
-											return -1;
-										} else if (a.postdate.getTime() < b.postdate.getTime()) {
-											return 1;
-										} else {
-											return 0;
-										}
-									});
-
-									(function() {
-										var unpacked = new Array();
-										for (var j = 0, len2 = comments.length; j < len2; j++) {
-											var comment = comments[j];
-
-											comment.getPost(function(err, post) {
-												post.getEvent(function(err, event) {
-													event.getUser(function(err, user) {
-														comment.author = owner ? owner : {name: "No Author"};
-														comment.post = post;
-														unpacked.push(comment);
-														if (j == len2-1) {
-															action(null, unpacked);
-														}
-													});
-												});
-											});
-										}
-										action(null, comments);
-									}());
-								}
-							}
-						});
-					}());
-				}
-			} else {
-				action(null, []);
-			}
-		}());
+		action(null, comments);
 	};
 };
 
