@@ -3,7 +3,7 @@ var eventservice = require('../services/eventservice');
 var postservice = require('../services/postservice');
 var mediaservice = require('../services/mediaservice');
 
-var Posts = function () {	
+var Posts = function () {
     this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
 
     this.index = function (req, resp, params) {
@@ -11,6 +11,8 @@ var Posts = function () {
         
         eventservice.findEventById(params.id,
             function(err, event) {
+				// refresh all posts belonging to the event
+				// sort newest to oldest
                 eventservice.getPostsToDisplay(event, function(err, posts) {
                     posts.sort(postservice.compare);
                     self.respond(
@@ -31,6 +33,7 @@ var Posts = function () {
 		var media;
 		
 		// TODO use loadUserFromSession
+		// load the user by whom the new post will be authored by 
 		userservice.findUserById(uId, function(err, user) {
 			if (err) {
 				throw err;
@@ -39,6 +42,7 @@ var Posts = function () {
 			}
 		});
 		
+		// locate the target event to add the new post to based on its id
 		eventservice.findEventById(eId, function(err, event) {
             if (err) {
                 throw err;
@@ -47,6 +51,7 @@ var Posts = function () {
             }
         });
 
+		// if user attached media, create the new media object based on the ajax'd params
 		if (params.mediaData) {
 			mediaservice.create(params.mediaData, function(err, postMedia) {
 				if (err) {
@@ -60,22 +65,25 @@ var Posts = function () {
 		else {
 			media = null;
 		}
-
+		
+		// these will be used to create the new post
 		var data = {
-			// these will be used to create the new post
 			content: params.content,
 			timestamp: new Date(),
 			author: author,
 			// if media exists, it will be set as the new post's media
 			media: media
 		};
-				
+
+		// create the new post
 		postservice.create(data, function(err, post) {
+			// add the new post to the event
 			eventservice.addPost(currentEvent, post, function(err, post) {
     			if (err) {
     				throw err;
     			} else {
                     self.params = currentEvent;
+					// "refresh" posts to display the new post
 					self.transfer("index");
     			}
     		});

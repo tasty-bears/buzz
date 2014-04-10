@@ -3,15 +3,18 @@ var CommentService = function() {
 	var eventservice = require('../services/eventservice');
 	var postservice = require('../services/postservice');
 
+	// comment creation function
 	this.create = function(params, action) {
 		var self = this;
 		
+		// comment data members for comment creation
 		var data = {
 			author: params.author,
 			timestamp: params.timestamp,
 			content: params.content
 		};
-				
+
+		// create the new comment
 	    var comment = geddy.model.Comment.create(data);
 
 		// save calls isValid, will throw err if false
@@ -33,6 +36,7 @@ var CommentService = function() {
 		action(null, post);
 	}
 
+	// find a comment based on its ID
 	this.findCommentById = function(commentId, action) {
 		geddy.model.Comment.first({id: commentId}, function(err, comment) {
 			if (err || !comment) {
@@ -53,6 +57,4 @@ var CommentService = function() {
 			return 0;
 		}
 	}
-
-
 }

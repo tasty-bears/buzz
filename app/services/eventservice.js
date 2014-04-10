@@ -76,8 +76,10 @@ var EventService = function() {
 		});
 	};
 
+	// add a post to an event
 	this.addPost = function(eventModel, postModel, action) {
 		var self = this;
+		// event hasMany post
 		eventModel.addPost(postModel);
 		eventModel.save(function(err, data) {
 			if (err) {
@@ -99,37 +101,35 @@ var EventService = function() {
 		});
 	};
 
-	//TODO: not convinced we need this (especially monkey-patching events)
+	// TODO: not convinced we need this (especially monkey-patching events)
+	// get all posts belonging to an event
 	this.getPostsToDisplay = function(event, action) {
 		event.getPosts(function(err, posts) {
 			if (err) {
 				action(err, null);
 			} else {
-
 				// add event attribute to each post(the view needs it I guess)
 				for (var i = 0; i < posts.length; i++) {
 					posts[i].getEvent(function(err, event) {
 						posts[i].event = event;
 					});
 				}
-
 				action(null, posts);
 			}
 		});
 	};
 
+	// get all existing posts for display
 	this.getAllPostsToDisplay = function(events, action) {
 		var posts = [];
-
+		// foreach post, get each comment belonging to that post
 		for(var i in events) {
 			this.getPostsToDisplay(events[i], function(err, data) {
 				posts.concat(data);
 			}); 
 		}
-
 		action(null, posts);
 	};
-
 }
 
 module.exports = new EventService();
