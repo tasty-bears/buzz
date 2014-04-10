@@ -1,76 +1,66 @@
 // Repository pattern for FooCDN
 
-var hostname = "foocdn.azurewebsites.net"
-
-// returns a cookie-cutter callback closure
-var request_callback = function(action) {
-    return function(err,data) {
-        if (err) {
-            action(err, null);
-        } else {
-            action(null, data);
-        }
-    }
-}
+var format = require('util').format;
 
 var FooRepo = function() {
     // http://geddyjs.org/reference#utilities_request
 
     // Returns the binary content associated with provided blob identifier
     this.get_content = function(blobId, action) {
-        var endpoint = '/api/content/{0}'.format(blobId)
+        
         geddy.request(
             {
-                url:'http://{0}{1}'.format(hostname, endpoint),
+                url: this.get_content_url(blobId),
                 method:'GET'
             },
-            request_callback(action)
+            action
         );
     };
 
     // Stores the binary content from the multi-part form data contents of the
     // request body in the storage location associated with the provided blob identifier
+    //TODO: untested
     this.set_content = function(blobId, content, action) {
-        var endpoint = '/api/content/{0}'.format(blobId)
         geddy.request(
             {
-                url:'http://{0}{1}/'.format(hostname, endpoint),
-                method:'POST'
+                url: this.set_content_url(blobId),
+                method: 'POST'
             },
-            request_callback(action)
+            action
         );
     };
 
     // Moves the content for the provided blob identifier to the specified
     // storage location
+    //TODO: untested
     this.move_content = function(blobID, locationType, action) {
         // locationType: (MEMCACHE | DISK | TAPE)
 
-        var endpoint = '/api/content/{0}'.format(blobId)
         geddy.request(
             {
-                url:'http://{0}{1}/'.format(hostname, endpoint),
-                method:'PUT',
-                data:'?type={0}'.format(locationType)
+                url: this.move_content_url(blobId),
+                method: 'PUT',
+                data: format('?type=%s', locationType)
             },
-            request_callback(action)
+            action
         );
     };
 
     // Deletes the content item and associated binary data for the provided blob
     // identifier
+    //TODO: untested
     this.delete_content = function(blobId, action) {
-        var endpoint = '/api/content/{0}'.format(blobId)
         geddy.request(
             {
-                url:'http://{0}{1}/'.format(hostname, endpoint),
-                method:'DELETE'
+                url: this.delete_content_url(blobId),
+                method: 'DELETE'
             },
-            request_callback(action)
+            action
         );
     };
 
     // Returns the information bundle for the provided blob identifier 
+    //TODO: untested
     this.get_content_info = function(blobId, action) {
         // Example Response: {
         //    "ID":7,
@@ -87,40 +77,74 @@ var FooRepo = function() {
         //     "DeletedOn":null
         // }
         
-        var endpoint = '/api/content/{0}/info'.format(blobId)
         geddy.request(
             {
-                url:'http://{0}{1}/'.format(hostname, endpoint),
-                method:'GET'
+                url: this.get_content_info_url(blobId),
+                method: 'GET'
             },
-            request_callback(action)
+            action
         );
     };
 
+    //TODO: untested
     this.create_container = function(accountKey, mimeType, action) {
         // POST /api/content/new
         // Creates a new container and blob identifier into which content can be
-        // stored and retrieved 
+        // stored and retrieved
         
         // Example Request Body: {"Account Key":"000-000-0000", "MimeType":"image/jpg"} 
         // Response: 3a39c0ef-7f37-475f-a2f4-d7ea19a31081
         
-        var endpoint = '/api/content/add'
         geddy.request(
             {
-                url:'http://{0}{1}/'.format(hostname, endpoint),
-                method:'POST',
-                data:{
-                    "Account Key":accountKey,
-                    "MimeType":mimeType
+                url: this.create_container_url(),
+                method: 'POST',
+                data: {
+                    "Account Key": accountKey,
+                    "MimeType": mimeType
                 }
                 // geddy reference says data should be a string, but FooCDN
                 // implies it should be JSON
             },
-            request_callback(action)
+            action
         );
     }
 
 };
+
+FooRepo.prototype.hostname = "foocdn.azurewebsites.net";
+
+// urls
+FooRepo.prototype.get_content_url =
+FooRepo.prototype.set_content_url =
+FooRepo.prototype.move_content_url =
+FooRepo.prototype.delete_content_url = function(blobId) {
+    return this._format_url(blobId, null);
+}
+FooRepo.prototype.get_content_info_url = function(blobId) {
+    return this._format_url(blobId, "info");
+}
+FooRepo.prototype.create_container_url = function() {
+    return this._format_url(null, "add");
+}
+
+// "static" method to piece together a content url given an endpoint
+FooRepo.prototype._format_url = function(blobId, suffix) {
+    var apiPath = "/api/content/"
+    return format('http://%s%s%s%s',
+                  this.hostname,
+                  apiPath,
+                  blobId ? (blobId + '/') : '',
+                  suffix ? (suffix + '/') : ''
+                  );
+}
+
+//TODO: make a test!
+// console.log(FooRepo.prototype.get_content_url('1234'));
+// console.log(FooRepo.prototype.set_content_url('1234'));
+// console.log(FooRepo.prototype.move_content_url('1234'));
+// console.log(FooRepo.prototype.delete_content_url('1234'));
+// console.log(FooRepo.prototype.get_content_info_url('1234'));
+// console.log(FooRepo.prototype.create_container_url());
 
 module.exports = new FooRepo();

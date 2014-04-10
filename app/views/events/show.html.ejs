@@ -1,67 +1,62 @@
 <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style type="text/css">
-      #map-canvas { height: 400px }
-    </style>
-<script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7-Lbo8t0W1I9_Uo3logWrK3EsdkQzGVQ&sensor=false">
-    </script>
-    <script type="text/javascript">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <style type="text/css">
+    #map-canvas { height: 400px }
 
-      function initialize() {
-        var lat;
-        var lng;
-        var latlng;
-       console.log(<%= event.latlng %>);
-        latlng = "<%= event.latlng %>";
-       console.log(latlng);
+    div.fb {
+      width:475px;
+      padding:10px;
+      border:10px;
+      margin:0px;
+      border-style:solid;
+      border-color:#3B5998;
+    }
 
-        var latlangArray = latlng.split(",");
-         lat = latlangArray[0];
-         lng = latlangArray[1];
-         console.log(lat);
-         console.log(lng);
+    div.twitter {
+      width:500px;
+      padding:10px;
+      border:10px;
+      margin:0px;
+      border-style:solid;
+      border-color:#30D8F0;
+    }
+  </style>
+  <script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7-Lbo8t0W1I9_Uo3logWrK3EsdkQzGVQ&sensor=false">
+  </script>
+  <script type="text/javascript">
+
+    function initialize() {
+      var lat;
+      var lng;
+      var latlng;
+     console.log(<%= event.latlng %>);
+      latlng = "<%= event.latlng %>";
+     console.log(latlng);
+
+      var latlangArray = latlng.split(",");
+       lat = latlangArray[0];
+       lng = latlangArray[1];
+       console.log(lat);
+       console.log(lng);
 
 
-        var myLatlng = new google.maps.LatLng( lat , lng);
-        var mapOptions = {
-          zoom: 12,
-          center: myLatlng
-        }
-        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-
-        var marker = new google.maps.Marker({
-            position: myLatlng,
-            map: map,
-            title: 'Hello World!'
-        });
+      var myLatlng = new google.maps.LatLng( lat , lng);
+      var mapOptions = {
+        zoom: 12,
+        center: myLatlng
       }
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+      var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-<style>
-    div.fb
-{
-width:475px;
-padding:10px;
-border:10px;
-margin:0px;
-border-style:solid;
-border-color:#3B5998;
-}
-
-div.twitter
-{
-width:500px;
-padding:10px;
-border:10px;
-margin:0px;
-border-style:solid;
-border-color:#30D8F0;
-}
-
-</style>
-  </head>
+      var marker = new google.maps.Marker({
+          position: myLatlng,
+          map: map,
+          title: 'Hello World!'
+      });
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+  </script>
+</head>
 
 <div class="hero-unit">
   <h2 class="name"><%- geddy.date.strftime(event.date, "%m/%d") + " - " + eventCourseName + " " + eventCourseNumber + " - " + event.name; %></h2>
@@ -83,100 +78,35 @@ border-color:#30D8F0;
   </div>
 </div>
 
-<h3>Posts</h3>
-<%- linkTo('Create a new Post', eventPath(''), {class: 'btn pull-right'}); %>
-<!--<div style="background: white; width: 200px; height: 200px; position:
-absolute; left: 50%; top: 50%; margin-left: -100px; margin-top: -100px"
-id="modal">I'm a modal</div>-->
+<h3>Create a new Post</h3>
 
-<div id="postView">
-  <%= partial("_postView", {event: event, events: events, posts: posts, selectedEvent: selectedEvent}); %>
+<div id="post">
+  <%= partial("posts/form", {event: event}); %>
+  <div id="posts-index"></div>
 </div>
-
-<!-- <div class="row list-item">
-	<div class="span12">
-		<% for (var i in posts) { -%>
-		<%if (i !== 'saved') { -%>
-		<p><%= i %></p>
-		<% } -%><% } -%>
-	</div>
-</div>
-
-<!-- <h3>Duration (Minutes)</h3>
-<div class="row list-item">
-  <div class="span12">
-    <p class="duration"><%= event.duration %></p>
-  </div>
-</div>
-
-<h3>Location Description</h3>
-<div class="row list-item">
-  <div class="span12">
-    <p class="locationDescription"><%= event.locationDescription %></p>
-  </div>
-</div>
-
-<h3>Repeat Type</h3>
-<div class="row list-item">
-  <div class="span12">
-    <p class="repeat"><%= event.repeat %></p>
-  </div>
-</div>
-
-<h3>Repeats on these days:</h3>
-<div class="row list-item">
-  <div class="span12">
-    <p class="repeatDaysOfWeek"><%= event.repeatDaysOfWeek %></p>
-  </div>
-</div>
-
-<h3>Repeats on this day of month:</h3>
-<div class="row list-item">
-  <div class="span12">
-    <p class="repeatDayOfMonth"><%= event.repeatDayOfMonth %></p>
-  </div>
-</div>
-
-<h3>Repeats on this day of month:</h3>
-<div class="row list-item">
-  <div class="span12">
-    <p class="repeatDayOfMonth"><%= event.repeatDayOfMonth %></p>
-  </div>
-</div>
-
-<h3>Number of Reccurences:</h3>
-<div class="row list-item">
-  <div class="span12">
-    <p class="numberOfReccurences"><%= event.numberOfReccurences %></p>
-  </div>
-</div> -->
-
 
 <h3>Feed</h3>
-<div class="twitter">
-	<blockquote class="twitter-tweet" lang="en"><p>Funny, people often ask me if being a scientist is like The Nutty Professor. But it&#39;s not really.</p>&mdash; Stephen Hawking (@Prof_S_Hawking) <a href="https://twitter.com/Prof_S_Hawking/statuses/1357746603">March 20, 2009</a></blockquote>
-	<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-</div>
-
-<div class="fb">
-<div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-<div class="fb-post" data-href="https://www.facebook.com/photo.php?fbid=10152067657376961&amp;set=a.10150331291841961.334784.216311481960&amp;type=1" data-width="466"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?fbid=10152067657376961&amp;set=a.10150331291841961.334784.216311481960&amp;type=1">Post</a> by <a href="https://www.facebook.com/BillGates">Bill Gates</a>.</div></div>
-</div>
-
 
 <h3>Map:</h3>
 <div id="map-canvas"/>
 
+<script>
+  var eventObj = <%- JSON.stringify(event) %>;
 
-<!-- <h2>Event Properties</h2>
-<% for(var i in event) { -%>
-<% if(i !== 'saved') { -%>
-<div class="row list-item">
-  <div class="span4">
-    <h3><%= i %></h3>
-  </div>
-  <div class="span8">
-    <h3><i class="icon-list-alt"></i><span class="<%= i %>"><%= event[i] %></span></h3>
-  </div>
-</div>
-<% } -%><% } -%> -->
+  $(document).ready(function() {
+    load_posts_index();
+  });
+
+  function load_posts_index() {
+    $.ajax({
+      type: "GET",
+      url: '/posts',
+      data: eventObj,
+            success: function(response)
+            {
+                //TODO: get rid of hardcoded id
+                $("#posts-index").html(response);
+            }
+    });
+  }
+</script>

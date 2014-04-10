@@ -11,8 +11,10 @@ var Events = function () {
   this.addEvent = function(req, resp, params) {
 
       var self = this;
+	  
       userservice.loadUserFromSession(self.session, function(err, user) {
-        var event = geddy.model.Event.create(params);
+		var event = geddy.model.Event.create(params);
+				
         eventservice.addEvent(user, event, function(err, events) {
           self.respond({params: params, events: events, selectedEvent: -1}, {
             format: 'html'
@@ -80,21 +82,13 @@ var Events = function () {
 	
     var data = {
         params: params,
-		// user: null,
+		    // user: null,
         event: null,
         eventCourseName: null,
         eventCourseNumber: null,
-        events: null,
-        posts: null,
-        selectedEvent: -1
+        posts: null
     };
-    geddy.model.Event.all(function(err, events) {
-       if (err) {
-           throw err;
-       } else {
-           data.events = events;
-       }
-    });
+
     geddy.model.Event.first(params.id, function(err, event) {
       if (err) {
         throw err;
@@ -106,12 +100,12 @@ var Events = function () {
         data.eventCourseName = eventservice.getCourseName(event);
         data.eventCourseNumber = eventservice.getCourseNumber(event);
         data.event = event;
-        data.selectedEvent = event.id;
-        var posts = eventservice.getPostsToDisplay(data.events, data.selectedEvent, function(err, posts) {
+        
+        eventservice.getPostsToDisplay(data.event, function(err, posts) {
             if (err) {
                 throw err;
             } else {
-				data.posts = posts;
+               data.posts = posts;
                self.respond(data);
             }
         });
