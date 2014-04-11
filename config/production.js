@@ -17,7 +17,7 @@
 */
 
 var config = {
-  appName: 'Angora'
+  appName: 'Buzz'
 , detailedErrors: false
 , hostname: null
 , email_activation: false

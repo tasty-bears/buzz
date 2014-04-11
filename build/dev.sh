@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE: Node.js and npm must be installed on the system to build Angora.
+# NOTE: Node.js and npm must be installed on the system to build Buzz.
 #       Please visit http://nodejs.org/ to install.
 
 scriptdir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
