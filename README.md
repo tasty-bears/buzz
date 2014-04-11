@@ -7,8 +7,10 @@ Web Application
 v0.3.0 Release Notes
 -------------------
 
-###New functionality###
-* 
+###Changelog###
+* Enhanced posting functionality
+* Calendars for events
+* Partial Facebook and Twitter integration
 
 ###Known Issues###
 * __Only Mac OS X is supported__ - contact developer for more information
