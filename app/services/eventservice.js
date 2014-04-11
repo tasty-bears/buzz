@@ -4,7 +4,7 @@ var EventService = function() {
 
 	this.getCourseNames = function (events, action){
 		var self = this;
-		var coursenames = new Array();
+		var coursenames = [];
 
 		for (var i = 0; i < events.length; i++) {
 			coursenames[i] = eventserviceSelf.getCourseName(events[i]);
@@ -14,7 +14,7 @@ var EventService = function() {
 
 	this.getCourseNumbers = function (events, action){
 		var self = this;
-		var coursenumbers = new Array();
+		var coursenumbers = [];
 
 		for (var i = 0; i < events.length; i++) {
 			coursenumbers[i] = eventserviceSelf.getCourseNumber(events[i]);
@@ -61,6 +61,7 @@ var EventService = function() {
 		return number;
 	}
 
+	//TODO: move to UserService
 	this.addEvent = function(userModel, eventModel, action) {
 		var self = this;
 		userModel.addEvent(eventModel);
@@ -75,94 +76,59 @@ var EventService = function() {
 		});
 	};
 
-	this.addPostToEvent = function(eventModel, postModel, action) {
+	// add a post to an event
+	this.addPost = function(eventModel, postModel, action) {
 		var self = this;
+		// event hasMany post
 		eventModel.addPost(postModel);
 		eventModel.save(function(err, data) {
 			if (err) {
 				action(err, null);
 			} else {
-				action(null, data);
+				action(null, postModel);
 			}
 		});
-		console.log("added post to event");
 	};
 
 	this.findEventById = function(eventId, action) {
 		geddy.model.Event.first({id: eventId}, function(err, event) {
 			if (err || !event) {
-				console.log("Could not find event by ID");
-				// action({event: 'The event was not found'}, null);
+				console.log("Could not find event by ID" + eventId);
+				action(err, null);
 			} else {
 				action(null, event);
 			}
 		});
 	};
 
-	this.getPostsToDisplay = function(events, selectedEvent, action) {
-		var posts = new Array();
-
-		// TODO make this block its own function in the controller that calls
-	    // getTweetsToDisplay
-	    // that way it will be getTweetsToDisplay(feeds, action)
-	    // will be called in posts.js and main.js
-		if (selectedEvent != -1) {
-			for (var i = 0, len = events.length; i < len; i++) {
-				if (events[i].id == selectedEvent) {
-					events = [events[i]];
-					break;
-				}
-			}
-		}
-
-		// iterate through posts in an event
-		(function() {
-			if (events.length > 0) {
-				for (var i = 0, len1=events.length; i < len1; i++) {
-					(function () {
-						events[i].getPosts(function(err, eventPosts) {
-							if (err) {
-								action(err, null);
-							} else {
-								posts = posts.concat(eventPosts);
-								if (i == len1-1) {
-									posts.sort(function(a,b) {
-										if (a.postdate.getTime() > b.postdate.getTime()) {
-											return -1;
-										} else if (a.postdate.getTime() < b.postdate.getTime()) {
-											return 1;
-										} else {
-											return 0;
-										}
-									});
-
-									(function() {
-										var unpacked = new Array();
-										for (var j = 0, len2 = posts.length; j < len2; j++) {
-											var post = posts[j];
-
-											post.getEvent(function(err, event) {
-												event.getUser(function(err, owner) {
-													post.author = owner ? owner : {name: "No Author"};
-													post.event = event;
-													unpacked.push(post);
-													if (j == len2-1) {
-														action(null, unpacked);
-													}
-												});
-											});
-										}
-										action(null, posts);
-									}());
-								}
-							}
-						});
-					}());
-				}
+	// TODO: not convinced we need this (especially monkey-patching events)
+	// get all posts belonging to an event
+	this.getPostsToDisplay = function(event, action) {
+		event.getPosts(function(err, posts) {
+			if (err) {
+				action(err, null);
 			} else {
-				action(null, []);
+				// add event attribute to each post(the view needs it I guess)
+				for (var i = 0; i < posts.length; i++) {
+					posts[i].getEvent(function(err, event) {
+						posts[i].event = event;
+					});
+				}
+				action(null, posts);
 			}
-		}());
+		});
+	};
+
+	// get all existing posts for display
+	this.getAllPostsToDisplay = function(events, action) {
+		var posts = [];
+		// foreach post, get each comment belonging to that post
+		for(var i in events) {
+			this.getPostsToDisplay(events[i], function(err, data) {
+				posts.concat(data);
+			}); 
+		}
+		action(null, posts);
 	};
 }
 

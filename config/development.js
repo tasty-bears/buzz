@@ -17,7 +17,7 @@
 */
 
 var config = {
-  appName: 'Angora (development)'
+  appName: 'Buzz (development)'
 , detailedErrors: true
 , debug: true
 , hostname: 'localhost' // set back to null?

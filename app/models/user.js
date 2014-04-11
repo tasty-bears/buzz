@@ -14,7 +14,7 @@ var User = function () {
   this.validatesConfirmed('password', 'confirmPassword');
 
   this.hasMany('Passports');
-
+  this.hasMany('Events');
   this.hasMany('Enrollments');
   this.hasMany('Courses', {through: 'Enrollments'});
 };

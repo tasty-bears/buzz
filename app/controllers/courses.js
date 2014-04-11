@@ -1,6 +1,7 @@
 var passport = require('../helpers/passport')
   , requireAuth = passport.requireAuth;
 var courseservice = require('../services/courseservice');
+var scheduleservice = require('../services/scheduleservice');
 
 
 var Courses = function () {
@@ -63,6 +64,7 @@ var Courses = function () {
   this.show = function (req, resp, params) {
     var self = this;
     var mySchedule = null;
+    var nonFormattedEvents = null;
 
     geddy.model.Course.first(params.id, function(err, course) {
       if (err) {
@@ -77,17 +79,18 @@ var Courses = function () {
             throw err;
           }
           mySchedule = schedule;
-
-          if (schedule == null) {
-            geddy.log.debug('schedule NULL');
-            geddy.log.debug(mySchedule.name);
-          }
         });
         mySchedule.getEvents(function (err, data) {
           if (err) {
             throw err;
           }
-          self.respond({course: course, schedule: mySchedule, events: data});
+          nonFormattedEvents = data;
+        });
+        scheduleservice.formatEventsForCalendar(nonFormattedEvents, function(err, events){
+          if (err) {
+            throw err;
+          }
+          self.respond({course: course, schedule: mySchedule, events: events});
         });
       }
     });
@@ -159,7 +162,7 @@ var Courses = function () {
     var cId = params.id;
     var myUser = null;
     var myCourse = null;
-	
+
     geddy.model.User.first(uId, function (err, user){
       if (err){
         throw err;

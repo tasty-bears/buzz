@@ -1,0 +1,34 @@
+<head>
+  <!-- Calendar plug-in credit goes to arshaw.com's FullCalendar plugin. -->
+  <link rel='stylesheet' type='text/css' href='/css/fullcalendar.css' />
+  <script type='text/javascript' src='/js/jquery.js'></script>
+  <script type='text/javascript' src='/js/fullcalendar.js'></script>
+  <script type='text/javascript'>
+    $(document).ready(function() {
+
+      var calEvents = new Array();
+
+      calEvents = <%- JSON.stringify(myEvents) %>;
+
+      //initialize the calendar.
+      $('#calendar').fullCalendar({
+        // put your options and callbacks here
+        header:
+        {
+				      left: 'prev,next today',
+				      center: 'title',
+				      right: 'month,agendaWeek,agendaDay'
+			  },
+      defaultView: 'agendaWeek',
+      events: calEvents,
+      titleFormat: {
+        week: "MMM d[ yyyy]{ '&#8212;'[ MMM] d, yyyy}",
+      },
+      aspectRatio: 1.75
+      });
+
+    });
+  </script>
+</head>
+
+<div id='calendar'></div>
