@@ -26,5 +26,8 @@ v0.3.0 Release Notes
 ###Buzz Source###
 [https://bitbucket.org/TastyBears/com.tastybears.buzz.web](https://bitbucket.org/TastyBears/com.tastybears.buzz.web)
 
+###Continuous Integration###
+[https://app.wercker.com/#applications/534926f385c557fb57019080](https://app.wercker.com/#applications/534926f385c557fb57019080)
+
 ###Tasty Bears###
 [https://bitbucket.org/TastyBears](https://bitbucket.org/TastyBears)
