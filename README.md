@@ -21,4 +21,4 @@ v0.3.0 Release Notes
 1. In browser, visit [http://localhost:5000](http://localhost:5000)
 
 ###Buzz on the web###
-[https://tastybears-buzz.herokuapp.com/](https://tastybears-buzz.herokuapp.com/)
+[http://buzz.tastybears.com/](http://buzz.tastybears.com/)
