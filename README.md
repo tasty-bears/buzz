@@ -22,3 +22,9 @@ v0.3.0 Release Notes
 
 ###Buzz on the web###
 [http://buzz.tastybears.com/](http://buzz.tastybears.com/)
+
+###Buzz Source###
+[https://bitbucket.org/TastyBears/com.tastybears.buzz.web](https://bitbucket.org/TastyBears/com.tastybears.buzz.web)
+
+###Tasty Bears###
+[https://bitbucket.org/TastyBears](https://bitbucket.org/TastyBears)
