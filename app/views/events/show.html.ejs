@@ -30,16 +30,11 @@
       var lat;
       var lng;
       var latlng;
-     console.log(<%= event.latlng %>);
       latlng = "<%= event.latlng %>";
-     console.log(latlng);
 
       var latlangArray = latlng.split(",");
-       lat = latlangArray[0];
-       lng = latlangArray[1];
-       console.log(lat);
-       console.log(lng);
-
+      lat = latlangArray[0];
+      lng = latlangArray[1];
 
       var myLatlng = new google.maps.LatLng( lat , lng);
       var mapOptions = {
