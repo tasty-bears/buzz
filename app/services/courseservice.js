@@ -1,30 +1,37 @@
+var async = require("async");
+
 var CourseService = function() {
 	this.getUserCoursesIds = function (userId, action) {
 		var self = this;
-		var user = null;
 		var myCourses = null;
-		var ids = new Array();
-		geddy.model.User.first(userId,function (err, data){
-			if (err) {
-				action(err, null);
-			}
-			user = data;
-		});
-		user.getCourses(function (err, data) {
-			if (err) {
-				action(err, null);
-			}
-			myCourses = data;
-		});
-		if (userId) {
-			for (var i = 0; i < myCourses.length; i++) {
-				ids[i] = myCourses[i].id;
-			}
-			action(null, ids);
-		} else {
-			action(null, null);
+
+		var _waterfallGetUser = function(callback){
+			geddy.model.User.first(userId,function (err, data){
+				callback(err,data);
+			})
+		};
+
+		var _waterfallGetCourses = function(user,callback){
+			user.getCourses(function (err, data) {
+				callback(err,data);
+			});
 		}
 
+		var _waterfallGetIds = function(courses,callback){
+			var ids = [];
+			if (userId) {
+				for (var i = 0; i < courses.length; i++) {
+					ids[i] = courses[i].id;
+				}
+				callback(null, ids);
+			} else {
+				callback(null, null);
+			}
+
+		}
+		async.waterfall([_waterfallGetUser, _waterfallGetCourses, _waterfallGetIds], function(err, result) {
+			action(err,result);
+		});
 	};
 
 	this.addCourse = function (myUser, myCourse, action) {
