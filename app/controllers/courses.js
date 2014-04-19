@@ -35,7 +35,30 @@ var Courses = function () {
 
   this.create = function (req, resp, params) {
     var self = this
-      , course = geddy.model.Course.create(params);
+    var courseData = {
+      name: params.name,
+      courseNumber: params.courseNumber,
+      section: params.section,
+      professor: params.professor,
+      isPublic: params.isPublic,
+      invitees: null
+    }
+    //if it is private we need to set invitee list
+    if (!(params.isPublic == "true")){
+      //split the invitees string into an array of user ID's
+      var courseInvitees = new Array();
+      var inviteesString = params.invitees;
+      courseInvitees = inviteesString.split(",");
+      //add current user's id to list
+      courseInvitees.push(this.session.get('userId'));
+      //assign the coursedata invitees to array and create the object
+      courseData.invitees = courseInvitees;
+    }else{
+      //public should just be an empty array of invitees
+      courseData.invitees = [];
+    }
+
+    var course = geddy.model.Course.create(courseData);
     if (!course.isValid()) {
       this.respondWith(course);
     }
@@ -45,11 +68,8 @@ var Courses = function () {
         if (err) {
           throw err;
         }
-        geddy.log.debug('in create');
         var schedule = geddy.model.Schedule.createSchedule(course);
-        geddy.log.debug('before association');
         course.setSchedule(schedule);
-        geddy.log.debug(schedule.name);
         course.save(function(err, data){
           if (err){
             throw err;
