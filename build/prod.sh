@@ -45,8 +45,8 @@ echo -e "===================="
 # create server start script
 echo -e "Creating server start script 'start.sh'..."
 echo "#!/usr/bin/env bash
-heroku_env=$(heroku config --app tastybears-buzz | sed 1d | sed s/:/=/ | sed -e "s/ //g")
-env $heroku_env PORT=5000 node server.js" > $scriptdir/../start.sh
+heroku_env=\$(heroku config --app tastybears-buzz | sed 1d | sed s/:/=/ | sed -e "s/ //g")
+env \$heroku_env PORT=5000 node server.js" > $scriptdir/../start.sh
 chmod +x $scriptdir/../start.sh
 echo -e "===================="
 # use ../start.sh to run server
