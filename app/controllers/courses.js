@@ -2,7 +2,7 @@ var passport = require('../helpers/passport')
   , requireAuth = passport.requireAuth;
 var courseservice = require('../services/courseservice');
 var scheduleservice = require('../services/scheduleservice');
-
+var async = require('async');
 
 var Courses = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
@@ -10,23 +10,38 @@ var Courses = function () {
 
   this.index = function (req, resp, params) {
     var self = this;
-    var courses = null;
-    var myCoursesIds = null;
+    var userId = this.session.get('userId');
 
-    courseservice.getUserCoursesIds(this.session.get('userId'), function (err, data){
-      if (err){
-        throw err;
-      }
-      myCoursesIds = data;
-    });
+    var _parallelIds = function(callback) {
+      courseservice.getUserCoursesIds(userId, function (err, data){
+        if (err){
+          callback(err,null);
+        }
+        callback(err,data);
+      });
+    }
 
-    geddy.model.Course.all(function (err, data) {
-      if (err) {
-        throw err;
-      }
-      courses = data;
+    var _parallelCourses = function(callback){
+      geddy.model.Course.all(function (err, data) {
+        if (err) {
+          callback(err, null);
+        }
+        var showCourses = [];
+        for (var i = 0; i < data.length; i++) {
+          var courseInvitees = [];
+          courseInvitees = data[i].invitees;
+          if ((data[i].isPublic) || (courseInvitees.indexOf(userId) != -1)){
+            showCourses.push(data[i]);
+          }
+        }
+        callback(err,showCourses);
+      });
+
+    }
+
+    async.parallel([_parallelIds, _parallelCourses], function(err, results) {
+      self.respond({courses: results[1], usercoursesId: results[0]});
     });
-    self.respond({courses: courses, usercoursesId: myCoursesIds});
   };
 
   this.add = function (req, resp, params) {
@@ -55,7 +70,7 @@ var Courses = function () {
       courseData.invitees = courseInvitees;
     }else{
       //public should just be an empty array of invitees
-      courseData.invitees = [];
+      courseData.invitees = ["none"];
     }
 
     var course = geddy.model.Course.create(courseData);
