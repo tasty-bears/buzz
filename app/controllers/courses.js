@@ -154,7 +154,31 @@ var Courses = function () {
       if (err) {
         throw err;
       }
-      course.updateProperties(params);
+
+      var courseData = {
+        name: params.name,
+        courseNumber: params.courseNumber,
+        section: params.section,
+        professor: params.professor,
+        isPublic: params.isPublic,
+        invitees: null
+      }
+      //if it is private we need to set invitee list
+      if (!(params.isPublic == "true")){
+        //split the invitees string into an array of user ID's
+        var courseInvitees = new Array();
+        var inviteesString = params.invitees;
+        courseInvitees = inviteesString.split(",");
+        //add current user's id to list
+        courseInvitees.push(self.session.get('userId'));
+        //assign the coursedata invitees to array and create the object
+        courseData.invitees = courseInvitees;
+      }else{
+        //public should just be an empty array of invitees
+        courseData.invitees = ["none"];
+      }
+
+      course.updateProperties(courseData);
 
       if (!course.isValid()) {
         self.respondWith(course);
