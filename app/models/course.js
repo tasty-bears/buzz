@@ -4,14 +4,16 @@ var Course = function () {
     name: {type: 'string', required: true},
     courseNumber: {type: 'int'},
     section: {type: 'int'},
-    professor: {type: 'string'}
+    professor: {type: 'string'},
+    isPublic: {type: 'boolean', required: true},
+    invitees: {type: 'object'}
   });
 
   this.hasOne('Schedule');
 
   this.hasMany('Enrollments');
   this.hasMany('Users',{through: 'Enrollments'});
- 
+
   /*
   this.property('login', 'string', {required: true});
   this.property('password', 'string', {required: true});

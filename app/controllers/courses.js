@@ -2,7 +2,8 @@ var passport = require('../helpers/passport')
   , requireAuth = passport.requireAuth;
 var courseservice = require('../services/courseservice');
 var scheduleservice = require('../services/scheduleservice');
-
+var eventservice = require('../services/eventservice');
+var async = require('async');
 
 var Courses = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
@@ -10,23 +11,38 @@ var Courses = function () {
 
   this.index = function (req, resp, params) {
     var self = this;
-    var courses = null;
-    var myCoursesIds = null;
+    var userId = this.session.get('userId');
 
-    courseservice.getUserCoursesIds(this.session.get('userId'), function (err, data){
-      if (err){
-        throw err;
-      }
-      myCoursesIds = data;
-    });
+    var _parallelIds = function(callback) {
+      courseservice.getUserCoursesIds(userId, function (err, data){
+        if (err){
+          callback(err,null);
+        }
+        callback(err,data);
+      });
+    }
 
-    geddy.model.Course.all(function (err, data) {
-      if (err) {
-        throw err;
-      }
-      courses = data;
+    var _parallelCourses = function(callback){
+      geddy.model.Course.all(function (err, data) {
+        if (err) {
+          callback(err, null);
+        }
+        var showCourses = [];
+        for (var i = 0; i < data.length; i++) {
+          var courseInvitees = [];
+          courseInvitees = data[i].invitees;
+          if ((data[i].isPublic) || (courseInvitees.indexOf(userId) != -1)){
+            showCourses.push(data[i]);
+          }
+        }
+        callback(err,showCourses);
+      });
+
+    }
+
+    async.parallel([_parallelIds, _parallelCourses], function(err, results) {
+      self.respond({courses: results[1], usercoursesId: results[0]});
     });
-    self.respond({courses: courses, usercoursesId: myCoursesIds});
   };
 
   this.add = function (req, resp, params) {
@@ -35,7 +51,30 @@ var Courses = function () {
 
   this.create = function (req, resp, params) {
     var self = this
-      , course = geddy.model.Course.create(params);
+    var courseData = {
+      name: params.name,
+      courseNumber: params.courseNumber,
+      section: params.section,
+      professor: params.professor,
+      isPublic: params.isPublic,
+      invitees: null
+    }
+    //if it is private we need to set invitee list
+    if (!(params.isPublic == "true")){
+      //split the invitees string into an array of user ID's
+      var courseInvitees = new Array();
+      var inviteesString = params.invitees;
+      courseInvitees = inviteesString.split(",");
+      //add current user's id to list
+      courseInvitees.push(this.session.get('userId'));
+      //assign the coursedata invitees to array and create the object
+      courseData.invitees = courseInvitees;
+    }else{
+      //public should just be an empty array of invitees
+      courseData.invitees = ["none"];
+    }
+
+    var course = geddy.model.Course.create(courseData);
     if (!course.isValid()) {
       this.respondWith(course);
     }
@@ -45,11 +84,8 @@ var Courses = function () {
         if (err) {
           throw err;
         }
-        geddy.log.debug('in create');
         var schedule = geddy.model.Schedule.createSchedule(course);
-        geddy.log.debug('before association');
         course.setSchedule(schedule);
-        geddy.log.debug(schedule.name);
         course.save(function(err, data){
           if (err){
             throw err;
@@ -119,7 +155,31 @@ var Courses = function () {
       if (err) {
         throw err;
       }
-      course.updateProperties(params);
+
+      var courseData = {
+        name: params.name,
+        courseNumber: params.courseNumber,
+        section: params.section,
+        professor: params.professor,
+        isPublic: params.isPublic,
+        invitees: null
+      }
+      //if it is private we need to set invitee list
+      if (!(params.isPublic == "true")){
+        //split the invitees string into an array of user ID's
+        var courseInvitees = new Array();
+        var inviteesString = params.invitees;
+        courseInvitees = inviteesString.split(",");
+        //add current user's id to list
+        courseInvitees.push(self.session.get('userId'));
+        //assign the coursedata invitees to array and create the object
+        courseData.invitees = courseInvitees;
+      }else{
+        //public should just be an empty array of invitees
+        courseData.invitees = ["none"];
+      }
+
+      course.updateProperties(courseData);
 
       if (!course.isValid()) {
         self.respondWith(course);
@@ -146,10 +206,46 @@ var Courses = function () {
         throw new geddy.errors.BadRequestError();
       }
       else {
-        geddy.model.Course.remove(params.id, function(err) {
+
+        var _getSchedule = function(callback) {
+          course.getSchedule(function(err, schedule){
+            callback(err,schedule);
+          });
+        }
+
+        var _getEvents = function(schedule, callback) {
+          schedule.getEvents(function(err, events){
+            callback(err, schedule, events);
+          });
+        }
+
+        var _removeEvents = function(schedule, events, callback) {
+          async.each(events, function(event, callback){
+            eventservice.removeEventFromDB(event, function(err){
+              callback(err);
+            });
+          }, function(err){
+            callback(err, schedule);
+          });
+        }
+
+        var _removeSchedule = function(schedule, callback) {
+          scheduleservice.removeScheduleFromDB(schedule, function(err){
+            callback(err);
+          });
+        }
+
+        var _removeCourse = function(callback) {
+          courseservice.removeCourseFromDB(course, function(err){
+            callback(err);
+          });
+        }
+
+        async.waterfall([_getSchedule, _getEvents, _removeEvents, _removeSchedule, _removeCourse], function(err) {
           if (err) {
             throw err;
           }
+          console.log("end of waterfall");
           self.respondWith(course);
         });
       }

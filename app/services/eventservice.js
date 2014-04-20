@@ -126,10 +126,19 @@ var EventService = function() {
 		for(var i in events) {
 			this.getPostsToDisplay(events[i], function(err, data) {
 				posts.concat(data);
-			}); 
+			});
 		}
 		action(null, posts);
 	};
+
+	this.removeEventFromDB = function(event, action) {
+		geddy.model.Event.remove(event.id, function(err) {
+			if (err) {
+				action(err);
+			}
+			action(null);
+		});
+	}
 }
 
 module.exports = new EventService();

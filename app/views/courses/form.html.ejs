@@ -22,3 +22,24 @@
     <%- contentTag('input', course.professor, {type:'text', class:'span6', name:'professor'}) %>
   </div>
 </div>
+<div class="control-group">
+  <label for="isPublic" class="control-label">Public Course*</label>
+  <div class="controls">
+    <select name="isPublic", class="span1">
+      <% if(course.isPublic) { -%>
+      <option>false</option>
+      <option selected>true</option>
+      <% } else { -%>
+      <option selected>false</option>
+      <option>true</option>
+      <% } -%>
+    </select>
+  </div>
+</div>
+
+<div class="control-group">
+  <label for="invitees" class="control-label">Enter User Id's to Invite (comma separated IDs)</label>
+  <div class="controls">
+    <%- contentTag('input', course.invitees, {type:'string', class:'span6', name:'invitees'}) %>
+  </div>
+</div>
