@@ -2,6 +2,7 @@ var passport = require('../helpers/passport')
   , requireAuth = passport.requireAuth;
 var courseservice = require('../services/courseservice');
 var scheduleservice = require('../services/scheduleservice');
+var eventservice = require('../services/eventservice');
 var async = require('async');
 
 var Courses = function () {
@@ -205,10 +206,46 @@ var Courses = function () {
         throw new geddy.errors.BadRequestError();
       }
       else {
-        geddy.model.Course.remove(params.id, function(err) {
+
+        var _getSchedule = function(callback) {
+          course.getSchedule(function(err, schedule){
+            callback(err,schedule);
+          });
+        }
+
+        var _getEvents = function(schedule, callback) {
+          schedule.getEvents(function(err, events){
+            callback(err, schedule, events);
+          });
+        }
+
+        var _removeEvents = function(schedule, events, callback) {
+          async.each(events, function(event, callback){
+            eventservice.removeEventFromDB(event, function(err){
+              callback(err);
+            });
+          }, function(err){
+            callback(err, schedule);
+          });
+        }
+
+        var _removeSchedule = function(schedule, callback) {
+          scheduleservice.removeScheduleFromDB(schedule, function(err){
+            callback(err);
+          });
+        }
+
+        var _removeCourse = function(callback) {
+          courseservice.removeCourseFromDB(course, function(err){
+            callback(err);
+          });
+        }
+
+        async.waterfall([_getSchedule, _getEvents, _removeEvents, _removeSchedule, _removeCourse], function(err) {
           if (err) {
             throw err;
           }
+          console.log("end of waterfall");
           self.respondWith(course);
         });
       }

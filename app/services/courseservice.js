@@ -74,6 +74,15 @@ var CourseService = function() {
 			action(null, data);
 		});
 	};
+
+	this.removeCourseFromDB = function(course, action) {
+		geddy.model.Course.remove(course.id, function(err) {
+			if (err) {
+				action(err);
+			}
+			action(null);
+		});
+	}
 }
 
 module.exports = new CourseService();

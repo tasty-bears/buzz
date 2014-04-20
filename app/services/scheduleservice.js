@@ -76,6 +76,15 @@ var ScheduleService = function() {
 
 	}
 
+	this.removeScheduleFromDB = function(schedule, action) {
+		geddy.model.Schedule.remove(schedule.id, function(err) {
+			if (err) {
+				throw err;
+			}
+			action(err);
+		});
+	}
+
 }
 
 module.exports = new ScheduleService();
