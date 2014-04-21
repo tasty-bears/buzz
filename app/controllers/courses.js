@@ -97,7 +97,7 @@ var Courses = function () {
           });
         }
 
-        async.waterfall([_createASchedule, _saveCourse], function(err, result) {
+        async.waterfall([_createASchedule, _saveCourse], function(err) {
           if (err) {
             throw err;
           }
@@ -137,11 +137,11 @@ var Courses = function () {
           });
         }
 
-        async.waterfall([_getSchedule,_getEventsFromSchedule,_formatEventsForCalendar],function(err, result) {
+        async.waterfall([_getSchedule,_getEventsFromSchedule,_formatEventsForCalendar],function(err, events, schedule) {
           if(err){
             throw err;
           }
-          self.respond({course: course, schedule: result.schedule, events: result.events});
+          self.respond({course: course, schedule: schedule, events: events});
         })
       }
     });
