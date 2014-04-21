@@ -109,8 +109,6 @@ var Courses = function () {
 
   this.show = function (req, resp, params) {
     var self = this;
-    var mySchedule = null;
-    var nonFormattedEvents = null;
 
     geddy.model.Course.first(params.id, function(err, course) {
       if (err) {
@@ -120,24 +118,31 @@ var Courses = function () {
         throw new geddy.errors.NotFoundError();
       }
       else {
-        course.getSchedule(function (err, schedule){
-          if (err){
+
+        var _getSchedule = function(callback) {
+          course.getSchedule(function (err, schedule){
+            callback(err,schedule);
+          });
+        }
+
+        var _getEventsFromSchedule = function(schedule, callback) {
+          schedule.getEvents(function (err, data) {
+            callback(err,data,schedule);
+          });
+        }
+
+        var _formatEventsForCalendar = function(changeevents, schedule, callback) {
+          scheduleservice.formatEventsForCalendar(changeevents, function(err, events){
+            callback(err,events,schedule);
+          });
+        }
+
+        async.waterfall([_getSchedule,_getEventsFromSchedule,_formatEventsForCalendar],function(err, result) {
+          if(err){
             throw err;
           }
-          mySchedule = schedule;
-        });
-        mySchedule.getEvents(function (err, data) {
-          if (err) {
-            throw err;
-          }
-          nonFormattedEvents = data;
-        });
-        scheduleservice.formatEventsForCalendar(nonFormattedEvents, function(err, events){
-          if (err) {
-            throw err;
-          }
-          self.respond({course: course, schedule: mySchedule, events: events});
-        });
+          self.respond({course: course, schedule: result.schedule, events: result.events});
+        })
       }
     });
   };
@@ -255,7 +260,6 @@ var Courses = function () {
           if (err) {
             throw err;
           }
-          console.log("end of waterfall");
           self.respondWith(course);
         });
       }
