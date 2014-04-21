@@ -84,15 +84,25 @@ var Courses = function () {
         if (err) {
           throw err;
         }
-        var schedule = geddy.model.Schedule.createSchedule(course);
-        course.setSchedule(schedule);
-        course.save(function(err, data){
-          if (err){
+        var _createASchedule = function(callback) {
+          geddy.model.Schedule.createSchedule(course, function(err, schedule){
+            course.setSchedule(schedule);
+            callback(err);
+          });
+        }
+
+        var _saveCourse = function(callback) {
+          course.save(function(err, data){
+            callback(err);
+          });
+        }
+
+        async.waterfall([_createASchedule, _saveCourse], function(err, result) {
+          if (err) {
             throw err;
           }
+          self.respondWith(course, {status: err});
         });
-        //course.setSchedule(schedule);
-        self.respondWith(course, {status: err});
       });
     }
   };
