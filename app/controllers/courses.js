@@ -270,23 +270,27 @@ var Courses = function () {
     var self = this;
     var uId = this.session.get('userId');
     var cId = params.id;
-    var myUser = null;
-    var myCourse = null;
 
-    geddy.model.User.first(uId, function (err, user){
-      if (err){
-        throw err;
-      }
-      myUser = user;
-    });
-    geddy.model.Course.first(cId, function (err, course){
-      if (err){
-        throw err;
-      }
-      myCourse = course;
-    });
-    courseservice.addCourse(myUser, myCourse, function(err, data) {
-      if (err) {
+    var _getUser = function(callback) {
+      geddy.model.User.first(uId, function (err, user){
+        callback(err, user);
+      });
+    }
+
+    var _getCourse = function(user, callback) {
+      geddy.model.Course.first(cId, function (err, course){
+        callback(err, course, user);
+      });
+    }
+
+    var _addCourse = function(course, user, callback) {
+      courseservice.addCourse(user, course, function(err, data) {
+        callback(err);
+      });
+    }
+
+    async.waterfall([_getUser,_getCourse,_addCourse],function(err) {
+      if(err) {
         throw err;
       }
       self.respond({params: params}, {
@@ -295,29 +299,35 @@ var Courses = function () {
         , layout: false
       });
     });
+
   };
 
   this.unsubscribeUser = function (req, resp, params) {
     var self = this;
     var uId = this.session.get('userId');
     var cId = params.id;
-    var myUser = null;
-    var myCourse = null;
 
-    geddy.model.User.first(uId, function (err, user){
-      if (err){
-        throw err;
-      }
-      myUser = user;
-    });
-    geddy.model.Course.first(cId, function (err, course){
-      if (err){
-        throw err;
-      }
-      myCourse = course;
-    });
-    courseservice.removeThisCourse(myUser, myCourse, function (err, data) {
-      if (err) {
+
+    var _getUser = function(callback) {
+      geddy.model.User.first(uId, function (err, user){
+        callback(err, user);
+      });
+    }
+
+    var _getCourse = function(user, callback) {
+      geddy.model.Course.first(cId, function (err, course){
+        callback(err, course, user);
+      });
+    }
+
+    var _removeCourse = function(course, user, callback) {
+      courseservice.removeThisCourse(user, course, function (err, data) {
+        callback(err);
+      });
+    }
+
+    async.waterfall([_getUser,_getCourse,_removeCourse], function(err) {
+      if(err) {
         throw err;
       }
       self.respond({params: params}, {
@@ -326,6 +336,7 @@ var Courses = function () {
         , layout: false
       });
     });
+
   };
 
 };
