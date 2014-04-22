@@ -87,7 +87,6 @@ var Main = function () {
 
         var _getCalEvents = function(myEvents, callback) {
           mainControllerSelf.getEventsForCalendar(function(err, events){
-            console.log(events);
             data.events = events;
             callback(err);
           });
@@ -140,7 +139,6 @@ var Main = function () {
 
     var _getCalendarEvents = function(currentUser, callback) {
       scheduleservice.getCalendarEvents(currentUser, function(err, events){
-        console.log(events);
         callback(err, events);
       });
     }
