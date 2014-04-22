@@ -6,7 +6,7 @@ var Schedule = function () {
   this.belongsTo('Course');
   this.hasMany('Events');
 
-  
+
   /*
   this.property('login', 'string', {required: true});
   this.property('password', 'string', {required: true});
@@ -31,7 +31,7 @@ var Schedule = function () {
 
 };
 
-Schedule.createSchedule = function(course){
+Schedule.createSchedule = function(course, action){
   var self = this
   , scheduleName = course.name + ' Schedule';
   var schedule = geddy.model.Schedule.create({name: scheduleName});
@@ -41,12 +41,14 @@ Schedule.createSchedule = function(course){
   }
   schedule.save(function(err, data){
     if (err) {
-      throw err;
       geddy.log.debug('error in save schedule');
-    } 
+      action(err, null);
+
+    }
     geddy.log.debug(scheduleName + ' as it should be');
+    action(null, data);
+
   });
-  return schedule;
 };
 
 /*
@@ -62,4 +64,3 @@ Schedule.someStaticProperty = 'YYZ';
 */
 
 exports.Schedule = Schedule;
-
