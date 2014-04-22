@@ -80,6 +80,9 @@ var ScheduleService = function() {
 		dateTime.setDate(date.getDate());
 		dateTime.setHours(time.getHours());
 		dateTime.setMinutes(time.getMinutes() + timeOffset);
+
+		//TODO: implement an actual fix for timezones. Have no idea how to
+		//      but it needs to be figured out and done
 		var correctDate = dateTime.toUTCString();
 
 		return correctDate;
