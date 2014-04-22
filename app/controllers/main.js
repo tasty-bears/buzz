@@ -51,7 +51,6 @@ var Main = function () {
           });
         }
 
-
         var _getEvents = function(courses, callback){
           if(courses != null){
             //make temp array for all of events the user must attend

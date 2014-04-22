@@ -1,3 +1,5 @@
+var async = require('async');
+
 var EventService = function() {
 	var userservice = require('../services/userservice');
 	var eventserviceSelf = this;
@@ -6,59 +8,73 @@ var EventService = function() {
 		var self = this;
 		var coursenames = [];
 
-		for (var i = 0; i < events.length; i++) {
-			coursenames[i] = eventserviceSelf.getCourseName(events[i]);
-		}
-		action(null, coursenames);
+		async.eachSeries(events, function(event, callback) {
+			eventserviceSelf.getCourseName(event, function(err,courseName){
+				coursenames.push(courseName);
+				callback(err);
+			});
+		}, function(err){
+			action(null, coursenames);
+		});
 	};
 
 	this.getCourseNumbers = function (events, action){
 		var self = this;
 		var coursenumbers = [];
 
-		for (var i = 0; i < events.length; i++) {
-			coursenumbers[i] = eventserviceSelf.getCourseNumber(events[i]);
-		}
-		action(null, coursenumbers);
+		async.eachSeries(events, function(event, callback) {
+			eventserviceSelf.getCourseNumber(event, function(err,courseNumber){
+				coursenumbers.push(courseNumber);
+				callback(err);
+			});
+		}, function(err){
+			action(null, coursenumbers);
+		});
 	};
 
-	this.getCourseName = function (myEvent){
+	this.getCourseName = function (myEvent,action){
 		var self = this;
-		myEvent.getSchedule(function (err, data){
-			if(err){
-				throw err;
+
+		var _getSchedule = function (callback) {
+			myEvent.getSchedule(function (err, data){
+				callback(err,data);
+			});
+		}
+
+		var _getCourse = function (sched, callback) {
+			sched.getCourse(function (err,data){
+				callback(err, data);
+			});
+		}
+
+		async.waterfall([_getSchedule,_getCourse],function(err,course){
+			if(err) {
+				action(err,null);
 			}
-			sched = data;
+			action(null,course.name);
 		});
-		var course = null;
-		sched.getCourse(function (err,data){
-			if(err){
-				throw err;
-			}
-			course = data;
-		});
-		var name = course.name;
-		return name;
 	}
 
-	this.getCourseNumber = function (myEvent){
+	this.getCourseNumber = function (myEvent,action){
 		var self = this;
-		var sched = null;
-		myEvent.getSchedule(function (err, data){
-			if(err){
-				throw err;
+		var _getSchedule = function (callback) {
+			myEvent.getSchedule(function (err, data){
+				callback(err,data);
+			});
+		}
+
+		var _getCourse = function (sched, callback) {
+			sched.getCourse(function (err,data){
+				callback(err, data);
+			});
+		}
+
+		async.waterfall([_getSchedule,_getCourse],function(err,course){
+			if(err) {
+				action(err,null);
 			}
-			sched = data;
+			action(null,course.courseNumber);
 		});
-		var course = null;
-		sched.getCourse(function (err,data){
-			if(err){
-				throw err;
-			}
-			course = data;
-		});
-		var number = course.courseNumber;
-		return number;
 	}
 
 	//TODO: move to UserService
@@ -109,12 +125,17 @@ var EventService = function() {
 				action(err, null);
 			} else {
 				// add event attribute to each post(the view needs it I guess)
-				for (var i = 0; i < posts.length; i++) {
-					posts[i].getEvent(function(err, event) {
-						posts[i].event = event;
+				async.eachSeries(posts, function(post,callback) {
+					post.getEvent(function(err, event) {
+						post.event = event;
+						callback(err);
 					});
-				}
-				action(null, posts);
+				}, function(err){
+					if (err) {
+						action(err,null);
+					}
+					action(null, posts);
+				});
 			}
 		});
 	};
@@ -123,12 +144,17 @@ var EventService = function() {
 	this.getAllPostsToDisplay = function(events, action) {
 		var posts = [];
 		// foreach post, get each comment belonging to that post
-		for(var i in events) {
+		async.eachSeries(events, function(event, callback) {
 			this.getPostsToDisplay(events[i], function(err, data) {
 				posts.concat(data);
+				callback(err);
 			});
-		}
-		action(null, posts);
+		},function(err){
+			if(err) {
+				action(err,null);
+			}
+			action(null,posts);
+		})
 	};
 
 	this.removeEventFromDB = function(event, action) {

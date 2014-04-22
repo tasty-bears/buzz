@@ -1,3 +1,5 @@
+var async = require('async');
+
 var PostService = function() {
 	var userservice = require('../services/userservice');
 	var eventservice = require('../services/eventservice');
@@ -7,7 +9,7 @@ var PostService = function() {
 	this.create = function(params, action) {
 		var self = this
 		, media;
-		
+
 		// if post has no attached media, null media object's members
 		if (!params.media) {
 			media = {
@@ -16,7 +18,7 @@ var PostService = function() {
 				blobId: null
 			};
 		}
-		
+
 		// these will be used the new post's data members
 		var data = {
 			content: params.content,
@@ -27,8 +29,8 @@ var PostService = function() {
 		};
 
 		// create the new post object
-        var post = geddy.model.Post.create(data);
-		
+    var post = geddy.model.Post.create(data);
+
 		// [PROTOTYPE IMPLEMENTATION]
 		// if post has attached media, get a link to that media from the CDN
 		if (post.media) {
@@ -36,15 +38,16 @@ var PostService = function() {
 		} else {
 			post.medialink = 'No media';
 		}
-		
+
 		// save the new post + its media
-        // save calls isValid, will throw err if false
-        post.save(function(err, data) {
-            if (err) {
-              action(err, null);
-            }
-        });
-			
+    // save calls isValid, will throw err if false
+    post.save(function(err, data) {
+        if (err) {
+          action(err, null);
+        }
+				action(null, post);
+    });
+
 	// TODO implement post hasOne media
 	// if (params.media) {
 	// 	post.setMedia(post, params.media, function(err, post) {
@@ -56,7 +59,7 @@ var PostService = function() {
 	// 	});
 	// }
 
-		action(null, post);
+
 	}
 
 	// get a post based on its ID
@@ -94,7 +97,7 @@ var PostService = function() {
 // 		});
 // 	};
 
-//	// TODO implement this 
+//	// TODO implement this
 //	// set a post's relationship with a media object
 // 	this.setMedia = function(postModel, mediaModel, action) {
 // 		var self = this;
@@ -116,26 +119,52 @@ var PostService = function() {
 				action(err, null);
 			} else {
 				// add event attribute to each post(the view needs it I guess)
-				for (var i = 0; i < posts.length; i++) {
-					comments[i].getPost(function(err, post) {
-						comments[i].post = post;
+				// for (var i = 0; i < posts.length; i++) {
+				// 	comments[i].getPost(function(err, post) {
+				// 		comments[i].post = post;
+				// 	});
+				// }
+				// async code below is the equivilant of this code block
+
+				async.eachSeries(comments, function(comment, callback){
+					comment.getPost(function(err,post){
+						comment.post = post;
+						callback(err);
 					});
-				}
-				action(null, comments);
+				}, function(err) {
+					if (err) {
+						action(err,null);
+					}
+					action(null, comments);
+				});
 			}
 		});
 	};
 
 	// get all existing comments for display
 	this.getAllCommentsToDisplay = function(posts, action) {
+		var self = this;
 		var comments = [];
 		// foreach post, get each comment belonging to that post
-		for(var i in posts) {
-			this.getCommentsToDisplay(posts[i], function(err, data) {
+		// for(var i in posts) {
+		// 	this.getCommentsToDisplay(posts[i], function(err, data) {
+		// 		comments.concat(data);
+		// 	});
+		// }
+		// action(null, comments);
+		//async block is the equivilant of this commented out code
+
+		async.eachSeries(posts, function(post,callback) {
+			self.getCommentsToDisplay(post, function(err, data) {
 				comments.concat(data);
-			}); 
-		}
-		action(null, comments);
+				callback(err);
+			});
+		}, function(err){
+			if(err) {
+				action(err,null);
+			}
+			action(null, comments);
+		});
 	};
 };
 
