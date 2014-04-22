@@ -82,7 +82,7 @@ var ScheduleService = function() {
 		dateTime.setMinutes(time.getMinutes() + timeOffset);
 		var correctDate = dateTime.toUTCString();
 
-		return correctDate;
+		return dateTime;
 
 	}
 
