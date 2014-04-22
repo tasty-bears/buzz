@@ -84,23 +84,31 @@ var Courses = function () {
         if (err) {
           throw err;
         }
-        var schedule = geddy.model.Schedule.createSchedule(course);
-        course.setSchedule(schedule);
-        course.save(function(err, data){
-          if (err){
+        var _createASchedule = function(callback) {
+          geddy.model.Schedule.createSchedule(course, function(err, schedule){
+            course.setSchedule(schedule);
+            callback(err);
+          });
+        }
+
+        var _saveCourse = function(callback) {
+          course.save(function(err, data){
+            callback(err);
+          });
+        }
+
+        async.waterfall([_createASchedule, _saveCourse], function(err) {
+          if (err) {
             throw err;
           }
+          self.respondWith(course, {status: err});
         });
-        //course.setSchedule(schedule);
-        self.respondWith(course, {status: err});
       });
     }
   };
 
   this.show = function (req, resp, params) {
     var self = this;
-    var mySchedule = null;
-    var nonFormattedEvents = null;
 
     geddy.model.Course.first(params.id, function(err, course) {
       if (err) {
@@ -110,24 +118,31 @@ var Courses = function () {
         throw new geddy.errors.NotFoundError();
       }
       else {
-        course.getSchedule(function (err, schedule){
-          if (err){
+
+        var _getSchedule = function(callback) {
+          course.getSchedule(function (err, schedule){
+            callback(err,schedule);
+          });
+        }
+
+        var _getEventsFromSchedule = function(schedule, callback) {
+          schedule.getEvents(function (err, data) {
+            callback(err,data,schedule);
+          });
+        }
+
+        var _formatEventsForCalendar = function(changeevents, schedule, callback) {
+          scheduleservice.formatEventsForCalendar(changeevents, function(err, events){
+            callback(err,events,schedule);
+          });
+        }
+
+        async.waterfall([_getSchedule,_getEventsFromSchedule,_formatEventsForCalendar],function(err, events, schedule) {
+          if(err){
             throw err;
           }
-          mySchedule = schedule;
-        });
-        mySchedule.getEvents(function (err, data) {
-          if (err) {
-            throw err;
-          }
-          nonFormattedEvents = data;
-        });
-        scheduleservice.formatEventsForCalendar(nonFormattedEvents, function(err, events){
-          if (err) {
-            throw err;
-          }
-          self.respond({course: course, schedule: mySchedule, events: events});
-        });
+          self.respond({course: course, schedule: schedule, events: events});
+        })
       }
     });
   };
@@ -245,7 +260,6 @@ var Courses = function () {
           if (err) {
             throw err;
           }
-          console.log("end of waterfall");
           self.respondWith(course);
         });
       }
@@ -256,23 +270,27 @@ var Courses = function () {
     var self = this;
     var uId = this.session.get('userId');
     var cId = params.id;
-    var myUser = null;
-    var myCourse = null;
 
-    geddy.model.User.first(uId, function (err, user){
-      if (err){
-        throw err;
-      }
-      myUser = user;
-    });
-    geddy.model.Course.first(cId, function (err, course){
-      if (err){
-        throw err;
-      }
-      myCourse = course;
-    });
-    courseservice.addCourse(myUser, myCourse, function(err, data) {
-      if (err) {
+    var _getUser = function(callback) {
+      geddy.model.User.first(uId, function (err, user){
+        callback(err, user);
+      });
+    }
+
+    var _getCourse = function(user, callback) {
+      geddy.model.Course.first(cId, function (err, course){
+        callback(err, course, user);
+      });
+    }
+
+    var _addCourse = function(course, user, callback) {
+      courseservice.addCourse(user, course, function(err, data) {
+        callback(err);
+      });
+    }
+
+    async.waterfall([_getUser,_getCourse,_addCourse],function(err) {
+      if(err) {
         throw err;
       }
       self.respond({params: params}, {
@@ -281,29 +299,35 @@ var Courses = function () {
         , layout: false
       });
     });
+
   };
 
   this.unsubscribeUser = function (req, resp, params) {
     var self = this;
     var uId = this.session.get('userId');
     var cId = params.id;
-    var myUser = null;
-    var myCourse = null;
 
-    geddy.model.User.first(uId, function (err, user){
-      if (err){
-        throw err;
-      }
-      myUser = user;
-    });
-    geddy.model.Course.first(cId, function (err, course){
-      if (err){
-        throw err;
-      }
-      myCourse = course;
-    });
-    courseservice.removeThisCourse(myUser, myCourse, function (err, data) {
-      if (err) {
+
+    var _getUser = function(callback) {
+      geddy.model.User.first(uId, function (err, user){
+        callback(err, user);
+      });
+    }
+
+    var _getCourse = function(user, callback) {
+      geddy.model.Course.first(cId, function (err, course){
+        callback(err, course, user);
+      });
+    }
+
+    var _removeCourse = function(course, user, callback) {
+      courseservice.removeThisCourse(user, course, function (err, data) {
+        callback(err);
+      });
+    }
+
+    async.waterfall([_getUser,_getCourse,_removeCourse], function(err) {
+      if(err) {
         throw err;
       }
       self.respond({params: params}, {
@@ -312,6 +336,7 @@ var Courses = function () {
         , layout: false
       });
     });
+
   };
 
 };

@@ -58,20 +58,24 @@ var CourseService = function() {
 
 	this.getEventsFromSchedule = function (course, action) {
 		var self = this;
-		var sched = null;
-		var myEvents = new Array();
 
-		course.getSchedule(function (err, data) {
+		var _getSchedule = function(callback) {
+			course.getSchedule(function (err, schedule) {
+				callback(err, schedule);
+			});
+		}
+
+		var _getEvents = function(schedule, callback){
+			schedule.getEvents(function (err, events){
+				callback(err,events);
+			});
+		}
+
+		async.waterfall([_getSchedule,_getEvents],function(err,events){
 			if (err) {
-				action(err, null);
+				action(err,null);
 			}
-			sched = data;
-		});
-		sched.getEvents(function (err, data){
-			if (err) {
-				action(err, null);
-			}
-			action(null, data);
+			action(null,events);
 		});
 	};
 
