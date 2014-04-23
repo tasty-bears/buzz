@@ -44,14 +44,23 @@ var MediaService = function() {
 	
 	// --- FooCDN Requests ----
 
-    this.get_content = function(media, action) {
-        // action: callback(err, data)
-
-        if(media.hostname == fooRepo.hostname) {
-            fooRepo.get_content(media.blobId, action);
+    this.check_hostname = function(media) {
+        if(media.hostname != fooRepo.hostname) {
+            return new Error("Requested media has unknown hostname.");
         }
-        else {
-            action("Requested media has unknown hostname.", null);
+        return null;
+    }
+
+    this.get_content = function(media, callback) {
+        // callback: function(err, data)
+
+        var hostNameError = this.check_hostname(media);
+        if(hostNameError) {
+            callback(hostNameError, null);
+        }
+        
+        fooRepo.get_content(media.blobId, callback);
+    }
         }
     }
 
@@ -74,10 +83,19 @@ var MediaService = function() {
     };
 
     this.move_storage = function(media, locationType, callback) {
+
+        var hostNameError = this.check_hostname(media);
+        if(hostNameError) {
+            callback(hostNameError);
+        }
+
         dataCallback = function(err, data) {
-            console.log("move response:", data);
+            if(!error && (data == null)) {
+                err = new Error("Move did not complete correctly.");
+            }
             callback(err);
         }
+
         fooRepo.move_content(media.blobId, locationType, dataCallback);
     };
 
