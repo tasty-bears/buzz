@@ -1,3 +1,5 @@
+var simplexService = require('../services/simplexservice');
+
 var FooManager = function () {
 
   this.index = function (req, resp, params) {
@@ -13,7 +15,17 @@ var FooManager = function () {
   this.prioritize = function(req, resp, params) {
     var self = this
 
-    self.flash.error('Lol didn\'t do anything try again.');
+    var results = simplexService.test();
+    if (results == null) {
+      self.flash.error('Something went wrong!');
+    }
+    if (results.feasible == false) {
+      self.flash.error("Infeasible results.")
+    }
+    else {
+      delete results.feasible;
+      self.flash.success(results);
+    }
     self.redirect('/foo');
   }
 
