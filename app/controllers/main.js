@@ -17,6 +17,7 @@
 */
 var strategies = require('../helpers/passport/strategies')
   , authTypes = geddy.mixin(strategies, {local: {name: 'local account'}});
+var userService = require('../services/userservice');
 var courseservice = require('../services/courseservice');
 var eventservice = require('../services/eventservice');
 var scheduleservice = require('../services/scheduleservice');
@@ -27,86 +28,82 @@ var Main = function () {
 
   this.index = function (req, resp, params) {
     var self = this
-      , User = geddy.model.User;
-    User.first({id: this.session.get('userId')}, function (err, user) {
-      var data = {
+
+    var data = {
         user: null
       , authType: null
       , courses: null
       , events: null
-      };
-      if (user != null) {
+    };
+    data.authType = authTypes[self.session.get('authType')].name;
 
+    var _getUser = function(callback) {
+      userService.loadUserFromSession(self.session, function(err, user) {
         data.user = user;
-        data.authType = authTypes[self.session.get('authType')].name;
+        callback(err, null);
+      });
+    };
+  
+    var _getCourses = function(throwaway, callback) {
+      //get the courses the user is enrolled in
+      data.user.getCourses(function(err, myCourses) {
+        if (err) {
+          callback(err,null);
+        }
+        data.courses = myCourses;
+        callback(err,myCourses);
+      });
+    }
 
-        var _getCourses = function(callback) {
-          //get the courses the user is enrolled in
-          data.user.getCourses(function(err, myCourses) {
+    var _getEvents = function(courses, callback){
+      if(courses != null){
+        //make temp array for all of events the user must attend
+        var myEvents = new Array();
+        //loop through and get all events for each course user is in
+
+        //ASYNC FOR EACH COURSE
+        async.each(courses, function(course,callback){
+          courseservice.getEventsFromSchedule(course, function(err, data) {
             if (err) {
-              callback(err,null);
+              throw err;
             }
-            data.courses = myCourses;
-            callback(err,myCourses);
-          });
-        }
-
-        var _getEvents = function(courses, callback){
-          if(courses != null){
-            //make temp array for all of events the user must attend
-            var myEvents = new Array();
-            //loop through and get all events for each course user is in
-
-            //ASYNC FOR EACH COURSE
-            async.each(courses, function(course,callback){
-              courseservice.getEventsFromSchedule(course, function(err, data) {
-                if (err) {
-                  throw err;
-                }
-                // add each event to temp array
-                for (var x in data){
-                  myEvents.push(data[x]);
-                }
-                callback(err);
-              });
-            }, function(err){
-              callback(err,myEvents);
-            });
-          }
-        }
-
-        var _sortEvents = function(myEvents, callback) {
-          myEvents = myEvents.sort(function(a, b){
-              if(a.date < b.date) return -1;
-              if(a.date > b.date) return 1;
-              return 0;
-          });
-          callback(null, myEvents);
-        }
-
-        var _getCalEvents = function(myEvents, callback) {
-          mainControllerSelf.getEventsForCalendar(function(err, events){
-            data.events = events;
+            // add each event to temp array
+            for (var x in data){
+              myEvents.push(data[x]);
+            }
             callback(err);
           });
-        }
-
-        async.waterfall([_getCourses,_getEvents,_sortEvents,_getCalEvents],function(err) {
-          if (err) {
-            throw err;
-          }
-          self.respond(data, {
-            format: 'html'
-          , template: 'app/views/main/index'
-          });
+        }, function(err){
+          callback(err,myEvents);
         });
+      }
+    }
 
-      } else {
+    var _sortEvents = function(myEvents, callback) {
+      myEvents = myEvents.sort(function(a, b){
+          if(a.date < b.date) return -1;
+          if(a.date > b.date) return 1;
+          return 0;
+      });
+      callback(null, myEvents);
+    }
+
+    var _getCalEvents = function(myEvents, callback) {
+      mainControllerSelf.getEventsForCalendar(function(err, events){
+        data.events = events;
+        callback(err);
+      });
+    }
+
+    async.waterfall([_getUser, _getCourses, _getEvents, _sortEvents, _getCalEvents],
+      function(err) {
+        if (err) {
+          throw err;
+        }
         self.respond(data, {
           format: 'html'
         , template: 'app/views/main/index'
-        });
-      }
+      });
     });
   };
 
