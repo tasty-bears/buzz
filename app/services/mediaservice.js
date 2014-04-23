@@ -1,4 +1,5 @@
 var fooRepo = require('../repositories/foorepo');
+var async = require('async');
 
 var MediaService = function() {
     
@@ -53,6 +54,32 @@ var MediaService = function() {
             action("Requested media has unknown hostname.", null);
         }
     }
+
+    //TODO: do stuff with priorities
+    this.stage_all = function(callback) {
+        // just moves everything to TAPE for now
+        // callback = function(err)
+        var self = this;
+
+        geddy.model.Media.all(function (err, medias) {
+            if (err) {
+                throw err;
+            }
+
+            var moveIterator = function(media, callback) {
+                self.move_storage(media, "TAPE", callback);
+            }
+            async.each(medias, moveIterator, callback);
+        });
+    };
+
+    this.move_storage = function(media, locationType, callback) {
+        dataCallback = function(err, data) {
+            console.log("move response:", data);
+            callback(err);
+        }
+        fooRepo.move_content(media.blobId, locationType, dataCallback);
+    };
 
 };
 

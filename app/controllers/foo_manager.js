@@ -1,4 +1,5 @@
 var simplexService = require('../services/simplexservice');
+var mediaService = require('../services/mediaservice');
 
 var FooManager = function () {
 
@@ -15,6 +16,7 @@ var FooManager = function () {
   this.prioritize = function(req, resp, params) {
     var self = this
 
+    // simplex
     var results = simplexService.test();
     if (results == null) {
       self.flash.error('Something went wrong!');
@@ -26,6 +28,14 @@ var FooManager = function () {
       delete results.feasible;
       self.flash.success(results);
     }
+
+    // staging
+    mediaService.stage_all(function (err) {
+      if(err) {
+        throw err;
+      }
+    })
+
     self.redirect('/foo');
   }
 
