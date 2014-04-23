@@ -30,7 +30,7 @@
 
 
 <div class="span10 offset0 pull-right" id="calendarpartial">
-  <%- partial('calendar', {myEvents: events}) %>
+  <%- partial('calendar', {myEvents: events, myUser: user}) %>
 </div>
   <% } else { %>
     <h1>Hello, stranger</h1>
