@@ -1,9 +1,7 @@
-var Solver = require('../../lib/jsLPSolver/src/solver');
 var fooRepo = require('../repositories/foorepo');
 
 var MediaService = function() {
-    var solver = new Solver();
-
+    
 	this.create = function(params, action) {
 		var self = this
           , media = geddy.model.Media.create(params);
