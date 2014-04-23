@@ -61,7 +61,16 @@ var MediaService = function() {
         
         fooRepo.get_content(media.blobId, callback);
     }
+
+    this.get_storage_info = function(media, callback) {
+        // callback: function(err, data)
+
+        var hostNameError = this.check_hostname(media);
+        if(hostNameError) {
+            callback(hostNameError, null);
         }
+
+        fooRepo.get_content_info(media.blobId, callback);
     }
 
     //TODO: do stuff with priorities
