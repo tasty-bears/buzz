@@ -34,14 +34,15 @@ var FooRepo = function() {
     // Moves the content for the provided blob identifier to the specified
     // storage location
     //TODO: untested
-    this.move_content = function(blobID, locationType, callback) {
+    this.move_content = function(blobId, locationType, callback) {
         // locationType: (MEMCACHE | DISK | TAPE)
 
+        var url = this.move_content_url(blobId)
+        var params = format('type=%s', locationType);
         geddy.request(
             {
-                url: this.move_content_url(blobId),
-                method: 'PUT',
-                data: format('?type=%s', locationType)
+                url: url + '?' + params,
+                method: 'PUT'
             },
             callback
         );
