@@ -16,7 +16,7 @@ var Post = function () {
 
   this.belongsTo('Event');
   // TODO
-  // this.hasOne('Media');
+  this.hasOne('Media');
   // TODO
   // this.belongsTo('User');
   this.hasMany('Comments');

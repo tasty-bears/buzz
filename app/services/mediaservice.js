@@ -16,6 +16,32 @@ var MediaService = function() {
             action(err, media);
         });
 	}
+
+    // this.get_all = function(callback) {
+    //     geddy.model.Media.all(function (err, medias) {
+    //         callback(err, medias);
+    //     });
+    // }
+
+    this.get_event_datetime = function(media, callback) {
+        media.getPost(function (err, post) {
+            post.getEvent(function (err, event) {
+                callback(err, {date: event.date, time: event.time});
+            });
+        });
+    };
+
+    this.get_num_course_enrollments = function(media, callback) {
+        media.getPost(function (err, post) {
+            post.getEvent(function (err, event) {
+                event.getCourse(function (err, course) {
+                    course.getEnrollments(function (err, enrollments) {
+                        callback(err, enrollments.length);
+                    });
+                });
+            });
+        });
+    };
 	
 	// --- FooCDN Requests ----
 
@@ -29,6 +55,7 @@ var MediaService = function() {
             action("Requested media has unknown hostname.", null);
         }
     }
+
 };
 
 // urls
