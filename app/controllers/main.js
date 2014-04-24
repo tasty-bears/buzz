@@ -21,11 +21,13 @@ var userService = require('../services/userservice');
 var courseservice = require('../services/courseservice');
 var eventservice = require('../services/eventservice');
 var scheduleservice = require('../services/scheduleservice');
+var UserResponder = require('../helpers/responders').UserResponder;
 var async = require('async');
 
 var Main = function () {
   var mainControllerSelf = this;
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
+  this.responder = new UserResponder(this);
 
   this.index = function (req, resp, params) {
     var self = this
