@@ -25,6 +25,7 @@ var async = require('async');
 
 var Main = function () {
   var mainControllerSelf = this;
+  this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
 
   this.index = function (req, resp, params) {
     var self = this
@@ -35,16 +36,16 @@ var Main = function () {
       , courses: null
       , events: null
     };
-    data.authType = authTypes[self.session.get('authType')].name;
+    //data.authType = authTypes[self.session.get('authType')].name;
 
     var _getUser = function(callback) {
       userService.loadUserFromSession(self.session, function(err, user) {
         data.user = user;
-        callback(err, null);
+        callback(err, user);
       });
     };
   
-    var _getCourses = function(throwaway, callback) {
+    var _getCourses = function(callback) {
       //get the courses the user is enrolled in
       data.user.getCourses(function(err, myCourses) {
         if (err) {
@@ -95,16 +96,24 @@ var Main = function () {
       });
     }
 
-    async.waterfall([_getUser, _getCourses, _getEvents, _sortEvents, _getCalEvents],
-      function(err) {
-        if (err) {
-          throw err;
-        }
-        self.respond(data, {
-          format: 'html'
-        , template: 'app/views/main/index'
+    var options = {
+      template: 'app/views/main/index'
+    }
+    _getUser(function(err, user) {
+      if(!err && (user == null)) {
+        self.respond(data, options);
+        return;
+      }
+      
+      async.waterfall([_getCourses, _getEvents, _sortEvents, _getCalEvents],
+        function(err) {
+          if (err) {
+            throw err;
+          }
+          self.respond(data, options);
       });
-    });
+    })
+    
   };
 
   this.login = function (req, resp, params) {
