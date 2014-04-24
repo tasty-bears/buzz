@@ -4,21 +4,25 @@ var _create_user_respond = function(controller) {
     // return a closure that replaces a controllers respond method
     // appends the user to all response content objects
 
-    var respond = controller.respond.bind(controller);
+    var respond = controller.respond;
 
     return function(content, opts) {
+        var self = this; // controller when called
+
         // if (opts && (opts.format == 'html')) {
-            userService.loadUserFromSession(controller.session, function(err, user) {
+            userService.loadUserFromSession(self.session, function(err, user) {
 
                 //TODO: probably not the best way to do this
-                content.user = {
-                    id: '055B87AF-60C1-4A57-920A-EF44A2CB473C',
-                    username: 'admin',
-                    familyName: 'admin',
-                    givenName: 'admin',
-                    email: 'admin@buzz.com'
+                if(user) {
+                    content.user = {
+                        id: user.id,
+                        username: user.username,
+                        familyName: user.familyName,
+                        givenName: user.givenName,
+                        email: user.email
+                    }
                 }
-                respond(content, opts);
+                respond.bind(self)(content, opts);
                 
             });
         // }
