@@ -1,7 +1,13 @@
 var UserService = function() {
 
 	this.loadUserFromSession = function(session, action) {
-		this.findUserById(session.get('userId'), function(err, user) {
+		var userId = session.get('userId') || null;
+		if(userId == null) {
+			action(null, null);
+			return;
+		}
+
+		this.findUserById(userId, function(err, user) {
 			action(err, user);
 		});
 	};

@@ -7,6 +7,7 @@ var User = function () {
   , email: {type: 'string', required: true, on: ['create', 'update']}
   , activationToken: {type: 'string'}
   , activatedAt: {type: 'datetime'}
+  , gCalAddress: {type: 'string'}
   });
 
   this.validatesLength('username', {min: 3});

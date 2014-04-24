@@ -3,11 +3,13 @@ var passport = require('../helpers/passport')
 var courseservice = require('../services/courseservice');
 var scheduleservice = require('../services/scheduleservice');
 var eventservice = require('../services/eventservice');
+var UserResponder = require('../helpers/responders').UserResponder;
 var async = require('async');
 
 var Courses = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
   this.before(requireAuth, {});
+  this.responder = new UserResponder(this);
 
   this.index = function (req, resp, params) {
     var self = this;
