@@ -1,7 +1,9 @@
 var mediaService = require('../services/mediaservice');
+var UserResponder = require('../helpers/responders').UserResponder;
 
 var Medias = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
+  this.responder = new UserResponder(this);
 
   this.index = function (req, resp, params) {
     var self = this;
@@ -10,7 +12,6 @@ var Medias = function () {
       if (err) {
         throw err;
       }
-      console.log("medias: " + medias); //DEBUG
       self.respondWith(medias, {type:'Media'});
     });
   };

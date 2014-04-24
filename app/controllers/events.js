@@ -2,11 +2,13 @@ var passport = require('../helpers/passport')
   , requireAuth = passport.requireAuth;
 var userservice = require('../services/userservice');
 var eventservice = require('../services/eventservice');
+var UserResponder = require('../helpers/responders').UserResponder;
 var async = require('async');
 
 var Events = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
   this.before(requireAuth, {});
+  this.responder = new UserResponder(this);
 
 
   this.addEvent = function(req, resp, params) {
