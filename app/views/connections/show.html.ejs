@@ -1,0 +1,10 @@
+<div class="hero-unit">
+  <h2 class="name"><%= course.name + " " + course.courseNumber %></h2>
+  <%- linkTo('Edit this course', editCoursePath(params.id), {class: 'btn pull-right'}); %>
+  <%- linkTo('Back to list', coursePath(''), {class: 'btn pull-right'}); %>
+  <%- linkTo('Create a new Event', addEventPath, {class: 'btn pull-left'}); %>
+</div>
+
+<div id="calendarpartial">
+  <%- partial('calendar', {myEvents: events}) %>
+</div>
