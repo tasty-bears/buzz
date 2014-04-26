@@ -18,7 +18,7 @@ var FooManager = function () {
     var self = this;
 
     // simplex
-    var results = simplexService.test();
+    var results = simplexService.solve_model(4 * Math.pow(1024, 3));
     if (results == null) {
       self.flash.error('Something went wrong!');
     }
