@@ -28,7 +28,7 @@ var _create_user_respond = function(controller) {
                         email: user.email
                     }
                 }
-                respond.bind(self)(content, opts);
+                respond.call(self, content, opts);
                 
             });
         // }
