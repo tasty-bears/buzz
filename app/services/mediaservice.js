@@ -41,6 +41,14 @@ var MediaService = function() {
             });
         });
     };
+
+    this.format_for_display = function(media) {
+        // add url attribute to media
+
+        //TODO: should be be cloning the media object before monkey patching
+        //      and returning it?
+        media.url = this.get_content_url(media);
+    }
 	
 	// --- FooCDN Requests ----
 
