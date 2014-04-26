@@ -16,8 +16,8 @@ var Posts = function () {
 				// sort newest to oldest
                 eventservice.getPostsToDisplay(event, function(err, posts) {
                     posts.sort(postservice.compare);
-                    self.respond(
-                        {event: event, posts: posts},
+                    self.respondWith(
+                        posts,
                         {layout: false}
                     );
                 });
