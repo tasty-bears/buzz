@@ -1,5 +1,11 @@
 var userService = require('../services/userservice');
 
+//TODO: InternalResponder, a custom responder that replaces the controllers
+//      respond method with a function that just "returns" the response instead
+//      of responding, so that controller actions can be called by other
+//      controller actions
+//      i.e. for posts within Events.show
+
 var _create_user_respond = function(controller) {
     // return a closure that replaces a controllers respond method
     // appends the user to all response content objects
@@ -22,7 +28,7 @@ var _create_user_respond = function(controller) {
                         email: user.email
                     }
                 }
-                respond.bind(self)(content, opts);
+                respond.call(self, content, opts);
                 
             });
         // }

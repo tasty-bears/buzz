@@ -6,6 +6,7 @@ var eventservice = require('../services/eventservice');
 var UserResponder = require('../helpers/responders').UserResponder;
 var async = require('async');
 
+
 var Courses = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
   this.before(requireAuth, {});
@@ -65,8 +66,11 @@ var Courses = function () {
     if (!(params.isPublic == "true")){
       //split the invitees string into an array of user ID's
       var courseInvitees = new Array();
+      //var inviteesEmail = newArray();
       var inviteesString = params.invitees;
       courseInvitees = inviteesString.split(",");
+
+
       //add current user's id to list
       courseInvitees.push(this.session.get('userId'));
       //assign the coursedata invitees to array and create the object
@@ -340,6 +344,17 @@ var Courses = function () {
     });
 
   };
+
+  this.emailInvites = function(req, resp, params) {
+      var self = this;
+      var courseId = params.courseId;
+      var invitees = params.invitees;
+      
+     courseservice.emailInvites(courseId, invitees, function (err, data) {
+        callback(err);
+      });
+
+  }
 
 };
 
