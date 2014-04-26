@@ -13,7 +13,7 @@ var FooManager = function () {
     self.respond(null, opts);
   };
 
-  this.prioritize = function(req, resp, params) {
+  this.stage = function(req, resp, params) {
     var self = this
 
     // simplex
