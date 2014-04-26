@@ -1,4 +1,5 @@
 var fooRepo = require('../repositories/foorepo');
+var fooService = require('../services/fooservice');
 var async = require('async');
 
 var MediaService = function() {
@@ -51,6 +52,10 @@ var MediaService = function() {
     }
 	
 	// --- FooCDN Requests ----
+
+    this.get_mimeType = function(media, callback) {
+        fooService.get_mimeType(media.blobId, callback);
+    }
 
     this.get_total_media_size = function(callback) {
         // get the size (in bytes?) of all media items
