@@ -67,7 +67,8 @@ var FooRepo = function() {
         // Example Response: {
         //    "ID":7,
         //    "BlobID":"3a39c0ef-7f37-475f-a2f4-d7ea19a31081",
-        //     "BlobSize":546189,"MimeType":"image/jpg",
+        //     "BlobSize":546189,
+        //     "MimeType":"image/jpg",
         //     "Account":{
         //         "Id":1,
         //         "Key":"F4LH-8KFS-42NB-9HJZ",
@@ -78,13 +79,22 @@ var FooRepo = function() {
         //     "Deleted":false,
         //     "DeletedOn":null
         // }
+
+        var jsonCallback = function(err, data) {
+            if(err) {
+                callback(err, data);
+            }
+            else {
+                callback(err, JSON.parse(data));
+            }
+        }
         
         geddy.request(
             {
                 url: this.get_content_info_url(blobId),
                 method: 'GET'
             },
-            callback
+            jsonCallback
         );
     };
 
