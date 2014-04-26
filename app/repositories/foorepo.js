@@ -5,6 +5,8 @@ var format = require('util').format;
 var FooRepo = function() {
     // http://geddyjs.org/reference#utilities_request
 
+    //------------------------ BASIC FooCDN CALLS -----------------------------
+
     // Returns the binary content associated with provided blob identifier
     this.get_content = function(blobId, callback) {
         
@@ -62,7 +64,7 @@ var FooRepo = function() {
     };
 
     // Returns the information bundle for the provided blob identifier 
-    //TODO: untested
+    //TODO: cache this?
     this.get_content_info = function(blobId, callback) {
         // Example Response: {
         //    "ID":7,

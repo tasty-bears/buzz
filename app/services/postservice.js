@@ -162,7 +162,6 @@ var PostService = function() {
 		if(post.media) {
 			mediaservice.format_for_display(post.media);
 		}
-		console.log(post.media)
 	}
 };
 
