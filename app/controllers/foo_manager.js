@@ -1,5 +1,6 @@
 var simplexService = require('../services/simplexservice');
 var mediaService = require('../services/mediaservice');
+var stagingService = require('../services/stagingservice');
 
 var FooManager = function () {
 
@@ -30,7 +31,7 @@ var FooManager = function () {
     }
 
     // staging
-    mediaService.stage_all(function (err) {
+    stagingService.stage_all(function (err) {
       if(err) {
         throw err;
       }
