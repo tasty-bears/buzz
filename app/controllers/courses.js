@@ -117,10 +117,6 @@ var Courses = function () {
     var self = this;
 
     self._show(params, function(err, course) {
-      console.log(course);
-      self.respond = function(content) {
-        console.log(content);
-      }
       self.respondWith(course);
     });
   };
