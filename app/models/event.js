@@ -37,10 +37,9 @@ var Event = function () {
   this.belongsTo('Schedule');
   this.hasMany('Posts');
   this.hasOne('User'); //creator
-  
+
   //this.hasMany('Enrollments'); //attendees
   //this.hasMany('Users', {through: "Enrollments"})
 };
 
 Event = geddy.model.register('Event', Event);
-exports.Event = Event;

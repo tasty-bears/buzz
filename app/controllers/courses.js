@@ -117,6 +117,10 @@ var Courses = function () {
     var self = this;
 
     self._show(params, function(err, course) {
+      console.log(course);
+      self.respond = function(content) {
+        console.log(content);
+      }
       self.respondWith(course);
     });
   };
@@ -361,7 +365,7 @@ var Courses = function () {
       var self = this;
       var courseId = params.courseId;
       var invitees = params.invitees;
-      
+
      courseservice.emailInvites(courseId, invitees, function (err, data) {
         callback(err);
       });
