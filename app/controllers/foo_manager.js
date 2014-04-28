@@ -15,7 +15,7 @@ var FooManager = function () {
   };
 
   this.stage = function(req, resp, params) {
-    var self = this
+    var self = this;
 
     // simplex
     var results = simplexService.test();
@@ -29,6 +29,11 @@ var FooManager = function () {
       delete results.feasible;
       self.flash.success(results);
     }
+
+    // priority
+    geddy.model.Media.all(function(err, medias) {
+      stagingService.prioritize_media(medias);
+    });
 
     // staging
     stagingService.stage_all(function (err) {
