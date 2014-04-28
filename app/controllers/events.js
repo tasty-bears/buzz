@@ -120,10 +120,9 @@ var Events = function () {
             event.schedule = schedule;
             schedule.getCourse(function(err, course) {
               event.schedule.course = course;
+              action(null,event);
             });
           });
-
-          action(null,event);
         });
       }
     });
