@@ -11,16 +11,24 @@ var Posts = function () {
     this.index = function (req, resp, params) {
         var self = this;
 
+        self._index(params, function(posts) {
+          self.respondWith(
+              posts,
+              {layout: false}
+          );
+        });
+    };
+
+    this._index = function(params, callback) {
+        var self = this;
+
         eventservice.findEventById(params.id,
             function(err, event) {
 				// refresh all posts belonging to the event
 				// sort newest to oldest
                 eventservice.getPostsToDisplay(event, function(err, posts) {
                     posts.sort(postservice.compare);
-                    self.respond(
-                        {event: event, posts: posts},
-                        {layout: false}
-                    );
+                    callback(posts);
                 });
             }
         );
