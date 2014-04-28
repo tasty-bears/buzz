@@ -1,0 +1,18 @@
+<div class="hero-unit">
+  <h2>Course Mates</h2>
+</div>
+
+<div id="users-list">
+<% if (users) { %>
+<% for (var i = 0, ii = users.length; i < ii; i++) { %>
+  <div class="row list-item" id="user-<%= users[i].id; %>">
+    <div class="span7">
+      <h3 class="list-header"><%- linkTo(users[i].givenName + " " + users[i].familyName , userPath(users[i].id)); %></h3>
+    </div>
+    <div class="span5">
+      <h3><i class="icon-list-alt"></i><%= users[i].username; %></h3>
+    </div>
+  </div>
+<% } %>
+<% } %>
+</div>

@@ -11,10 +11,10 @@
     <!-- <p><%- linkTo('See Courses', '/courses', {class: 'btn btn-primary btn-large'}) %></p>
     <p><%- linkTo('See Events', '/events', {class: 'btn btn-primary btn-large'}) %></p> -->
 </div>
-<div class="span2 offset0">
-<h4> My Courses </h4>
+<div class="span2 offset0 white">
+<h4 > My Courses </h4>
 
-<div class="span2 offset0 courses-list ">
+<div class="span2 offset0 courses-list">
   <% if (courses) { %>
     <% for (var i = 0, ii = courses.length; i < ii; i++) { %>
       <div class="row list-item pull-left" id="course-<%= courses[i].id; %>">
@@ -25,11 +25,15 @@
     <% } %>
   <% } %>
 </div>
-<%- linkTo('Create a new Event', addEventPath, {class: 'btn pull-left'}); %>
+
+<div class="drop">
+  <%- linkTo('Create a New Event', addEventPath, {class: 'btn btn-primary pull-center'}); %>
+</div>
+
 </div>
 
 
-<div class="span10 offset0 pull-right" id="calendarpartial">
+<div class="span9 offset0 pull-right hero-unit" id="calendarpartial">
   <%- partial('calendar', {myEvents: events, myUser: user}) %>
 </div>
   <% } else { %>
