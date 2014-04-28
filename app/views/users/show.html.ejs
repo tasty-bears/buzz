@@ -1,7 +1,8 @@
 <div class="hero-unit">
   <h2 class="id"><%= user.givenName + " " + user.familyName%></h2>
-  <%- linkTo('Edit this user', editUserPath(params.id), {class: 'btn pull-right'}); %>
-  <!-- <%- linkTo('Back to list', userPath(''), {class: 'btn pull-right'}); %> -->
+	<% if( session.get('userId') == user.id){  %>
+		<%- linkTo('Edit this user', editUserPath(params.id), {class: 'btn pull-right'}); %>
+	<% } %>
 </div>
 
 <h2>Account Info</h2>

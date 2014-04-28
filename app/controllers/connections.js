@@ -8,43 +8,31 @@ var async = require('async');
 
 
 var Connections = function () {
+
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
-  this.before(requireAuth, {});
-  this.responder = new UserResponder(this);
 
   this.index = function (req, resp, params) {
     var self = this;
-    var userId = this.session.get('userId');
 
-    var _parallelIds = function(callback) {
-      courseservice.getUserCoursesIds(userId, function (err, data){
-        if (err){
-          callback(err,null);
-        }
-        callback(err,data);
-      });
-    }
+    geddy.model.User.all(function(err, users) {
+      self.respond({params: params, users: users});
+    });
+  };
 
-    var _parallelCourses = function(callback){
-      geddy.model.Course.all(function (err, data) {
-        if (err) {
-          callback(err, null);
-        }
-        var showCourses = [];
-        for (var i = 0; i < data.length; i++) {
-          var courseInvitees = [];
-          courseInvitees = data[i].invitees;
-          if ((data[i].isPublic) || (courseInvitees.indexOf(userId) != -1)){
-            showCourses.push(data[i]);
-          }
-        }
-        callback(err,showCourses);
-      });
+    this.show = function (req, resp, params) {
+    var self = this;
 
-    }
-
-    async.parallel([_parallelIds, _parallelCourses], function(err, results) {
-      self.respond({courses: results[1], usercoursesId: results[0]});
+    geddy.model.User.first(params.id, function(err, user) {
+      if (err) {
+        throw err;
+      }
+      if (!user) {
+        throw new geddy.errors.NotFoundError();
+      }
+      else {
+        user.password = '';
+        self.respondWith(user);
+      }
     });
   };
 
@@ -54,117 +42,100 @@ var Connections = function () {
 
   // this.create = function (req, resp, params) {
   //   var self = this
-  //   var courseData = {
-  //     name: params.name,
-  //     courseNumber: params.courseNumber,
-  //     section: params.section,
-  //     professor: params.professor,
-  //     isPublic: params.isPublic,
-  //     invitees: null
-  //   }
-  //   //if it is private we need to set invitee list
-  //   if (!(params.isPublic == "true")){
-  //     //split the invitees string into an array of user ID's
-  //     var courseInvitees = new Array();
-  //     //var inviteesEmail = newArray();
-  //     var inviteesString = params.invitees;
-  //     courseInvitees = inviteesString.split(",");
+  //     , user = geddy.model.User.create(params)
+  //     , sha;
 
-
-  //     //add current user's id to list
-  //     courseInvitees.push(this.session.get('userId'));
-  //     //assign the coursedata invitees to array and create the object
-  //     courseData.invitees = courseInvitees;
-  //   }else{
-  //     //public should just be an empty array of invitees
-  //     courseData.invitees = ["none"];
-  //   }
-
-  //   var course = geddy.model.Course.create(courseData);
-  //   if (!course.isValid()) {
-  //     this.respondWith(course);
-  //   }
-  //   else {
-
-  //     course.save(function(err, data) {
-  //       if (err) {
-  //         throw err;
-  //       }
-  //       var _createASchedule = function(callback) {
-  //         geddy.model.Schedule.createSchedule(course, function(err, schedule){
-  //           course.setSchedule(schedule);
-  //           callback(err);
-  //         });
-  //       }
-
-  //       var _saveCourse = function(callback) {
-  //         course.save(function(err, data){
-  //           callback(err);
-  //         });
-  //       }
-
-  //       async.waterfall([_createASchedule, _saveCourse], function(err) {
-  //         if (err) {
-  //           throw err;
-  //         }
-  //         self.respondWith(course, {status: err});
-  //       });
-  //     });
-  //   }
-  // };
-
-  // this.show = function (req, resp, params) {
-  //   var self = this;
-
-  //   geddy.model.Course.first(params.id, function(err, course) {
+  //   // Non-blocking uniqueness checks are hard
+  //   geddy.model.User.first({username: user.username}, function(err, data) {
+  //     var activationUrl;
   //     if (err) {
   //       throw err;
   //     }
-  //     if (!course) {
-  //       throw new geddy.errors.NotFoundError();
+  //     if (data) {
+  //       user.errors  = {
+  //         username: 'This username is already in use.'
+  //       };
+  //       self.respondWith(user);
   //     }
   //     else {
+  //       if (user.isValid()) {
+  //         user.password = generateHash(user.password);
 
-  //       var _getSchedule = function(callback) {
-  //         course.getSchedule(function (err, schedule){
-  //           callback(err,schedule);
-  //         });
-  //       }
-
-  //       var _getEventsFromSchedule = function(schedule, callback) {
-  //         schedule.getEvents(function (err, data) {
-  //           callback(err,data,schedule);
-  //         });
-  //       }
-
-  //       var _formatEventsForCalendar = function(changeevents, schedule, callback) {
-  //         scheduleservice.formatEventsForCalendar(changeevents, function(err, events){
-  //           callback(err,events,schedule);
-  //         });
-  //       }
-
-  //       async.waterfall([_getSchedule,_getEventsFromSchedule,_formatEventsForCalendar],function(err, events, schedule) {
-  //         if(err){
-  //           throw err;
+  //         if (EMAIL_ACTIVATION) {
+  //           user.activationToken = generateHash(user.email);
   //         }
-  //         self.respond({course: course, schedule: schedule, events: events});
-  //       })
+  //         else {
+  //           user.activatedAt = new Date();
+  //         }
+  //         user.save(function(err, data) {
+  //           var options = {}
+  //             , mailOptions
+  //             , mailCallback
+  //             , mailHtml
+  //             , mailText;
+
+  //           if (err) {
+  //             throw err;
+  //           }
+
+  //           if (EMAIL_ACTIVATION) {
+  //             activationUrl = geddy.config.fullHostname + '/users/activate?token=' +
+  //                 encodeURIComponent(user.activationToken);
+  //             options.status = 'You have successfully signed up. ' +
+  //                 'Check your e-mail to activate your account.';
+
+  //             mailHtml = 'Welcome to ' + geddy.config.appName + '. ' +
+  //                 'Use the following URL to activate your account: ' +
+  //                 '<a href="' + activationUrl + '">' + activationUrl + '</a>.';
+  //             mailText = 'Welcome to ' + geddy.config.appName + '. ' +
+  //                 'Use the following URL to activate your account: ' +
+  //                 activationUrl + '.';
+
+  //             mailOptions = {
+  //               from: geddy.config.mailer.fromAddressUsername + '@' +
+  //                   geddy.config.hostname
+  //             , to: user.email
+  //             , subject: 'Welcome to ' + geddy.config.appName
+  //             , html: mailHtml
+  //             , text: mailText
+  //             };
+  //             mailCallback = function (err, data) {
+  //               if (err) {
+  //                 throw err;
+  //               }
+  //               self.respondWith(user, options);
+  //             };
+  //             geddy.mailer.sendMail(mailOptions, mailCallback);
+  //           }
+
+  //           else {
+  //             self.respondWith(user);
+  //           }
+  //         });
+  //       }
+  //       else {
+  //         self.respondWith(user, {status: err});
+  //       }
   //     }
   //   });
+
   // };
+
+
+
 
   // this.edit = function (req, resp, params) {
   //   var self = this;
 
-  //   geddy.model.Course.first(params.id, function(err, course) {
+  //   geddy.model.User.first(params.id, function(err, user) {
   //     if (err) {
   //       throw err;
   //     }
-  //     if (!course) {
+  //     if (!user) {
   //       throw new geddy.errors.BadRequestError();
   //     }
   //     else {
-  //       self.respondWith(course);
+  //       self.respondWith(user);
   //     }
   //   });
   // };
@@ -172,45 +143,25 @@ var Connections = function () {
   // this.update = function (req, resp, params) {
   //   var self = this;
 
-  //   geddy.model.Course.first(params.id, function(err, course) {
-  //     if (err) {
-  //       throw err;
-  //     }
+  //   geddy.model.User.first(params.id, function(err, user) {
+  //     // Only update password if it's changed
+  //     var skip = params.password ? [] : ['password'];
 
-  //     var courseData = {
-  //       name: params.name,
-  //       courseNumber: params.courseNumber,
-  //       section: params.section,
-  //       professor: params.professor,
-  //       isPublic: params.isPublic,
-  //       invitees: null
-  //     }
-  //     //if it is private we need to set invitee list
-  //     if (!(params.isPublic == "true")){
-  //       //split the invitees string into an array of user ID's
-  //       var courseInvitees = new Array();
-  //       var inviteesString = params.invitees;
-  //       courseInvitees = inviteesString.split(",");
-  //       //add current user's id to list
-  //       courseInvitees.push(self.session.get('userId'));
-  //       //assign the coursedata invitees to array and create the object
-  //       courseData.invitees = courseInvitees;
-  //     }else{
-  //       //public should just be an empty array of invitees
-  //       courseData.invitees = ["none"];
-  //     }
+  //     user.updateAttributes(params, {skip: skip});
 
-  //     course.updateProperties(courseData);
-
-  //     if (!course.isValid()) {
-  //       self.respondWith(course);
+  //     if (!user.isValid()) {
+  //       self.respondWith(user);
   //     }
   //     else {
-  //       course.save(function(err, data) {
+  //       if (params.password) {
+  //         user.password = generateHash(user.password);
+  //       }
+
+  //       user.save(function(err, data) {
   //         if (err) {
   //           throw err;
   //         }
-  //         self.respondWith(course, {status: err});
+  //         self.respondWith(user, {status: err});
   //       });
   //     }
   //   });
@@ -219,142 +170,23 @@ var Connections = function () {
   // this.remove = function (req, resp, params) {
   //   var self = this;
 
-  //   geddy.model.Course.first(params.id, function(err, course) {
+  //   geddy.model.User.first(params.id, function(err, user) {
   //     if (err) {
   //       throw err;
   //     }
-  //     if (!course) {
+  //     if (!user) {
   //       throw new geddy.errors.BadRequestError();
   //     }
   //     else {
-
-  //       var _getSchedule = function(callback) {
-  //         course.getSchedule(function(err, schedule){
-  //           callback(err,schedule);
-  //         });
-  //       }
-
-  //       var _getEvents = function(schedule, callback) {
-  //         schedule.getEvents(function(err, events){
-  //           callback(err, schedule, events);
-  //         });
-  //       }
-
-  //       var _removeEvents = function(schedule, events, callback) {
-  //         async.each(events, function(event, callback){
-  //           eventservice.removeEventFromDB(event, function(err){
-  //             callback(err);
-  //           });
-  //         }, function(err){
-  //           callback(err, schedule);
-  //         });
-  //       }
-
-  //       var _removeSchedule = function(schedule, callback) {
-  //         scheduleservice.removeScheduleFromDB(schedule, function(err){
-  //           callback(err);
-  //         });
-  //       }
-
-  //       var _removeCourse = function(callback) {
-  //         courseservice.removeCourseFromDB(course, function(err){
-  //           callback(err);
-  //         });
-  //       }
-
-  //       async.waterfall([_getSchedule, _getEvents, _removeEvents, _removeSchedule, _removeCourse], function(err) {
+  //       geddy.model.User.remove(params.id, function(err) {
   //         if (err) {
   //           throw err;
   //         }
-  //         self.respondWith(course);
+  //         self.respondWith(user);
   //       });
   //     }
   //   });
   // };
-
-  // this.subscribeUser = function (req, resp, params) {
-  //   var self = this;
-  //   var uId = this.session.get('userId');
-  //   var cId = params.id;
-
-  //   var _getUser = function(callback) {
-  //     geddy.model.User.first(uId, function (err, user){
-  //       callback(err, user);
-  //     });
-  //   }
-
-  //   var _getCourse = function(user, callback) {
-  //     geddy.model.Course.first(cId, function (err, course){
-  //       callback(err, course, user);
-  //     });
-  //   }
-
-  //   var _addCourse = function(course, user, callback) {
-  //     courseservice.addCourse(user, course, function(err, data) {
-  //       callback(err);
-  //     });
-  //   }
-
-  //   async.waterfall([_getUser,_getCourse,_addCourse],function(err) {
-  //     if(err) {
-  //       throw err;
-  //     }
-  //     self.respond({params: params}, {
-  //       format: 'html'
-  //       , template: 'app/views/courses/index'
-  //       , layout: false
-  //     });
-  //   });
-
-  // };
-
-  // this.unsubscribeUser = function (req, resp, params) {
-  //   var self = this;
-  //   var uId = this.session.get('userId');
-  //   var cId = params.id;
-
-
-  //   var _getUser = function(callback) {
-  //     geddy.model.User.first(uId, function (err, user){
-  //       callback(err, user);
-  //     });
-  //   }
-
-  //   var _getCourse = function(user, callback) {
-  //     geddy.model.Course.first(cId, function (err, course){
-  //       callback(err, course, user);
-  //     });
-  //   }
-
-  //   var _removeCourse = function(course, user, callback) {
-  //     courseservice.removeThisCourse(user, course, function (err, data) {
-  //       callback(err);
-  //     });
-  //   }
-
-  //   async.waterfall([_getUser,_getCourse,_removeCourse], function(err) {
-  //     if(err) {
-  //       throw err;
-  //     }
-  //     self.respond({params: params}, {
-  //       format: 'html'
-  //       , template: 'app/views/courses/index'
-  //       , layout: false
-  //     });
-  //   });
-
-  // };
-
-  // this.emailInvites = function(req, resp, params) {
-  //     var self = this;
-  //     var courseId = params.courseId;
-  //     var invitees = params.invitees;
-      
-  //    courseservice.emailInvites(courseId, invitees, function (err, data) {
-  //       callback(err);
-  //     });
-
-  // }
 
 };
 
