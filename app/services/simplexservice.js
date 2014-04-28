@@ -10,36 +10,36 @@ var SimplexService = function() {
         tapeLatency = 45;
     var budget = 15;
 
-    this.solve_model = function(totalSize) {
-        //TODO: 10 CDN mirrors? content moving charge?
+    userActivity = 40; // how many times the average user will access
+                       // each media item. super rough estimate
+                       // - highballing since we are testing a lot
 
-        //TODO: calculate these based on individual estimates
-        averageEstimatedCacheServes = 100
-        averageEstimatedDiskServes = 25
-        //TODO: make sure (individual estimated serves * individual sizes)
-        //      == (averageServes * solved storage amount) when assigning media
-        //      to each storage location
+    // assume our latency constants are super awesome and exactily proportional
+    // to the relative user activity for each type of media
+    var cacheActivity = tapeLatency / cacheLatency;
+    var diskActivity = tapeLatency / diskLatency;
 
-        // in bytes
-        var model = {
+    // in bytes
+    this.create_model = function(totalMediaSize, avgCacheServes, avgDiskServes) {
+        return {
             optimize: "latency",
             opType: "min",
             constraints: {
                 //TODO: can we combine storage and serve costs?
                 storageCost: {max: 1/10 * budget},
                 serveCost: {max: 9/10 * budget},
-                space: {min: totalSize}
+                space: {min: totalMediaSize}
             },
             variables: {
                 cache: {
                     storageCost: 0.25 / (10 * GB),
-                    serveCost: 0.30 / GB * averageEstimatedCacheServes,
+                    serveCost: 0.30 / GB * avgCacheServes,
                     latency: cacheLatency,
                     space: 1
                 },
                 disk: {
                     storageCost: 0.025 / (10 * GB),
-                    serveCost: 0.10 / GB * averageEstimatedDiskServes,
+                    serveCost: 0.10 / GB * avgDiskServes,
                     latency: diskLatency,
                     space: 1
                 },
@@ -52,6 +52,16 @@ var SimplexService = function() {
             },
             ints: { cache: 1 , disk: 1 , tape: 1 }
         };
+    }
+    
+
+    this.solve_model = function(totalMediaSize, numUsers) {
+        //TODO: 10 CDN mirrors? content moving charge?
+
+        var avgEstCacheServes = numUsers * userActivity * cacheActivity
+        var avgEstDiskServes = numUsers * userActivity * diskActivity
+
+        var model = this.create_model(totalMediaSize, avgEstCacheServes, avgEstDiskServes)
 
         var results = solver.Solve(model);
         return results;
