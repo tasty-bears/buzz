@@ -117,14 +117,73 @@ var StagingService = function() {
         });
     }
 
-    this.stage_all = function(optimal, callback) {
+    this.stage_all = function(alloc, callback) {
+        // alloc = {
+        //     cache: numBytes (int),
+        //     disk: numBytes (int),
+        //     tape: numBytes (int)
+        // }
         // callback = function(err)
         var self = this;
 
         self.prioritize_media(function(err, medias) {
-            self.dump_to_tape(callback);
-        })
+            self.split_prioritized_media(medias, alloc, function(err, splitMedias) {
+
+                var move_bulk = fooService.move_bulk.bind(fooService)
+                async.parallel(
+                    [
+                        async.apply(move_bulk, splitMedias.cache, "MEMCACHE"),
+                        async.apply(move_bulk, splitMedias.disk, "DISK"),
+                        async.apply(move_bulk, splitMedias.tape, "TAPE")
+                    ],
+                    function(err, results) {
+                        callback(err);
+                    }
+                )
+            })
+        });
     };
+
+    this.split_prioritized_media = function(medias, alloc, callback) {
+        //TODO: generalize this so it works with more storage locations
+        var self = this;
+
+        var cacheBytes = 0,
+            diskBytes = 0,
+            tapeBytes = 0;
+
+        var cache = [],
+            disk = [],
+            tape = [];
+
+        function add_to_location(media, iterCallback) {
+            fooService.get_media_size(media, function(err, size) {
+                if(cacheBytes + size <= alloc.cache) {
+                    cache.push(media);
+                }
+                else if(diskBytes + size <= alloc.disk) {
+                    disk.push(media);
+                }
+                else {
+                    tape.push(media);
+                }
+
+                iterCallback(err);
+            });
+        }
+
+        async.each(medias, add_to_location, function(err) {
+            var split = {
+                cache: cache,
+                disk: disk,
+                tape: tape
+            }
+            callback(err, split)
+        })
+
+
+        return 
+    }
 
     this.dump_to_tape = function(callback) {
         // just moves everything to TAPE for now
@@ -132,33 +191,10 @@ var StagingService = function() {
         var self = this;
 
         geddy.model.Media.all(function (err, medias) {
-            if (err) {
-                throw err;
-            }
-
-            var moveIterator = function(media, callback) {
-                self.move_storage(media, "TAPE", callback);
-            }
-            async.each(medias, moveIterator, callback);
+            if(err) throw err;
+            fooService.move_bulk(medias, "TAPE", callback);
         });
     }
-
-    this.move_storage = function(media, locationType, callback) {
-
-        var hostNameError = mediaService.check_hostname(media);
-        if(hostNameError) {
-            callback(hostNameError);
-        }
-
-        dataCallback = function(err, data) {
-            if(!err && (data == null)) {
-                err = new Error("Move did not complete correctly.");
-            }
-            callback(err);
-        }
-
-        fooRepo.move_content(media.blobId, locationType, dataCallback);
-    };
 
     this.solve_simplex = function(callback) {
         var self = this;

@@ -71,6 +71,29 @@ var FooService = function() {
         return output
     }
 
+    this.move_storage = function(media, locationType, callback) {
+        // callback = function(err)
+
+        dataCallback = function(err, data) {
+            if(!err && (data == null)) {
+                err = new Error("Move did not complete correctly.");
+            }
+            callback(err);
+        }
+
+        fooRepo.move_content(media.blobId, locationType, dataCallback);
+    };
+
+    this.move_bulk = function(medias, locationType, callback) {
+        // callback = function(err);
+        var self = this;
+
+        var moveIterator = function(media, iterCallback) {
+            self.move_storage(media, locationType, iterCallback);
+        }
+        async.each(medias, moveIterator, callback);
+    }
+
 };
 
 module.exports = new FooService();
