@@ -1,5 +1,7 @@
 var mediaService = require('../services/mediaservice');
 var fooRepo = require('../repositories/foorepo');
+var fooService = require('../services/fooservice');
+var simplexService = require('../services/simplexservice');
 var async = require('async');
 
 var StagingService = function() {
@@ -132,6 +134,40 @@ var StagingService = function() {
 
         fooRepo.move_content(media.blobId, locationType, dataCallback);
     };
+
+    this.solve_simplex = function(callback) {
+        var self = this;
+
+        function _mediaSize(callback) {
+          fooService.get_total_media_size(callback);
+        }
+
+        function _numUsers(callback) {
+          geddy.model.User.all(function(err, users) {
+            callback(err, users.length);
+          });
+        }
+
+        function _solve(mediaSize, numUsers, callback) {
+          var results = simplexService.solve_model(mediaSize, numUsers);
+          var err = null
+
+
+          if (results == null) {
+            err = 'Something went wrong!'
+          }
+          else if (results.feasible == false) {
+            err = "Infeasible results."
+          }
+
+          callback(err, results);
+        }
+
+        async.series([_mediaSize, _numUsers], function(err, results) {
+          _solve(results[0], results[1], callback)
+        })
+
+      }
 
 
 };
