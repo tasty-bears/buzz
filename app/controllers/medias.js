@@ -22,20 +22,9 @@ var Medias = function () {
 
   this.create = function (req, resp, params) {
     var self = this
-      , media = geddy.model.Media.create(params);
-
-    geddy.log.debug("Medias.create params: " + JSON.stringify(params));
-    if (!media.isValid()) {
-      this.respondWith(media);
-    }
-    else {
-      media.save(function(err, data) {
-        if (err) {
-          throw err;
-        }
-        self.respondWith(media, {status: err});
-      });
-    }
+    mediaService.create(params, function(err, media) {
+      self.respondWith(media, {status: err});
+    });
   };
 
   this.show = function (req, resp, params) {

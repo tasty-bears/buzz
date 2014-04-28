@@ -2,6 +2,7 @@ var userservice = require('../services/userservice');
 var eventservice = require('../services/eventservice');
 var postservice = require('../services/postservice');
 var mediaservice = require('../services/mediaservice');
+var fooService = require('../services/fooservice');
 var async = require('async');
 
 var Posts = function () {
@@ -23,15 +24,15 @@ var Posts = function () {
 
         eventservice.findEventById(params.id,
             function(err, event) {
-        // refresh all posts belonging to the event
-        // sort newest to oldest
+				// refresh all posts belonging to the event
+				// sort newest to oldest
                 eventservice.getPostsToDisplay(event, function(err, posts) {
                     posts.sort(postservice.compare);
                     callback(posts);
                 });
             }
         );
-    }
+    };
 
     this.add = function(req, resp, params) {
   		var self = this;
@@ -64,6 +65,20 @@ var Posts = function () {
           }
           callback(err);
         });
+      }
+
+      var _getMimeType = function (callback) {
+        if(params.mediaData) {
+          fooService.get_mimeType(params.mediaData.blobId,
+            function (err, mimeType) {
+              if(err) {
+                callback(err);
+              }
+              params.mediaData.mimeType = mimeType;
+              callback(null);
+            }
+          );
+        }
       }
 
   		// if user attached media, create the new media object based on the ajax'd params
@@ -107,15 +122,18 @@ var Posts = function () {
         });
       }
 
-      async.waterfall([_getUser,_getEvent,_createMedia,_setDataValues,_createPost],function(err) {
-        if (err) {
-          throw err;
-        } else {
-          self.params = currentEvent;
-          // "refresh" posts to display the new post
-          self.transfer("index");
+      async.waterfall(
+        [_getUser, _getEvent, _getMimeType, _createMedia, _setDataValues, _createPost],
+        function(err) {
+          if (err) {
+            throw err;
+          } else {
+            self.params = currentEvent;
+            // "refresh" posts to display the new post
+            self.transfer("index");
+          }
         }
-      });
+      );
   	};
 
     // this.show = function (req, resp, params) {

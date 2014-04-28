@@ -24,20 +24,11 @@ var PostService = function() {
 			content: params.content,
 			timestamp: params.timestamp,
 			author: params.author,
-			media: params.media,
-			medialink: null
+			media: params.media
 		};
 
 		// create the new post object
     var post = geddy.model.Post.create(data);
-
-		// [PROTOTYPE IMPLEMENTATION]
-		// if post has attached media, get a link to that media from the CDN
-		if (post.media) {
-			post.medialink = mediaservice.get_content_url(post.media);
-		} else {
-			post.medialink = 'No media';
-		}
 
 		// save the new post + its media
     // save calls isValid, will throw err if false
@@ -166,6 +157,12 @@ var PostService = function() {
 			action(null, comments);
 		});
 	};
+
+	this.format_for_display = function(post, callback) {
+		if(post.media) {
+			mediaservice.format_for_display(post.media);
+		}
+	}
 };
 
 module.exports = new PostService();

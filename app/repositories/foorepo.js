@@ -5,67 +5,72 @@ var format = require('util').format;
 var FooRepo = function() {
     // http://geddyjs.org/reference#utilities_request
 
+    //------------------------ BASIC FooCDN CALLS -----------------------------
+
     // Returns the binary content associated with provided blob identifier
-    this.get_content = function(blobId, action) {
+    this.get_content = function(blobId, callback) {
         
         geddy.request(
             {
                 url: this.get_content_url(blobId),
                 method:'GET'
             },
-            action
+            callback
         );
     };
 
     // Stores the binary content from the multi-part form data contents of the
     // request body in the storage location associated with the provided blob identifier
     //TODO: untested
-    this.set_content = function(blobId, content, action) {
+    this.set_content = function(blobId, content, callback) {
         geddy.request(
             {
                 url: this.set_content_url(blobId),
-                method: 'POST'
+                method: 'POST',
+                data: content
             },
-            action
+            callback
         );
     };
 
     // Moves the content for the provided blob identifier to the specified
     // storage location
     //TODO: untested
-    this.move_content = function(blobID, locationType, action) {
+    this.move_content = function(blobId, locationType, callback) {
         // locationType: (MEMCACHE | DISK | TAPE)
 
+        var url = this.move_content_url(blobId)
+        var params = format('type=%s', locationType);
         geddy.request(
             {
-                url: this.move_content_url(blobId),
-                method: 'PUT',
-                data: format('?type=%s', locationType)
+                url: url + '?' + params,
+                method: 'PUT'
             },
-            action
+            callback
         );
     };
 
     // Deletes the content item and associated binary data for the provided blob
     // identifier
     //TODO: untested
-    this.delete_content = function(blobId, action) {
+    this.delete_content = function(blobId, callback) {
         geddy.request(
             {
                 url: this.delete_content_url(blobId),
                 method: 'DELETE'
             },
-            action
+            callback
         );
     };
 
     // Returns the information bundle for the provided blob identifier 
-    //TODO: untested
-    this.get_content_info = function(blobId, action) {
+    //TODO: cache this?
+    this.get_content_info = function(blobId, callback) {
         // Example Response: {
         //    "ID":7,
         //    "BlobID":"3a39c0ef-7f37-475f-a2f4-d7ea19a31081",
-        //     "BlobSize":546189,"MimeType":"image/jpg",
+        //     "BlobSize":546189,
+        //     "MimeType":"image/jpg",
         //     "Account":{
         //         "Id":1,
         //         "Key":"F4LH-8KFS-42NB-9HJZ",
@@ -76,18 +81,27 @@ var FooRepo = function() {
         //     "Deleted":false,
         //     "DeletedOn":null
         // }
+
+        var jsonCallback = function(err, data) {
+            if(err) {
+                callback(err, data);
+            }
+            else {
+                callback(err, JSON.parse(data));
+            }
+        }
         
         geddy.request(
             {
                 url: this.get_content_info_url(blobId),
                 method: 'GET'
             },
-            action
+            jsonCallback
         );
     };
 
     //TODO: untested
-    this.create_container = function(accountKey, mimeType, action) {
+    this.create_container = function(accountKey, mimeType, callback) {
         // POST /api/content/new
         // Creates a new container and blob identifier into which content can be
         // stored and retrieved
@@ -106,7 +120,7 @@ var FooRepo = function() {
                 // geddy reference says data should be a string, but FooCDN
                 // implies it should be JSON
             },
-            action
+            callback
         );
     }
 
