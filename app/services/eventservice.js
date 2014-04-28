@@ -124,9 +124,12 @@ var EventService = function() {
 
 		var add_display_items__iterator = function(post, iterCallback) {
 
-			//TODO: Really don't like this, but I suppose it may be necessary
-			//		for the recent feed. Maybe replace with eventId instead?
-			post.event = event;
+			//TODO: Implement this using
+			//		something similar to http://stackoverflow.com/a/14344573
+			post.event = {
+				name: event.name,
+				id: event.id
+			}
 
 			// add url to medias
 			postService.format_for_display(post);

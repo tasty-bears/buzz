@@ -11,7 +11,9 @@ var Posts = function () {
     this.index = function (req, resp, params) {
         var self = this;
 
-        self._index(params, function(posts) {
+        self._index(params, function(err, posts) {
+          if(err) throw err;
+
           self.respondWith(
               posts,
               {layout: false}
@@ -24,11 +26,11 @@ var Posts = function () {
 
         eventservice.findEventById(params.id,
             function(err, event) {
-				// refresh all posts belonging to the event
-				// sort newest to oldest
+				        // refresh all posts belonging to the event
+				        // sort newest to oldest
                 eventservice.getPostsToDisplay(event, function(err, posts) {
                     posts.sort(postservice.compare);
-                    callback(posts);
+                    callback(err, posts);
                 });
             }
         );
@@ -79,6 +81,9 @@ var Posts = function () {
             }
           );
         }
+        else {
+          callback(null);
+        }
       }
 
   		// if user attached media, create the new media object based on the ajax'd params
@@ -101,7 +106,7 @@ var Posts = function () {
       }
 
   		// these will be used to create the new post
-      var _setDataValues = function (callback) {
+      var _setPostParams = function (callback) {
         var data = {
           content: params.content,
           timestamp: new Date(),
@@ -109,7 +114,7 @@ var Posts = function () {
           // if media exists, it will be set as the new post's media
           media: media
         };
-        callback(null,data);
+        callback(null, data);
       }
 
   		// create the new post
@@ -117,13 +122,13 @@ var Posts = function () {
     		postservice.create(data, function(err, post) {
     			// add the new post to the event
     			eventservice.addPost(currentEvent, post, function(err, post) {
-      	     callback(err);
+            callback(err);
       		});
         });
       }
 
       async.waterfall(
-        [_getUser, _getEvent, _getMimeType, _createMedia, _setDataValues, _createPost],
+        [_getUser, _getEvent, _getMimeType, _createMedia, _setPostParams, _createPost],
         function(err) {
           if (err) {
             throw err;
