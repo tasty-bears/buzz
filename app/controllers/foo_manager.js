@@ -45,6 +45,18 @@ var FooManager = function () {
     self.redirect('/foo');
   }
 
+  this.dump = function(req, resp, params) {
+    var self = this;
+
+    stagingService.dump_to_tape(function (err) {
+      if(err) {
+        throw err;
+      }
+
+      self.redirect('/foo');
+    });
+  }
+
 };
 
 exports.FooManager = FooManager;

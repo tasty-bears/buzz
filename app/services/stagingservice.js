@@ -90,8 +90,16 @@ var StagingService = function() {
         });
     }
 
-    //TODO: do stuff with priorities
-    this.stage_all = function(callback) {
+    this.stage_all = function(optimal, callback) {
+        // callback = function(err)
+        var self = this;
+
+        self.prioritize_media(function(err, medias) {
+            self.dump_to_tape(callback);
+        })
+    };
+
+    this.dump_to_tape = function(callback) {
         // just moves everything to TAPE for now
         // callback = function(err)
         var self = this;
@@ -106,7 +114,7 @@ var StagingService = function() {
             }
             async.each(medias, moveIterator, callback);
         });
-    };
+    }
 
     this.move_storage = function(media, locationType, callback) {
 
