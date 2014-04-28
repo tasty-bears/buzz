@@ -19,21 +19,13 @@ var CourseService = function() {
 
 	this.emailInvites = function(myCourseId, invitees, action )
 	{
-		var myCourse;
-
-		courseServiceSelf.findCourseById(myCourseId, function(err, course){
-										myCourse = course;
-									}
-		 );
-
 		courseInvitees = invitees.split(",");
-		console.log(courseInvitees);
-
+		//console.log(courseInvitees);
 
 		var getUsers = function(callback){
 	        
 	        var getInviteeEmailIterator = function(courseInvitee, iteratorCallback){
-	            geddy.model.User.first( courseInvitee, function(err, user){
+	            geddy.model.User.first({ username: courseInvitee }, function(err, user){
 	            	console.log(user.email);
 	              iteratorCallback(err, user.email);
 	            });
@@ -58,15 +50,14 @@ var CourseService = function() {
 
 		      //send invitation email
 		      //http://www.nodemailer.com/docs/usage-example
-
 		      mail({
 		          from: "Buzz Invitation <tastybears.dev@gmail.com>", // sender address
 		          to: emailString, // list of receivers
 		          //to: "bradasteiner@gmail.com",
 		          subject: "Buzz Course Invite", // Subject lin
 		          //text: "Test",
-		          text: "You have been invited to a Buzz Course. Please use the following link to view the course: http://buzz.tastybears.com/courses/" + myCourseId, // plaintext body
-		          html: "<b>You have been invited to a Buzz Course. Please use the following link to view the course: http://buzz.tastybears.com/courses/</b>" + myCourseId + "<b>/</b>" // html body
+		          //text: "You have been invited to a Buzz Course. Please use the following link to view the course: http://buzz.tastybears.com/courses/" + myCourseId, // plaintext body
+		          html: "<b>You have been invited to a Buzz Course. Please use the following link to view and subscribe to the course: http://buzz.tastybears.com/courses/</b>" + myCourseId + "<b>/</b>" // html body
 		      });
 	    }
 
