@@ -12,6 +12,8 @@ var StagingService = function() {
             mediaPriorities.sort(function(a, b) {
                 return a.priority - b.priority;
             })
+
+            // we want highest priority first
             mediaPriorities.reverse();
 
             var medias = mediaPriorities.map(
@@ -37,18 +39,41 @@ var StagingService = function() {
                     var timeDifference = Math.abs(mediaDetail.date - now) / 1000 / 60; // in minutes
                     var priority = mediaDetail.numUsers / timeDifference;
 
-                    mediaPriorities.push(
-                        {
-                            media: mediaDetail.media,
-                            priority: priority
-                        }
-                    );
+                    var mediaPriority = {
+                        media: mediaDetail.media,
+                        priority: priority
+                    }
+
+                    // if the same blobId is used twice (should only happen
+                    //in dev), then sum the priorities
+                    var index = priority_index.call(mediaPriorities, mediaPriority)
+                    if(index == -1) {
+                        mediaPriorities.push(mediaPriority);
+                    }
+                    else {
+                        mediaPriorities[index].priority += mediaPriority.priority
+                    }
 
                 }
 
                 callback(null, mediaPriorities);
             }
         });
+
+        //------------------
+
+        function priority_index(mediaPriority) {
+            // bind this to an array of mediaPriorities
+            var i = this.length;
+
+            while (i--) {
+               if (this[i].media.blobId == mediaPriority.media.blobId) {
+                   return i;
+               }
+            }
+            return -1;
+        }
+
     }
 
     this.get_medias_with_priority_details = function(callback) {
