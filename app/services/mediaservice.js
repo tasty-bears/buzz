@@ -10,18 +10,9 @@ var MediaService = function() {
 
         // save calls isValid, will throw err if false
         media.save(function(err, data) {
-            if (err) {
-              throw err;
-            }
             action(err, media);
         });
 	}
-
-    // this.get_all = function(callback) {
-    //     geddy.model.Media.all(function (err, medias) {
-    //         callback(err, medias);
-    //     });
-    // }
 
     this.get_event_datetime = function(media, callback) {
         media.getPost(function (err, post) {
