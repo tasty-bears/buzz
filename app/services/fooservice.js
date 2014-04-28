@@ -31,6 +31,8 @@ var FooService = function() {
                 return;
             }
 
+            medias = self.distinct(medias);
+
             var addSizeIterator = function(media, itercallback) {
                 self.get_media_size(media, function(err, size) {
                     totalSize += size;
@@ -54,6 +56,19 @@ var FooService = function() {
                 callback(null, data.BlobSize);
             }
         })
+    }
+
+    this.distinct = function(medias) {
+        var flags = [],
+            output = [];
+
+        for(var i = 0; i < medias.length; i++) {
+            if( flags[ medias[i].blobId ]) continue;
+            flags[ medias[i].blobId ] = true;
+            output.push( medias[i] );
+        }
+
+        return output
     }
 
 };
