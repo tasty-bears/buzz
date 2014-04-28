@@ -84,55 +84,46 @@ var Events = function () {
   this.show = function (req, resp, params) {
     var self = this;
 
-    var data = {
-        params: params,
-		    // user: null,
-        event: null,
-        eventCourseName: null,
-        eventCourseNumber: null,
-        posts: null
-    };
+    self._show(params, function(err, event) {
+      self.respondWith(event);
+    });
+  };
 
-    geddy.model.Event.first(params.id, function(err, event) {
+  this._show = function(params, action){
+    var self = this;
+    var event = null;
+
+    geddy.model.Event.first(params.id, function(err, eventModel) {
       if (err) {
         throw err;
       }
-      if (!event) {
+      if (!eventModel) {
         throw new geddy.errors.NotFoundError();
       }
       else {
-
-        data.event = event;
-
-        var _getCourseName = function (callback) {
-          eventservice.getCourseName(event, function(err,courseName) {
-            data.eventCourseName = courseName;
-            callback(err);
-          });
-        }
-
-        var _getCourseNumber = function (callback) {
-          eventservice.getCourseNumber(event, function(err,courseNumber) {
-            data.eventCourseNumber = courseNumber;
-            callback(err);
-          });
-        }
-
+        event = eventModel;
         var _getPosts = function (callback) {
-          eventservice.getPostsToDisplay(data.event, function(err, posts) {
+          eventservice.getPostsToDisplay(event, function(err, posts) {
             if (err) {
                 callback(err);
             } else {
-               data.posts = posts;
+               event.posts = posts;
             }
             callback(null);
           });
         }
-
-        async.parallel([_getCourseName,_getCourseNumber,_getPosts], function(err){
-          self.respond(data);
+        async.parallel([_getPosts], function(err){
+          if (err) {
+            throw err;
+          }
+          event.getSchedule(function(err, schedule) {
+            event.schedule = schedule;
+            schedule.getCourse(function(err, course) {
+              event.schedule.course = course;
+              action(null,event);
+            });
+          });
         });
-
       }
     });
   };

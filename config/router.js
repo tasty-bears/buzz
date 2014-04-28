@@ -60,6 +60,10 @@ router.resource('posts');
 router.match('/stash').to({controller: 'Stash', action: 'index'});
 router.match('/stash/:action').to({controller: 'Stash', action: ':action'});
 
+// foo manager
+router.match('/foo').to({controller: 'FooManager', action: 'index'});
+router.match('/foo/:action').to({controller: 'FooManager', action: ':action'});
+
 // general / fallback
 router.match('/:controller/:action').to({controller: ':controller', action: ':action'});
 router.match('/:controller').to({controller: ':controller', action: 'index'});

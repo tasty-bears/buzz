@@ -116,6 +116,15 @@ var Courses = function () {
   this.show = function (req, resp, params) {
     var self = this;
 
+    self._show(params, function(err, course) {
+      self.respondWith(course);
+    });
+  };
+
+  this._show = function(params, callback) {
+    var self = this;
+    var course = null;
+
     geddy.model.Course.first(params.id, function(err, course) {
       if (err) {
         throw err;
@@ -125,33 +134,36 @@ var Courses = function () {
       }
       else {
 
-        var _getSchedule = function(callback) {
+        var _getSchedule = function(seriesCallback) {
           course.getSchedule(function (err, schedule){
-            callback(err,schedule);
+            course.schedule = schedule;
+            seriesCallback(err);
           });
         }
 
-        var _getEventsFromSchedule = function(schedule, callback) {
-          schedule.getEvents(function (err, data) {
-            callback(err,data,schedule);
+        var _getEventsFromSchedule = function(seriesCallback) {
+          course.schedule.getEvents(function (err, events) {
+            course.schedule.events = events;
+            seriesCallback(err);
           });
         }
 
-        var _formatEventsForCalendar = function(changeevents, schedule, callback) {
-          scheduleservice.formatEventsForCalendar(changeevents, function(err, events){
-            callback(err,events,schedule);
+        var _formatEventsForCalendar = function(seriesCallback) {
+          scheduleservice.formatEventsForCalendar(course.schedule.events, function(err, formattedEvents){
+            course.schedule.events = formattedEvents;
+            seriesCallback(err);
           });
         }
 
-        async.waterfall([_getSchedule,_getEventsFromSchedule,_formatEventsForCalendar],function(err, events, schedule) {
+        async.series([_getSchedule,_getEventsFromSchedule,_formatEventsForCalendar],function(err, results) {
           if(err){
             throw err;
           }
-          self.respond({course: course, schedule: schedule, events: events});
+          callback(err, course);
         })
       }
     });
-  };
+  }
 
   this.edit = function (req, resp, params) {
     var self = this;
@@ -349,7 +361,7 @@ var Courses = function () {
       var self = this;
       var courseId = params.courseId;
       var invitees = params.invitees;
-      
+
      courseservice.emailInvites(courseId, invitees, function (err, data) {
         callback(err);
       });

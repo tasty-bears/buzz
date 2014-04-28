@@ -63,7 +63,7 @@
 }(document, 'script', 'facebook-jssdk'));</script>
 
 <div class="hero-unit">
-  <h2 class="name"><%- geddy.date.strftime(event.date, "%m/%d") + " - " + eventCourseName + " " + eventCourseNumber + " - " + event.name; %></h2>
+  <h2 class="name"><%- geddy.date.strftime(event.date, "%m/%d") + " - " + event.schedule.course.name + " " + event.schedule.course.courseNumber + " - " + event.name; %></h2>
   <p class="description">Description: <%= event.description %></p>
   <p class="time">Time: <%= geddy.date.strftime(event.time, "%l:%M%p"); %></p>
   <%- linkTo('Edit this event', editEventPath(params.id), {class: 'btn pull-right'}); %>
@@ -94,9 +94,8 @@
   	</script>
 </div>
 
-<h3>Create a new Post</h3>
-
 <div id="post">
+  <h3>Posts</h3>
   <%= partial("posts/form", {event: event}); %>
   <div id="posts-index"></div>
 </div>

@@ -1,4 +1,5 @@
 var async = require('async');
+var postService = require('./postservice');
 
 var EventService = function() {
 	var userservice = require('../services/userservice');
@@ -119,24 +120,32 @@ var EventService = function() {
 
 	// TODO: not convinced we need this (especially monkey-patching events)
 	// get all posts belonging to an event
-	this.getPostsToDisplay = function(event, action) {
+	this.getPostsToDisplay = function(event, callback) {
+
+		var add_display_items__iterator = function(post, iterCallback) {
+
+			//TODO: Really don't like this, but I suppose it may be necessary
+			//		for the recent feed. Maybe replace with eventId instead?
+			post.event = event;
+
+			// add url to medias
+			postService.format_for_display(post);
+
+			iterCallback(null);
+
+		};
+
 		event.getPosts(function(err, posts) {
 			if (err) {
-				action(err, null);
-			} else {
-				// add event attribute to each post(the view needs it I guess)
-				async.eachSeries(posts, function(post,callback) {
-					post.getEvent(function(err, event) {
-						post.event = event;
-						callback(err);
-					});
-				}, function(err){
-					if (err) {
-						action(err,null);
-					}
-					action(null, posts);
-				});
+				callback(err, posts);
+				return;
 			}
+				
+			async.each(posts, add_display_items__iterator,
+			    function(err){ // each callback
+					callback(err, posts);
+				}
+			);
 		});
 	};
 
