@@ -5,16 +5,89 @@ var async = require('async');
 var StagingService = function() {
     // service for prioritizing and staging media on FooCDN
 
-    this.prioritize_media = function(medias) {
-        var get_num_users = function(media) {
-            media.getPost(function (err, post) {
-              console.log(post);
+    this.prioritize_media = function(callback) {
+        this.get_media_priorities(function(err, mediaPriorities) {
+            mediaPriorities.sort(function(a, b) {
+                return a.priority - b.priority;
+            })
+            mediaPriorities.reverse();
+
+            var medias = mediaPriorities.map(
+                function(mediaPriority) { return mediaPriority.media; }
+            );
+            callback(err, medias);
+        })
+    }
+
+    this.get_media_priorities = function(callback) {
+        var mediaPriorities = []
+
+        this.get_medias_with_priority_details(function(err, mediaDetails) {
+            if(err) {
+                callback(err, null);
+            }
+            else {
+                var now = new Date();
+
+                for(var i in mediaDetails) {
+                    var mediaDetail = mediaDetails[i];
+
+                    var timeDifference = Math.abs(mediaDetail.date - now) / 1000 / 60; // in minutes
+                    var priority = mediaDetail.numUsers / timeDifference;
+
+                    mediaPriorities.push(
+                        {
+                            media: mediaDetail.media,
+                            priority: priority
+                        }
+                    );
+
+                }
+
+                callback(null, mediaPriorities);
+            }
+        });
+    }
+
+    this.get_medias_with_priority_details = function(callback) {
+        // gross
+        //TODO: fix once post-media association works
+
+        function postIter(post, iterCallback) {
+            post.getEvent(function(err, event) {
+                if(err) iterCallback(err, null);
+
+                event.getSchedule(function(err, schedule) {
+                    if(err) iterCallback(err, null);
+
+                    schedule.getCourse(function(err, course) {
+                        if(err) iterCallback(err, null);
+
+                        course.getUsers(function(err, users) {
+                            if(err) iterCallback(err, null);
+
+                            iterCallback(
+                                null,
+                                {
+                                    media: post.media,
+                                    date: event.date,
+                                    //time: event.time,
+                                    numUsers: users.length
+                                }
+                            );
+
+                        });
+
+                    });
+                });
             });
         }
 
-        for(var index in medias) {
-            get_num_users(medias[index]);
-        }
+        geddy.model.Post.all(function(err, posts) {
+            async.map(posts, postIter, function(err, results) {
+                callback(err, results);
+            });
+        });
     }
 
     //TODO: do stuff with priorities

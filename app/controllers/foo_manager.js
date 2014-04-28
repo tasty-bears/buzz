@@ -31,8 +31,8 @@ var FooManager = function () {
     }
 
     // priority
-    geddy.model.Media.all(function(err, medias) {
-      stagingService.prioritize_media(medias);
+    stagingService.prioritize_media(function(err, medias) {
+      console.log(JSON.stringify(medias));
     });
 
     // staging
