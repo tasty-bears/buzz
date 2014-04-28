@@ -17,6 +17,7 @@ code {
 .geddy-welcome-box {
   text-align: center;
   background-color: rgba(200, 200, 200, .5);
+  background-color: #eeeeee;
   box-shadow: 0px 0px 3px #bababa;
   border: 1px solid #EDEDED;
 }
@@ -24,6 +25,7 @@ code {
 .geddy-welcome-box h1 {
   line-height: 1.25;
   margin-bottom: 20px;
+
 }
 
 .geddy-welcome-box p {
@@ -86,4 +88,14 @@ code {
     float: none;
     margin-top: 10px;
   }
+}
+
+.white {
+  background-color: #eeeeee;
+  text-align:center 
+}
+
+.drop{
+  margin-top: 20px;
+  vertical-align: bottom;
 }
