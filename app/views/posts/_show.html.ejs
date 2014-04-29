@@ -61,7 +61,7 @@
 	<!-- This code was pulled from the Twitter for Developers page -->
 	<!-- It is used because it presents a simple way to tweet and in 
 	a way that users are used to seeing -->
-	<a href="https://twitter.com/share" id="<%- post.id %>" class="twitter-share-button" data-lang="en" data-size="large" data-url="http://tastybears.com" data-count="none" data-related="tastybears" data-hashtags="Buzz" data-text="Via @Buzz: '<% if (post.content.length > 90){%><%- post.content.substring(0, 89) + '...'%> <%} else { %> <%- post.content%> <% } %>'">Tweet</a> 
+	<a href="https://twitter.com/share" id="<%- post.id %>" class="btn btn-secondary" data-lang="en" data-size="large" data-url="http://tastybears.com" data-count="none" data-related="tastybears" data-hashtags="Buzz" data-text="Via @Buzz: '<% if (post.content.length > 90){%><%- post.content.substring(0, 89) + '...'%> <%} else { %> <%- post.content%> <% } %>'">Tweet</a> 
 
     <input type="button" onclick="submitFB()" value="Post to Facebook" class="btn btn-secondary"/>
 
