@@ -3,8 +3,9 @@
     	<%- post.content %>
 		<% if (post.media) { %>
             <% if (post.media.mimeType.split('/')[0] == "image") { %>
+                <br/>
                 <a href="<%= post.media.url %>" style="text-decoration: none;">
-                    <img src="<%= post.media.url %>" width="100px" height="100px"/>
+                    <img src="<%= post.media.url %>" style="margin-top: 10px; max-height: 300px; max-width: 300px;"/>
                 </a>
             <% } else { %>
 			    <small>
