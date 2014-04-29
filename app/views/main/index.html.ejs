@@ -4,33 +4,44 @@
   <% if (user) { %>
     <div>
       <h1 class="profile-header">
+        <img border="0"  src="/img/buzz.png" alt="Logo" width="150" height="140">
         Hello<% if (user.givenName) { %>, <%= user.givenName %><% } %>
+
       </h1>
     </div>
 
     <!-- <p><%- linkTo('See Courses', '/courses', {class: 'btn btn-primary btn-large'}) %></p>
     <p><%- linkTo('See Events', '/events', {class: 'btn btn-primary btn-large'}) %></p> -->
 </div>
+
+
 <div class="span2 offset0 white">
-<h4 > My Courses </h4>
+  
+    <div class = "white span2 offset0">
+      <h4 > My Courses </h4>
+     
+    <div class="span2 offset0 courses-list margin-bottom white">
+      <% if (courses) { %>
+        <% for (var i = 0, ii = courses.length; i < ii; i++) { %>
+          <div class="row list-item pull-left" id="course-<%= courses[i].id; %>">
+            <div class="span2">
+              <h5 class="list-height"><%- linkTo(courses[i].name + " " + courses[i].courseNumber, coursePath(courses[i].id)); %></h5>
+            </div>
+          </div>
+        <% } %>
+      <% } %>
+    </div>
+    </div>
 
-<div class="span2 offset0 courses-list">
-  <% if (courses) { %>
-    <% for (var i = 0, ii = courses.length; i < ii; i++) { %>
-      <div class="row list-item pull-left" id="course-<%= courses[i].id; %>">
-        <div class="span2">
-          <h5 class="list-height"><%- linkTo(courses[i].name + " " + courses[i].courseNumber, coursePath(courses[i].id)); %></h5>
-        </div>
-      </div>
-    <% } %>
-  <% } %>
+    
+
+  <div class="margin-bottom white">
+    <%- linkTo('Create a New Event', addEventPath, {class: 'btn btn-primary pull-center'}); %>
+  </div>
 </div>
 
-<div class="drop">
-  <%- linkTo('Create a New Event', addEventPath, {class: 'btn btn-primary pull-center'}); %>
-</div>
 
-</div>
+
 
 
 <div class="span9 offset0 pull-right hero-unit" id="calendarpartial">
