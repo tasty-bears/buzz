@@ -114,7 +114,7 @@ var FooRepo = function() {
                 url: this.create_container_url(),
                 method: 'POST',
                 data: {
-                    "Account Key": accountKey,
+                    "AccountKey": accountKey,
                     "MimeType": mimeType
                 }
                 // geddy reference says data should be a string, but FooCDN
