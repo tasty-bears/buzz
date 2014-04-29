@@ -62,6 +62,9 @@
 	<!-- It is used because it presents a simple way to tweet and in 
 	a way that users are used to seeing -->
 	<a href="https://twitter.com/share" id="<%- post.id %>" class="twitter-share-button" data-lang="en" data-size="large" data-url="http://tastybears.com" data-count="none" data-related="tastybears" data-hashtags="Buzz" data-text="Via @Buzz: '<% if (post.content.length > 90){%><%- post.content.substring(0, 89) + '...'%> <%} else { %> <%- post.content%> <% } %>'">Tweet</a> 
+
+    <input type="button" onclick="submitFB()" value="Post to Facebook" class="btn btn-secondary"/>
+
 </div>
 
 <script>
@@ -82,4 +85,13 @@
         }
     }
     (document,"script","twitter-wjs");
+
+    function submitFB() {
+    var content = $("#content").val();
+    
+    FB.login(function(){
+    FB.api('/me/feed', 'post', {message: "<%- post.content%>" + " @ " + window.location.href});
+    }, {scope: 'publish_actions'});
+    submitPost();
+  }
 </script>
