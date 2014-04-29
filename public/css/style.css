@@ -99,3 +99,7 @@ code {
   margin-top: 20px;
   vertical-align: bottom;
 }
+
+.margin-bottom {
+  margin-bottom: 10px;
+}
