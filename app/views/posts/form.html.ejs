@@ -7,7 +7,6 @@
 		<textarea value="" name="blobId" id="blobId" style="margin-top: 10px; margin-bottom: 20px; width: 25%; font-size: 12pt" rows="1" placeholder="Blob ID"></textarea>
 		<br/>
 		<input type="button" onclick="submitPost()" value="Post" class="btn btn-primary" id="<%= event.id %>"/>
-		<input type="button" onclick="submitFB()" value="Post to Facebook" class="btn btn-primary"/>
 	</form>
 </div>
 
@@ -56,14 +55,5 @@
 		}
 
 		return mediaData;
-	}
-
-	function submitFB() {
-		var content = $("#content").val();
-		
-		FB.login(function(){
-		FB.api('/me/feed', 'post', {message: content + " @ " + window.location.href});
-		}, {scope: 'publish_actions'});
-		submitPost();
 	}
 </script>
