@@ -23,23 +23,24 @@
 	<!-- It is used because it presents a simple way to tweet and in 
 	a way that users are used to seeing -->
 	<a href="https://twitter.com/share" id="<%- post.id %>" class="twitter-share-button" data-lang="en" data-size="large" data-url="http://tastybears.com" data-count="none" data-related="tastybears" data-hashtags="Buzz" data-text="Via @Buzz: '<% if (post.content.length > 90){%><%- post.content.substring(0, 89) + '...'%> <%} else { %> <%- post.content%> <% } %>'">Tweet</a> 
-	<script>
-// 		$(document).ready(function()
-// 		{
-// 			var buttonId = $(".twitter-share-button").attr("id");
-// 			var url = window.location.href;
-// 			var _datatext = $("#"+buttonId).attr("data-text");
-// 			$(".twitter-share-button").attr("data-text", _datatext + ' ' + url);
-// 		});
-		!function(d,s,id) {
-			var js,fjs=d.getElementsByTagName(s)[0];
-			if(!d.getElementById(id)) {
-				js=d.createElement(s);
-				js.id=id;
-				js.src="https://platform.twitter.com/widgets.js";
-				fjs.parentNode.insertBefore(js,fjs);
-			}
-		}
-		(document,"script","twitter-wjs");
-	</script>
 </div>
+
+<script>
+//  $(document).ready(function()
+//  {
+//      var buttonId = $(".twitter-share-button").attr("id");
+//      var url = window.location.href;
+//      var _datatext = $("#"+buttonId).attr("data-text");
+//      $(".twitter-share-button").attr("data-text", _datatext + ' ' + url);
+//  });
+    !function(d,s,id) {
+        var js,fjs=d.getElementsByTagName(s)[0];
+        if(!d.getElementById(id)) {
+            js=d.createElement(s);
+            js.id=id;
+            js.src="https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js,fjs);
+        }
+    }
+    (document,"script","twitter-wjs");
+</script>
