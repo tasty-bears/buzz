@@ -8,9 +8,15 @@ v0.4.0 Release Notes
 -------------------
 
 ###Changelog###
-* Enhanced posting functionality
-* Calendars for events
-* Partial Facebook and Twitter integration
+* Application is hosted at buzz.tastybears.com
+* Set up continuous integration with Wercker.
+* Posts can be shared to Twitter.
+* Events can be shared to Twitter.
+* Media is displayed on posts.
+* Users are able to log in with Twitter.
+* Users stay visibly logged in throughout the application.
+* Media can be staged on FooCDN based on estimated activity.
+
 
 ###Known Issues###
 * __Only Mac OS X is supported__ - contact developer for more information
