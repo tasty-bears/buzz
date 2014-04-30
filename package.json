@@ -1,6 +1,6 @@
 {
   "name": "Buzz",
-  "version": "0.2.1",
+  "version": "0.4.0",
   "author": "",
   "dependencies": {
     "geddy": "~0.12.7",

@@ -4,7 +4,7 @@ Buzz Social Media
 Web Application
 
 
-v0.3.0 Release Notes
+v0.4.0 Release Notes
 -------------------
 
 ###Changelog###
