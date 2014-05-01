@@ -1,32 +1,8 @@
-Tasty Bears Development Group
-=========================
 Buzz Social Media
-Web Application
+=================
+__Tasty Bears Development Group__
 
-
-v0.4.0 Release Notes
--------------------
-
-###Change Log###
-
-Features:
-* Posts can be shared to Facebook and Twitter.
-* Events can be shared to Facebook and Twitter.
-* Media is displayed on posts.
-* Users are able to log in with Facebook and Twitter.
-* Media can be staged on FooCDN based on estimated activity.
-* Courses can be private, with invitations via email.
-* Users can see "User Connections".
-* Users can pull a public Google Calendar into their calendar.
-
-Improvements:
-* Application is hosted at buzz.tastybears.com
-* Set up continuous integration with Wercker.
-* Google Analytics are in use.
-* UI has been improved a bit.
-
-Bug Fixes:
-* Users stay visibly logged in throughout the application.
+Web Application v0.4.0
 
 
 ###Known Issues###
