@@ -1,5 +1,4 @@
 <div id="posts-list">
-    <h3>Posts</h3>
     <% if (!posts || posts.length == 0) { %>
     <div class="alert alert-danger alert-dismissable">
         <h4 class="alert-heading">Shucks! No posts here!</h4>
@@ -9,24 +8,8 @@
         <div id="posts">
                 <% if (posts) {
                   posts.forEach(function(post) { %>
-                    <div class="well">
-                        <h3>
-                        	<%- post.content %>
-							<br/>
-							
-							<% if (post.media) { %>
-								<small>
-									<!-- <%- post.medialink %> -->
-									<a href="<%= post.medialink %>">blah.txt</a>
-								</small>
-								<br/>
-							<% } %>
-                            <small>Posted by <%- post.author.username %> in
-                                <%- post.event.name %> at
-                                <span><%- post.timestamp.toLocaleTimeString() %> on <%- post.timestamp.toLocaleDateString() %></span>
-                            </small>
-                        </h3>
-                    </div>
+					  <!-- each post is its own partial -->
+                  <%= partial("_show", {post: post}); %>
                 <% });} %>
         </div>
     <% } %>

@@ -30,20 +30,15 @@
       var lat;
       var lng;
       var latlng;
-     console.log(<%= event.latlng %>);
       latlng = "<%= event.latlng %>";
-     console.log(latlng);
 
       var latlangArray = latlng.split(",");
-       lat = latlangArray[0];
-       lng = latlangArray[1];
-       console.log(lat);
-       console.log(lng);
-
+      lat = latlangArray[0];
+      lng = latlangArray[1];
 
       var myLatlng = new google.maps.LatLng( lat , lng);
       var mapOptions = {
-        zoom: 12,
+        zoom: 17,
         center: myLatlng
       }
       var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
@@ -58,29 +53,49 @@
   </script>
 </head>
 
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=583611305068385";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
 <div class="hero-unit">
-  <h2 class="name"><%- geddy.date.strftime(event.date, "%m/%d") + " - " + eventCourseName + " " + eventCourseNumber + " - " + event.name; %></h2>
+  <h2 class="name"><%- geddy.date.strftime(event.date, "%m/%d") + " - " + event.schedule.course.name + " " + event.schedule.course.courseNumber + " - " + event.name; %></h2>
+  <p class="description">Description: <%= event.description %></p>
+  <p class="time">Time: <%= geddy.date.strftime(event.time, "%l:%M%p"); %></p>
   <%- linkTo('Edit this event', editEventPath(params.id), {class: 'btn pull-right'}); %>
   <%- linkTo('Back to list', eventPath(''), {class: 'btn pull-right'}); %>
-</div>
 
-<h3>Event Description</h3>
-<div class="row list-item">
-  <div class="span12">
-    <p class="description"><%= event.description %></p>
-  </div>
-</div>
+  <div><a href="https://twitter.com/share" id="twitter" class="twitter-share-button" data-lang="en" data-size="large" data-url="http://tastybears.com" data-count="none" data-related="tastybears" data-hashtags="Buzz" data-text="Come join me at '<%- event.name %>' on @Buzz!">Tweet</a></div>
 
-<h3>Time</h3>
-<div class="row list-item">
-  <div class="span12">
-    <p class="time"><%= event.time %></p>
-  </div>
-</div>
+  <div class="fb-share-button" data-href="http://buzz.tastybears.com/" data-type="button_count"></div>
 
-<h3>Create a new Post</h3>
+
+  	<script>
+// 		$(document).ready(function()
+// 		{
+// 			var url = window.location.href;
+// 			var _datatext = $("#twitter").attr("data-text");
+// 			$("twitter").attr("data-text", _datatext + ' ' + url);
+// 		});
+  		!function(d,s,id) {
+  			var js,fjs=d.getElementsByTagName(s)[0];
+  			if(!d.getElementById(id)) {
+  				js=d.createElement(s);
+  				js.id=id;
+  				js.src="https://platform.twitter.com/widgets.js";
+  				fjs.parentNode.insertBefore(js,fjs);
+  			}
+  		}
+  		(document,"script","twitter-wjs");
+  	</script>
+</div>
 
 <div id="post">
+  <h3>Posts</h3>
   <%= partial("posts/form", {event: event}); %>
   <div id="posts-index"></div>
 </div>

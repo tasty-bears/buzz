@@ -1,24 +1,26 @@
-Tasty Bears Development Group
-=========================
 Buzz Social Media
-Web Application
+=================
+__Tasty Bears Development Group__
 
+Web Application v0.4.0
 
-v0.3.0 Release Notes
--------------------
-
-###Changelog###
-* Enhanced posting functionality
-* Calendars for events
-* Partial Facebook and Twitter integration
 
 ###Known Issues###
 * __Only Mac OS X is supported__ - contact developer for more information
 
 ###Building Buzz###
 1. Run build/dev.sh for development environment
-1. In web directory, run the generated start.sh script
+1. In repository root directory, run the generated start.sh script
 1. In browser, visit [http://localhost:5000](http://localhost:5000)
 
 ###Buzz on the web###
-[https://tastybears-buzz.herokuapp.com/](https://tastybears-buzz.herokuapp.com/)
+[http://buzz.tastybears.com/](http://buzz.tastybears.com/)
+
+###Buzz Source###
+[https://bitbucket.org/TastyBears/com.tastybears.buzz.web](https://bitbucket.org/TastyBears/com.tastybears.buzz.web)
+
+###Continuous Integration###
+[https://app.wercker.com/#applications/534926f385c557fb57019080](https://app.wercker.com/#applications/534926f385c557fb57019080)
+
+###Tasty Bears###
+[https://bitbucket.org/TastyBears](https://bitbucket.org/TastyBears)

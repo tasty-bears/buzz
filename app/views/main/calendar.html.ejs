@@ -3,16 +3,24 @@
   <link rel='stylesheet' type='text/css' href='/css/fullcalendar.css' />
   <script type='text/javascript' src='/js/jquery.js'></script>
   <script type='text/javascript' src='/js/fullcalendar.js'></script>
+  <script type='text/javascript' src='/js/gcal.js'></script>
   <script type='text/javascript'>
     $(document).ready(function() {
 
       var calEvents = new Array();
 
       calEvents = <%- JSON.stringify(myEvents) %>;
+      gCalAddress = "<%- myUser.gCalAddress %>";
 
       //initialize the calendar.
       $('#calendar').fullCalendar({
         // put your options and callbacks here
+       // events: gcalEvents.concat(calEvents), 
+       
+       eventSources: [
+           gCalAddress,
+           calEvents],
+
         header:
         {
 				      left: 'prev,next today',
@@ -20,7 +28,9 @@
 				      right: 'month,agendaWeek,agendaDay'
 			  },
       defaultView: 'agendaWeek',
-      events: calEvents,
+      
+      
+
       titleFormat: {
         week: "MMM d[ yyyy]{ '&#8212;'[ MMM] d, yyyy}",
       },

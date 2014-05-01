@@ -5,6 +5,6 @@
   <%- linkTo('Create a new Event', addEventPath, {class: 'btn pull-left'}); %>
 </div>
 
-<div id="calendarpartial">
-  <%- partial('calendar', {myEvents: events}) %>
+<div class="hero-unit" id="calendarpartial">
+  <%- partial('calendar', {myEvents: course.schedule.events}) %>
 </div>

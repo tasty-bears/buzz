@@ -1,7 +1,9 @@
 var mediaService = require('../services/mediaservice');
+var UserResponder = require('../helpers/responders').UserResponder;
 
 var Medias = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
+  this.responder = new UserResponder(this);
 
   this.index = function (req, resp, params) {
     var self = this;
@@ -10,7 +12,6 @@ var Medias = function () {
       if (err) {
         throw err;
       }
-      console.log("medias: " + medias); //DEBUG
       self.respondWith(medias, {type:'Media'});
     });
   };
@@ -21,20 +22,9 @@ var Medias = function () {
 
   this.create = function (req, resp, params) {
     var self = this
-      , media = geddy.model.Media.create(params);
-
-    geddy.log.debug("Medias.create params: " + JSON.stringify(params));
-    if (!media.isValid()) {
-      this.respondWith(media);
-    }
-    else {
-      media.save(function(err, data) {
-        if (err) {
-          throw err;
-        }
-        self.respondWith(media, {status: err});
-      });
-    }
+    mediaService.create(params, function(err, media) {
+      self.respondWith(media, {status: err});
+    });
   };
 
   this.show = function (req, resp, params) {

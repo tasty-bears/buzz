@@ -1,30 +1,21 @@
-<form id="postForm">
-	<textarea value="" type="text" id="content" name="content" style="margin-top: 10px; margin-bottom: 20px; width: 75%; font-size: 16pt" rows="3" placeholder="Compose a new Post..."></textarea>
-	<textarea value="" name="attachments" id="attachments" style="margin-top: 10px; margin-bottom: 20px; width: 25%; font-size: 12pt" rows="1" placeholder="Attachments"></textarea><br/>
-	<input type="button" onclick="submitPost()" value="Post" class="btn btn-primary" id="<%= event.id %>"/>
-	<input type="button" onclick="attachMedia()" value="Attach media" class="btn btn-primary"/>
-	<!-- <input type="button" onclick="" value="Post to Twitter" class="btn btn-secondary"/>
-	<input type="button" onclick="" value="Post to Facebook" class="btn btn-secondary"/> -->
-</form>
+<div class="hero-unit" style="padding-top: 15px; padding-bottom: 15px;">
+	<h4>Create a new Post</h4>
+	<form id="postForm">
+		<textarea value="" type="text" id="content" name="content" style="margin-top: 10px; margin-bottom: 20px; width: 75%; font-size: 16pt" rows="3" placeholder="Compose a new Post..."></textarea>
+		<h5>Attachment</h5>
+		<p style="font-size: 10pt;">Host: <span id="hostname">foocdn.azurewebsites.net</span></p>
+		<textarea value="" name="blobId" id="blobId" style="margin-top: 10px; margin-bottom: 20px; width: 25%; font-size: 12pt" rows="1" placeholder="Blob ID"></textarea>
+		<br/>
+		<input type="button" onclick="submitPost()" value="Post" class="btn btn-primary" id="<%= event.id %>"/>
+	</form>
+</div>
 
 <script type="text/javascript">
 	function submitPost() {
-		var content = $("#content").val();
-		clearContents('content');
-		
-		var mediaData = null;
-		
-		if($('#attachments').val()) {
-			mediaData = {
-				mimeType: 'plain/text',
-				hostname: 'http://foocdn.azurewebsites.net/',
-				blobId: 'a1bc0c85-c66a-4e9a-9617-cc70528e48ff'
-			};
-		}
-		clearContents('attachments');
-		
+		var content = $("#content").val();	
+		var mediaData = get_attachment();	
 		var id = event.target.id;
-		
+
 		$.ajax({
 			type: "POST",
 			url: '/posts/add/',
@@ -40,11 +31,29 @@
                 $("#posts-list").html(data);
             }
 		});
-	}
-	function attachMedia() {
-		document.getElementById('attachments').value='blah.txt';
+
+		clearForm();
 	}
 	function clearContents(element) {
-		document.getElementById(element).value = '';
+		$(element).attr('value', '');
+	}
+	function clearForm() {
+		clearContents('#content');
+		clearContents('#blobId');
+		clearContents('#mimeType');
+	}
+	function get_attachment() {
+		var mimeType = $('#mimeType').val();
+		var blobId = $('#blobId').val();
+
+		var mediaData = null;
+		if(blobId) {
+			mediaData = {
+				hostname: $("#hostname").html(),
+				blobId: $("#blobId").val()
+			};
+		}
+
+		return mediaData;
 	}
 </script>

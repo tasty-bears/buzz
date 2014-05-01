@@ -1,0 +1,97 @@
+<style>
+    div.iframe-link {
+        position: relative;
+        float: left;
+        max-width: 960px;
+        height: 30px;
+        overflow: hidden;
+        border: dashed 1px grey;
+    }
+    a.iframe-link {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: #ffffff;
+        opacity: 0.1;
+        filter:Alpha(opacity=10);
+    }
+
+    .media-attachment {
+        max-height: 300px;
+        max-width: 500px;
+        margin-bottom: 5px;
+    }
+</style>
+
+<div class="well">
+    <h3>
+    	<%- post.content %>
+    </h3>
+	<% if (post.media) { %>
+        <% if (post.media.mimeType.split('/')[0] == "image") { %>
+            <a href="<%= post.media.url %>" style="text-decoration: none;">
+                <img class="media-attachment" src="<%= post.media.url %>"/>
+            </a>
+            <br/>
+
+        <% } else if (post.media.mimeType.split('/')[0] == "text") { %>
+            <div class="iframe-link media-attachment">
+                <iframe src="<%= post.media.url %>" frameborder="0" scrolling="no"
+                 marginheight="0" marginwidth="0" allowtransparency="true" noscaling="true">
+                </iframe>
+                <a href="<%= post.media.url %>" target="_top" class="iframe-link"></a>
+            </div>
+            <div style="clear: both;"></div>
+
+        <% } else { %>
+		    <small>
+			    <a href="<%= post.media.url %>">Attachment</a>
+		    </small>
+            <br/>
+        <% } %>
+	<% } %>
+    <p>Posted by <%- post.author.username %> in
+        <%- post.event.name %> at
+        <span><%- post.timestamp.toLocaleTimeString() %> on <%- post.timestamp.toLocaleDateString() %></span>
+    </p>
+	<!-- TODO eventually we will want a single 'Share' button that
+	will bring up a modal showing all sharing options -->
+	<!-- This code was pulled from the Twitter for Developers page -->
+	<!-- It is used because it presents a simple way to tweet and in 
+	a way that users are used to seeing -->
+	<a href="https://twitter.com/share" id="<%- post.id %>" class="btn btn-secondary" data-lang="en" data-size="large" data-url="http://tastybears.com" data-count="none" data-related="tastybears" data-hashtags="Buzz" data-text="Via @Buzz: '<% if (post.content.length > 90){%><%- post.content.substring(0, 89) + '...'%> <%} else { %> <%- post.content%> <% } %>'">Tweet</a> 
+
+    <input type="button" onclick="submitFB()" value="Post to Facebook" class="btn btn-secondary"/>
+
+</div>
+
+<script>
+//  $(document).ready(function()
+//  {
+//      var buttonId = $(".twitter-share-button").attr("id");
+//      var url = window.location.href;
+//      var _datatext = $("#"+buttonId).attr("data-text");
+//      $(".twitter-share-button").attr("data-text", _datatext + ' ' + url);
+//  });
+    !function(d,s,id) {
+        var js,fjs=d.getElementsByTagName(s)[0];
+        if(!d.getElementById(id)) {
+            js=d.createElement(s);
+            js.id=id;
+            js.src="https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js,fjs);
+        }
+    }
+    (document,"script","twitter-wjs");
+
+    function submitFB() {
+    var content = $("#content").val();
+    
+    FB.login(function(){
+    FB.api('/me/feed', 'post', {message: "<%- post.content%>" + " @ " + window.location.href});
+    }, {scope: 'publish_actions'});
+    submitPost();
+  }
+</script>

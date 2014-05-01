@@ -2,27 +2,28 @@ var passport = require('../helpers/passport')
   , requireAuth = passport.requireAuth;
 var userservice = require('../services/userservice');
 var eventservice = require('../services/eventservice');
+var UserResponder = require('../helpers/responders').UserResponder;
+var async = require('async');
 
 var Events = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
   this.before(requireAuth, {});
+  this.responder = new UserResponder(this);
 
 
   this.addEvent = function(req, resp, params) {
+    var self = this;
 
-      var self = this;
-	  
-      userservice.loadUserFromSession(self.session, function(err, user) {
-		var event = geddy.model.Event.create(params);
-				
-        eventservice.addEvent(user, event, function(err, events) {
-          self.respond({params: params, events: events, selectedEvent: -1}, {
-            format: 'html'
-            , template: 'app/views/main/_eventView'
-            , layout: false
-          });
+    userservice.loadUserFromSession(self.session, function(err, user) {
+		  var event = geddy.model.Event.create(params);
+      eventservice.addEvent(user, event, function(err, events) {
+        self.respond({params: params, events: events, selectedEvent: -1}, {
+          format: 'html'
+          , template: 'app/views/main/_eventView'
+          , layout: false
         });
       });
+    });
   };
 
   this.index = function (req, resp, params) {
@@ -34,19 +35,22 @@ var Events = function () {
       if (err) {
         throw err;
       }
-      eventservice.getCourseNames(events, function (err, data){
-        if (err) {
-          throw err;
-        }
-        courseNames = data;
+
+      var _getCourseNames = function(callback) {
+        eventservice.getCourseNames(events, function (err, data){
+          callback(err,data);
+        });
+      }
+
+      var _getCourseNumbers = function(courseNames, callback) {
+        eventservice.getCourseNumbers(events, function (err, data){
+          callback(err,data,courseNames)
+        });
+      }
+
+      async.waterfall([_getCourseNames,_getCourseNumbers],function(err,courseNumbers,courseNames){
+        self.respond({events: events, eventCourseNames: courseNames, eventCourseNumbers: courseNumbers});
       });
-      eventservice.getCourseNumbers(events, function (err, data){
-        if (err) {
-          throw err;
-        }
-        courseNumbers = data;
-      });
-      self.respond({events: events, eventCourseNames: courseNames, eventCourseNumbers: courseNumbers});
     });
   };
 
@@ -79,35 +83,46 @@ var Events = function () {
 
   this.show = function (req, resp, params) {
     var self = this;
-	
-    var data = {
-        params: params,
-		    // user: null,
-        event: null,
-        eventCourseName: null,
-        eventCourseNumber: null,
-        posts: null
-    };
 
-    geddy.model.Event.first(params.id, function(err, event) {
+    self._show(params, function(err, event) {
+      self.respondWith(event);
+    });
+  };
+
+  this._show = function(params, action){
+    var self = this;
+    var event = null;
+
+    geddy.model.Event.first(params.id, function(err, eventModel) {
       if (err) {
         throw err;
       }
-      if (!event) {
+      if (!eventModel) {
         throw new geddy.errors.NotFoundError();
       }
       else {
-        data.eventCourseName = eventservice.getCourseName(event);
-        data.eventCourseNumber = eventservice.getCourseNumber(event);
-        data.event = event;
-        
-        eventservice.getPostsToDisplay(data.event, function(err, posts) {
+        event = eventModel;
+        var _getPosts = function (callback) {
+          eventservice.getPostsToDisplay(event, function(err, posts) {
             if (err) {
-                throw err;
+                callback(err);
             } else {
-               data.posts = posts;
-               self.respond(data);
+               event.posts = posts;
             }
+            callback(null);
+          });
+        }
+        async.parallel([_getPosts], function(err){
+          if (err) {
+            throw err;
+          }
+          event.getSchedule(function(err, schedule) {
+            event.schedule = schedule;
+            schedule.getCourse(function(err, course) {
+              event.schedule.course = course;
+              action(null,event);
+            });
+          });
         });
       }
     });
@@ -168,7 +183,7 @@ var Events = function () {
         throw new geddy.errors.BadRequestError();
       }
       else {
-        geddy.model.Event.remove(params.id, function(err) {
+        eventservice.removeEventFromDB(event, function(err){
           if (err) {
             throw err;
           }
@@ -181,5 +196,3 @@ var Events = function () {
 };
 
 exports.Events = Events;
-
-

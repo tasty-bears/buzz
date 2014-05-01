@@ -1,32 +1,42 @@
 var courseservice = require('../services/courseservice.js');
+var async = require('async');
 
 var ScheduleService = function() {
 	var schedServiceSelf = this;
 
 	this.getCalendarEvents = function(userModel, action) {
 		var self = this;
-		var userCourses = new Array();
-		var userEvents = new Array();
 
-		userModel.getCourses(function(err, courses) {
-			if(err) {
-				action(err,null);
-			}
-			userCourses = courses;
-		});
-
-		for (var course in userCourses) {
-			courseservice.getEventsFromSchedule(userCourses[course],function(err, events) {
-				if (err) {
-					action(err,null);
-				}
-				// add each event to temp array
-				for (var x in events){
-					userEvents.push(events[x]);
-				}
+		var _getCourses = function(callback) {
+			userModel.getCourses(function(err, courses) {
+				callback(err,courses);
 			});
 		}
-		action(null, userEvents);
+
+		var _getEvents = function(courses, callback) {
+			var userEvents = [];
+			async.each(courses, function(course, callback) {
+				courseservice.getEventsFromSchedule(course,function(err, events) {
+					if (err) {
+						callback(err,null);
+					}
+					// add each event to temp array
+					for (var x in events){
+						userEvents.push(events[x]);
+					}
+					callback(null);
+				});
+			}, function(err){
+				callback(err, userEvents);
+			});
+		}
+		async.waterfall([_getCourses,_getEvents], function(err, userEvents) {
+			if (err) {
+				action(err,null);
+			}
+			action(null, userEvents);
+		});
+
 	}
 
 	this.formatEventsForCalendar = function (nonFormattedEvents, action){
@@ -70,10 +80,22 @@ var ScheduleService = function() {
 		dateTime.setDate(date.getDate());
 		dateTime.setHours(time.getHours());
 		dateTime.setMinutes(time.getMinutes() + timeOffset);
+
+		//TODO: implement an actual fix for timezones. Have no idea how to
+		//      but it needs to be figured out and done
 		var correctDate = dateTime.toUTCString();
 
 		return correctDate;
 
+	}
+
+	this.removeScheduleFromDB = function(schedule, action) {
+		geddy.model.Schedule.remove(schedule.id, function(err) {
+			if (err) {
+				throw err;
+			}
+			action(err);
+		});
 	}
 
 }

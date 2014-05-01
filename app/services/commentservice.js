@@ -1,3 +1,5 @@
+var async = require('async');
+
 var CommentService = function() {
 	var userservice = require('../services/userservice');
 	var eventservice = require('../services/eventservice');
@@ -6,7 +8,7 @@ var CommentService = function() {
 	// comment creation function
 	this.create = function(params, action) {
 		var self = this;
-		
+
 		// comment data members for comment creation
 		var data = {
 			author: params.author,
@@ -15,15 +17,16 @@ var CommentService = function() {
 		};
 
 		// create the new comment
-	    var comment = geddy.model.Comment.create(data);
+	  var comment = geddy.model.Comment.create(data);
 
 		// save calls isValid, will throw err if false
 		comment.save(function(err, data) {
 		   if (err) {
 		     action(err, null);
 		   }
+			action(null, post);
 		});
-		
+
 		// TODO set comment belongsTo post relationship
 		// comment.setPost(comment, post, function(err, comment) {
 		// 	if (err) {
@@ -32,8 +35,8 @@ var CommentService = function() {
 		// 		console.log(comment.getPost());
 		// 	}
 		// });
-		
-		action(null, post);
+
+
 	}
 
 	// find a comment based on its ID
